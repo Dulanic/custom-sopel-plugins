@@ -1289,7 +1289,7 @@ def smitepro(bot, trigger):
 def xmassong(bot, trigger):
     """The only good Christmas song.
     Can also be triggered with '!xmas' anywhere in a message."""
-    bot.say("https://p.actionsack.com/v/xmas.webm")
+    bot.say("https://p.actionsack.com/v/xmas.mp4")
 
 
 @plugin.search("!swat")
