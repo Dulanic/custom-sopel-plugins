@@ -205,7 +205,6 @@ def delete_money(bot, trigger):
 
 @plugin.command(r"\$")
 @plugin.require_chanmsg
-@plugin.rule(r"(^)(\$$|\$ )($|.*$)")
 def check_money(bot, trigger):
     """Check how much money you or another user has."""
     # We're not using gambling_checks() because it's
@@ -286,8 +285,9 @@ def claim_money(bot, trigger):
         bot.db.set_nick_value(target, "currency_timely", now)
         claim = check_for_money + 100
         bot.db.set_nick_value(target, "currency_amount", claim)
+        balance = "${:,}".format(claim)
         return bot.reply(
-            "New balance: ${:,}. Don't forget to claim again in an hour! ($10/hr going forward.)".format(claim))
+            "New balance: {}. Don't forget to claim again in an hour! ($10/hr going forward.)".format(bold(balance)))
 
     check_1_hour = now - check_for_timely
     if check_1_hour >= 3600:
@@ -490,11 +490,11 @@ def gamble_oddsevens(bot, trigger):
     bot.db.set_nick_value(gambler, "currency_amount", spend_on_bet)
 
     # Set odds or evens
-    if user_choice == ("odd", "even"):
+    if user_choice == "odd" or user_choice == "even":
         pass
-    elif user_choice == ("o", "odds"):
+    elif user_choice == "o" or user_choice == "odds":
         user_choice = "odd"
-    elif user_choice == ("e", "evens"):
+    elif user_choice == "e" or user_choice == "evens":
         user_choice = "even"
 
     """# Flip coin and complete transaction
