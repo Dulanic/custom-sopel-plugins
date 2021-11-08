@@ -491,18 +491,14 @@ def gamble_oddsevens(bot, trigger):
     bot.db.set_nick_value(gambler, "currency_amount", spend_on_bet)
 
     # Set odds or evens
-    if user_choice == "odd" or user_choice == "even":
+    if user_choice in ("odd", "even"):
         pass
-    elif user_choice == "o" or user_choice == "odds":
+    elif user_choice in ("o", "odds"):
         user_choice = "odd"
-    elif user_choice == "e" or user_choice == "evens":
+    elif user_choice in ("e", "evens"):
         user_choice = "even"
 
-    """# Flip coin and complete transaction
-    heads_or_tails = ["heads", "tails"]
-    flip_result = random.choice(heads_or_tails)"""
-
-    # # Roll and complete transaction
+    # Roll and complete transaction
     roll_num = random.randint(0, 100)
     if (roll_num % 2) == 0:
         roll = "even"
