@@ -296,7 +296,8 @@ def claim_money(bot, trigger):
         bot.db.set_nick_value(target, "currency_amount", claim)
         balance = "${:,}".format(claim)
         return bot.reply(
-            "New balance: {}. Don't forget to claim again in an hour!".format(bold(balance)))
+            "New balance: {}. Don't forget to claim again in an hour!".format(
+                bold(balance)))
     else:
         to_1_hour = 3600 - check_1_hour
         time_remaining = str(timedelta(seconds=round(to_1_hour)))
