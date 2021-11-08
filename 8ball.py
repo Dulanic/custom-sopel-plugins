@@ -1,4 +1,4 @@
-from sopel import plugin, formatting
+from sopel import plugin
 import random
 
 
@@ -13,8 +13,7 @@ def eightball(bot, trigger):
             msg = "I need something to foretell!"
         except KeyError:
             msg = "How did you do that?!"
-        bot.reply(msg)
-        return
+        return bot.reply(msg)
 
     messages = [
         # Positive Replies (10)
