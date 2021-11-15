@@ -4,14 +4,21 @@ import requests
 import rule34
 
 
+def nsfw_check(bot, trigger):
+    # TODO: Make this configurable
+    if trigger.is_privmsg or trigger.sender == "#nsfw":
+        msg = None
+    else:
+        msg = "This command is only usable in the #nsfw channel."
+    return msg
+
+
 @plugin.commands("ass", "butt", "booty")
 def ass_api(bot, trigger):
     """Posts a random ass pic. #nsfw only."""
-    if trigger.is_privmsg or trigger.sender == "#nsfw":
-        pass
-    else:
-        bot.reply("This command is only usable in the #nsfw channel.")
-        return
+    msg = nsfw_check(bot, trigger)
+    if msg:
+        return bot.reply(msg)
 
     url = "http://api.obutts.ru/butts/0/1/random"
     try:
@@ -25,11 +32,9 @@ def ass_api(bot, trigger):
 @plugin.commands("boobs", "tits", "titties")
 def boobs_api(bot, trigger):
     """Posts a random boobs pic. #nsfw only."""
-    if trigger.is_privmsg or trigger.sender == "#nsfw":
-        pass
-    else:
-        bot.reply("This command is only usable in the #nsfw channel.")
-        return
+    msg = nsfw_check(bot, trigger)
+    if msg:
+        return bot.reply(msg)
 
     url = "http://api.oboobs.ru/boobs/0/1/random"
     try:
@@ -49,11 +54,9 @@ reddit_headers = {
 @plugin.command("rboobs")
 def reddit_boobs(bot, trigger):
     """Posts a random boob pic from Reddit. #nsfw only."""
-    if trigger.is_privmsg or trigger.sender == "#nsfw":
-        pass
-    else:
-        bot.reply("This command is only usable in the #nsfw channel.")
-        return
+    msg = nsfw_check(bot, trigger)
+    if msg:
+        return bot.reply(msg)
 
     url = "https://old.reddit.com/search.json"
     params = {
@@ -72,11 +75,9 @@ def reddit_boobs(bot, trigger):
 @plugin.command("rass")
 def reddit_ass(bot, trigger):
     """Posts a random ass pic from Reddit. #nsfw only."""
-    if trigger.is_privmsg or trigger.sender == "#nsfw":
-        pass
-    else:
-        bot.reply("This command is only usable in the #nsfw channel.")
-        return
+    msg = nsfw_check(bot, trigger)
+    if msg:
+        return bot.reply(msg)
 
     url = "https://old.reddit.com/search.json"
     params = {
@@ -100,11 +101,9 @@ r34 = rule34.Sync()
 def rule34_cmd(bot, trigger):
     """Search rule34.xxx by tags. You can type multiple words to chain together tags.
     Full Tag List: rule34.xxx/index.php?page=tags&s=list"""
-    if trigger.is_privmsg or trigger.sender == "#nsfw":
-        pass
-    else:
-        bot.reply("This command is only usable in the #nsfw channel.")
-        return
+    msg = nsfw_check(bot, trigger)
+    if msg:
+        return bot.reply(msg)
 
     search_term = trigger.group(2)
 
