@@ -3413,3 +3413,8 @@ def sackbot_latest(bot, trigger):
 @plugin.rule("^F$")
 def pay_respects(bot, trigger):
     bot.action("pays respects")
+
+
+@plugin.rule("^X$")
+def x_to_doubt(bot, trigger):
+    bot.action("doubts")
