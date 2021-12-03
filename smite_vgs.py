@@ -2,9 +2,8 @@
 # \x0311 – Start Light Cyan
 # \u200B – ZWSP
 # \x0315 – Start Light Grey
-from sopel import plugin, formatting
+from sopel import plugin
 import random
-import unicodedata
 
 
 # <VA – Attack>
