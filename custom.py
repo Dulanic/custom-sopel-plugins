@@ -3328,21 +3328,26 @@ def ineedahero(bot, trigger):
 @plugin.command("mdma")
 def mdma(bot, trigger):
     """Can also be triggered with '!MDMA' anywhere in a message."""
-    bot.say("https://p.actionsack.com/a/MDMA.ogg")
+    bot.say("https://p.actionsack.com/a/MDMA.flac")
 
 
 @plugin.search("!albatraoz")
 @plugin.command("albatraoz")
 def albatraoz(bot, trigger):
     """Can also be triggered with '!albatraoz' anywhere in a message."""
-    bot.say("https://p.actionsack.com/a/albatraoz.ogg")
+    bot.say("https://p.actionsack.com/a/albatraoz.flac")
 
 
 @plugin.search("!swing")
 @plugin.command("swing")
 def little_swing(bot, trigger):
     """Can also be triggered with '!swing' anywhere in a message."""
-    bot.say("https://p.actionsack.com/a/swing.ogg")
+    bot.say("https://p.actionsack.com/a/swing.flac")
+
+
+@plugin.search("!rimg") # 'rimg' command taken already, so search only
+def rave_in_my_garage(bot, trigger):
+    bot.say("https://p.actionsack.com/a/RIMG.flac")
 
 
 @plugin.search("Let it go!")
