@@ -3350,6 +3350,11 @@ def rave_in_my_garage(bot, trigger):
     bot.say("https://p.actionsack.com/a/RIMG.flac")
 
 
+@plugin.search("!fun") # not going to reserve 'fun' command
+def lsn_fun(bot, trigger):
+    bot.say("https://p.actionsack.com/a/fun.flac")
+
+
 @plugin.search("Let it go!")
 def let_it_go(bot, trigger):
     bot.say("https://p.actionsack.com/v/letitgo.mp4")
@@ -3423,3 +3428,8 @@ def pay_respects(bot, trigger):
 @plugin.rule("^X$")
 def x_to_doubt(bot, trigger):
     bot.action("doubts")
+
+
+@plugin.search(r"\bpiracy\b")
+def piracy(bot, trigger):
+    bot.say("https://p.actionsack.com/v/piracy.mp4")
