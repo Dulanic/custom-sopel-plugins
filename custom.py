@@ -794,7 +794,7 @@ def murica(bot, trigger):
 def knock(bot, trigger):
     """RP: America knocks on your door...
     Can also be triggered with '!knock' anywhere in a message."""
-    bot.say("https://p.actionsack.com/murica/knockknock.gif")
+    bot.say("https://p.actionsack.com/murica/knockknock.webp")
 
 
 @plugin.command("pledge")
