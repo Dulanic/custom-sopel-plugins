@@ -4,6 +4,7 @@ import base64
 
 @plugin.command("b64e")
 @plugin.example(".b64e I love you.")
+@plugin.output_prefix("[Base64] ")
 def base64_encode(bot, trigger):
     """Encodes a message into base64."""
     if not trigger.group(2):
@@ -18,6 +19,7 @@ def base64_encode(bot, trigger):
 
 @plugin.command("b64d")
 @plugin.example(".b64d V293ISBNdWNoIHNlY3JldC4=")
+@plugin.output_prefix("[Base64] ")
 def base64_decode(bot, trigger):
     """Decodes a base64 string."""
     if not trigger.group(2):
