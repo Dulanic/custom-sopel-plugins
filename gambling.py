@@ -198,6 +198,8 @@ def delete_money(bot, trigger):
     if not target:
         return bot.reply("I need someone's wealth to eliminate.")
 
+    target = tools.Identifier(target)
+
     bot.db.delete_nick_value(target, "currency_amount")
     bot.db.delete_nick_value(target, "currency_timely")
     bot.say("{}'s wealth has been deleted from existence.".format(target))
@@ -608,6 +610,7 @@ def gamble_leadboard(bot, trigger):
     else:
         return bot.reply("This command can only be used in #casino")
 
+    """
     try:
         # Connect to DB
         con = sqlite3.connect("/home/xnaas/sackbot2/sopel/default.db")
@@ -622,6 +625,11 @@ def gamble_leadboard(bot, trigger):
     except sqlite3.OperationalError:
         return bot.reply(
             "Error querying database...most likely no one has gambled yet. Try `.iwantmoney` to get started.")
+    """
+
+    # Do it through Sopel, not SQL
+    # Need to add back error handling later
+    lb_base = bot.db.execute("SELECT canonical, key, value FROM nick_values a join nicknames b on a.nick_id = b.nick_id WHERE key='currency_amount' ORDER BY cast(value as int) DESC;")
 
     # go through db for results
     for index, person in enumerate(lb_base):
