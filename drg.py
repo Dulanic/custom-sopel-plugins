@@ -5,7 +5,7 @@ import random
 
 @plugin.command("salute")
 @plugin.rule("^V$")
-@plugin.search("!salute", "rock and stone")
+@plugin.search("!salute", "rock and stone", "⛏️")
 def drg_salute(bot, trigger):
     if trigger.sender == "#drg":
         pass
