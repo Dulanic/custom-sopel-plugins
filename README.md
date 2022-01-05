@@ -71,7 +71,7 @@ Uses [PlexAPI](https://github.com/pkkid/python-plexapi) to interface your Sopel 
 
 
 ## [thesaurus.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/thesaurus.py)
-Uses [Merriam-Webster's Collegiate Thesaurus API](https://www.dictionaryapi.com/) to query synonyms and antonyms.
+Uses [Merriam-Webster's Collegiate Thesaurus API](https://www.dictionaryapi.com/products/api-collegiate-thesaurus) to query synonyms and antonyms.
 
 
 ## [yourmom.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/yourmom.py)
