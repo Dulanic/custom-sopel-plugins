@@ -70,6 +70,10 @@ Adds [Smite's VGS](https://smite.gamepedia.com/Voice_Guided_System) to Sopel.
 Uses [PlexAPI](https://github.com/pkkid/python-plexapi) to interface your Sopel bot with your Plex server.
 
 
+## [thesaurus.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/thesaurus.py)
+Uses [Merriam-Webster's Collegiate Thesaurus API](https://www.dictionaryapi.com/) to query synonyms and antonyms.
+
+
 ## [yourmom.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/yourmom.py)
 Posts a random joke from [yourmom.txt](https://github.com/xnaas/custom-sopel-plugins/blob/master/yourmom.txt).
 
