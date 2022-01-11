@@ -940,7 +940,7 @@ def batdoge(bot, trigger):
 
 @plugin.search("slow down")
 def slowdown(bot, trigger):
-    bot.say("https://www.youtube.com/watch?v=fJdqw-JzW08")
+    bot.say("https://p.actionsack.com/a/slowdown.flac")
 
 
 @plugin.require_admin
