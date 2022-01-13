@@ -3121,7 +3121,7 @@ def upvote(bot, trigger):
     bot.say(random.choice(upvotes))
 
 
-@plugin.rule(r"^apologize\.(\s$|$)")
+@plugin.search("!apologize")
 def apologize(bot, trigger):
     bot.say("https://p.actionsack.com/misc/apologize.webp")
 
