@@ -3434,3 +3434,8 @@ def x_to_doubt(bot, trigger):
 @plugin.search(r"\bpiracy\b")
 def piracy(bot, trigger):
     bot.say("https://p.actionsack.com/v/piracy.mp4")
+
+
+@plugin.rule("^🦆$")
+def duck_gif(bot, trigger):
+    bot.say("https://p.actionsack.com/emoji/duck.webp")
