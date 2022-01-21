@@ -455,7 +455,7 @@ def gamble_betroll(bot, trigger):
     bot.reply(msg)
 
 
-@plugin.command("oe")
+@plugin.command("oe", "eo")
 @plugin.example(".oe 10 e")
 def gamble_oddsevens(bot, trigger):
     """Wager X amount of money on (o)dds or (e)vens. Winning will net you double your bet."""
