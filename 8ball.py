@@ -1,5 +1,5 @@
 from sopel import plugin
-import random
+import secrets
 
 
 @plugin.commands('8', '8ball')
@@ -40,4 +40,4 @@ def eightball(bot, trigger):
         "Outlook not so good.",
         "Very doubtful."
     ]
-    bot.reply(random.choice(messages))
+    bot.reply(secrets.choice(messages))
