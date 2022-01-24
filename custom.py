@@ -1,6 +1,5 @@
 from sopel import plugin, formatting
-import random
-import unicodedata
+import secrets
 
 
 @plugin.search("!nod")
@@ -58,7 +57,7 @@ def retarded(bot, trigger):
         "https://p.actionsack.com/retard/retarded.webp",
         "https://p.actionsack.com/retard/△.webp"
     ]
-    bot.say(random.choice(retard))
+    bot.say(secrets.choice(retard))
 
 
 @plugin.search("rekt")
@@ -101,7 +100,7 @@ def rekt(bot, trigger):
         "https://p.actionsack.com/rekt/watergun.gif",
         "https://w.wiki/n9f"
     ]
-    bot.say(random.choice(rekt))
+    bot.say(secrets.choice(rekt))
 
 
 @plugin.rule("^420.*")
@@ -142,7 +141,7 @@ def fourtwenty(bot, trigger):
         "https://p.actionsack.com/420/toystory.webp",
         "https://p.actionsack.com/420/wednesday.webp"
     ]
-    bot.say(random.choice(fourtwozero))
+    bot.say(secrets.choice(fourtwozero))
 
 
 @plugin.search(":retardeyes:")
@@ -167,7 +166,7 @@ def thanks(bot, trigger):
         "https://p.actionsack.com/thx/t.hanks.mp4",
         "https://p.actionsack.com/thx/thankyou.mp4"
     ]
-    bot.say(random.choice(thanks))
+    bot.say(secrets.choice(thanks))
 
 
 @plugin.rule("^😢$")
@@ -190,7 +189,7 @@ def crying(bot, trigger):
         "X﹏X",
         "T_T"
     ]
-    bot.say(random.choice(crying))
+    bot.say(secrets.choice(crying))
 
 
 @plugin.search("!pat(?!ch)")
@@ -204,7 +203,7 @@ def pat(bot, trigger):
         "https://p.actionsack.com/pat/04.gif",
         "https://p.actionsack.com/pat/05.gif"
     ]
-    bot.say(random.choice(pat_gifs))
+    bot.say(secrets.choice(pat_gifs))
 
 
 @plugin.search("cry me a river")
@@ -227,7 +226,7 @@ def book(bot, trigger):
         "https://p.actionsack.com/mike/📖/📖+.jpg",
         "https://p.actionsack.com/mike/📖/📖🐇.jpg"
     ]
-    bot.say(random.choice(book))
+    bot.say(secrets.choice(book))
 
 
 @plugin.rule("^8D$")
@@ -252,7 +251,7 @@ def adapters(bot, trigger):
         "https://p.actionsack.com/adapters/01.webp",
         "https://p.actionsack.com/adapters/02.webp"
     ]
-    bot.say(random.choice(adapters))
+    bot.say(secrets.choice(adapters))
 
 
 @plugin.search(r"accident\b")
@@ -321,7 +320,7 @@ def bait(bot, trigger):
         "https://p.actionsack.com/bait/whose-bait.jpg",
         "https://p.actionsack.com/bait/wtf-bait.jpg"
     ]
-    bot.say(random.choice(bait))
+    bot.say(secrets.choice(bait))
 
 
 @plugin.search("backhand")
@@ -368,7 +367,7 @@ def deeznutz(bot, trigger):
         "https://p.actionsack.com/nutz/prez.webp",
         "https://p.actionsack.com/nutz/wood.webp"
     ]
-    bot.say(random.choice(deez_nutz))
+    bot.say(secrets.choice(deez_nutz))
 
 
 @plugin.command("lenny", "rlenny")
@@ -394,7 +393,7 @@ def rlenny(bot, trigger):
         r"¯\_( ͡° ͜ʖ ͡°)_/¯",
         "(͡ ͡° ͜ つ ͡͡°)"
     ]
-    bot.say(random.choice(rlenny))
+    bot.say(secrets.choice(rlenny))
 
 
 @plugin.command("shrug")
@@ -418,7 +417,7 @@ def prank(bot, trigger):
         "https://p.actionsack.com/prank/prank01.png",
         "https://p.actionsack.com/prank/prank02.png"
     ]
-    bot.say(random.choice(prank))
+    bot.say(secrets.choice(prank))
 
 
 @plugin.rule(r"^\?{3,}$")
@@ -547,7 +546,7 @@ def football(bot, trigger):
         "Torque [Construction Noise] Lewith",
         "Tyroil Smoochie-Wallace"
     ]
-    bot.say(random.choice(football))
+    bot.say(secrets.choice(football))
 
 
 @plugin.search(r"🍍(|\s)🍕")
@@ -568,7 +567,7 @@ def triggered(bot, trigger):
         "https://p.actionsack.com/triggered/triggered.webp",
         "https://p.actionsack.com/triggered/feek.webp"
     ]
-    bot.say(random.choice(triggered))
+    bot.say(secrets.choice(triggered))
 
 
 @plugin.search("to be fair(?!ly)")
@@ -627,7 +626,7 @@ def tb(bot, trigger):
         "If I can just overclock the UNIX django, I can BASIC the DDOS root. Damn. No Dice. But wait...if I disencrypt their kilobytes with a backdoor handshake then...jackpot!",
         "https://p.actionsack.com/v/Rockwell_Retro_Encabulator.mp4"
     ]
-    bot.say(random.choice(tb), max_messages=2)
+    bot.say(secrets.choice(tb), max_messages=2)
 
 
 @plugin.command("jolly")
@@ -662,7 +661,7 @@ def fgr(bot, trigger):
         "https://p.actionsack.com/fgr/hang.gif",
         "https://p.actionsack.com/fgr/stewie-gun.jpg"
     ]
-    bot.say(random.choice(fgr))
+    bot.say(secrets.choice(fgr))
 
 
 @plugin.search("!adr")
@@ -739,7 +738,7 @@ def jordan(bot, trigger):
         "https://p.actionsack.com/jordan/ddosvariants.png",
         "https://p.actionsack.com/jordan/littledick.png"
     ]
-    bot.say(random.choice(jordan))
+    bot.say(secrets.choice(jordan))
 
 
 @plugin.search("!!cockhunter")
@@ -753,7 +752,7 @@ def twerk(bot, trigger):
         "https://p.actionsack.com/twerk/ash.gif",
         "https://p.actionsack.com/twerk/nose.gif"
     ]
-    bot.say(random.choice(twerkit))
+    bot.say(secrets.choice(twerkit))
 # === NSFW Commands ===
 
 
@@ -786,7 +785,7 @@ def murica(bot, trigger):
         "https://p.actionsack.com/murica/kiss.webp",
         "https://p.actionsack.com/murica/knockknock.webp"
     ]
-    bot.say(random.choice(murica))
+    bot.say(secrets.choice(murica))
 
 
 @plugin.search("!knock")
@@ -831,7 +830,7 @@ def putin(bot, trigger):
         "https://p.actionsack.com/putin/ritz.gif",
         "https://p.actionsack.com/putin/🐻.mp4"
     ]
-    bot.say(random.choice(putin))
+    bot.say(secrets.choice(putin))
 
 
 @plugin.command("aidsclub")
@@ -902,7 +901,7 @@ def dealwithit(bot, trigger):
         "https://p.actionsack.com/deal/squirtle.webp",
         "https://p.actionsack.com/deal/tf2.webp"
     ]
-    bot.say(random.choice(deal))
+    bot.say(secrets.choice(deal))
 
 
 @plugin.search("!mindjack")
@@ -920,7 +919,7 @@ def doge(bot, trigger):
         "https://p.actionsack.com/doge/dogemine.webp",
         "https://p.actionsack.com/doge/skeledoge.webp"
     ]
-    bot.say(random.choice(doge))
+    bot.say(secrets.choice(doge))
 
 
 @plugin.search("!dogemine")
@@ -964,7 +963,7 @@ def sockbot(bot, trigger):
         "Sockbot: gone, but not forgotten.",
         "Good riddance to Discord, but RIP Sockbot. 😢"
     ]
-    bot.say(random.choice(sockbot))
+    bot.say(secrets.choice(sockbot))
 
 
 @plugin.search("!brony")
@@ -992,7 +991,7 @@ def banned(bot, trigger):
         "https://p.actionsack.com/banned/xbox.png",
         "https://p.actionsack.com/banned/xnaas.gif"
     ]
-    bot.say(random.choice(banned))
+    bot.say(secrets.choice(banned))
 
 
 @plugin.search("boycott")
@@ -1012,7 +1011,7 @@ def censor(bot, trigger):
         "https://p.actionsack.com/censored/spider.webp",
         "https://p.actionsack.com/censored/tasian.webp"
     ]
-    bot.say(random.choice(censor))
+    bot.say(secrets.choice(censor))
 
 
 @plugin.rule("^(P|B|Ch|D|S|W)ing!$")
@@ -1121,7 +1120,7 @@ def fuckyou(bot, trigger):
         "https://p.actionsack.com/fuck/you/ww-mib.webp",
         "https://p.actionsack.com/fuck/you/☂.webp"
     ]
-    bot.say(random.choice(fuckyou))
+    bot.say(secrets.choice(fuckyou))
 
 
 @plugin.search("(gfy(?!c)|go fuck yourself)")
@@ -1137,7 +1136,7 @@ def gfy(bot, trigger):
         "https://p.actionsack.com/fuck/urself/rugrats.webp",
         "https://p.actionsack.com/fuck/urself/science.webp"
     ]
-    bot.say(random.choice(gfy))
+    bot.say(secrets.choice(gfy))
 
 
 @plugin.rule(r"^What\sthe\sfuck\?$")
@@ -1171,7 +1170,7 @@ def ftge(bot, trigger):
         "https://p.actionsack.com/fuck/ftge-a.webp",
         "https://p.actionsack.com/fuck/ftge.webp"
     ]
-    bot.say(random.choice(ftge))
+    bot.say(secrets.choice(ftge))
 
 
 @plugin.search("fooled you")
@@ -1186,7 +1185,7 @@ def fiteme(bot, trigger):
         "https://p.actionsack.com/fite/phones.gif",
         "https://p.actionsack.com/fite/🌮.gif"
     ]
-    bot.say(random.choice(fiteme))
+    bot.say(secrets.choice(fiteme))
 
 
 @plugin.rule(r"^Found out I'm gay(|\.|\s)$")
@@ -1209,7 +1208,7 @@ def faggot(bot, trigger):
         "Faggot!",
         "(/¯◡ ‿ ◡)/¯ ~~~~ Abracadabra, you're a faggot!"
     ]
-    bot.say(random.choice(faggot))
+    bot.say(secrets.choice(faggot))
 
 
 @plugin.rule("^Gay!$")
@@ -1219,7 +1218,7 @@ def gayexclamation(bot, trigger):
         "https://p.actionsack.com/gay/sayshere.webp",
         "https://p.actionsack.com/gay/shit.webp"
     ]
-    bot.say(random.choice(gayexclamation))
+    bot.say(secrets.choice(gayexclamation))
 
 
 @plugin.search("everything's fucked")
@@ -1276,7 +1275,7 @@ def datboi(bot, trigger):
         "https://p.actionsack.com/oshit/wat.png",
         "https://p.actionsack.com/oshit/woodwork.png"
     ]
-    bot.say(random.choice(oshit))
+    bot.say(secrets.choice(oshit))
 
 
 @plugin.command("spl")
@@ -1337,7 +1336,7 @@ def clickbait(bot, trigger):
         "How freeing an escaped convict turned this little boy into a MILLIONAIRE!",
         "What This Man Learned From Having Sex With 365 Guys In One Year"
     ]
-    bot.say(random.choice(clickbait))
+    bot.say(secrets.choice(clickbait))
 
 
 @plugin.search("COVID19!")
@@ -1368,7 +1367,7 @@ def dbc(bot, trigger):
         "https://p.actionsack.com/dbc/dbc09.png",
         "https://p.actionsack.com/dbc/dbc10.png"
     ]
-    bot.say(random.choice(dbc))
+    bot.say(secrets.choice(dbc))
 
 
 @plugin.rule(r"^Deus\svult!$")
@@ -1385,7 +1384,7 @@ def fake(bot, trigger):
         "https://p.actionsack.com/fake/faux.png",
         "https://p.actionsack.com/fake/kazoo.gif"
     ]
-    bot.say(random.choice(fake))
+    bot.say(secrets.choice(fake))
 
 
 @plugin.search("!erect")
@@ -1430,7 +1429,7 @@ def hue(bot, trigger):
         "https://p.actionsack.com/hue/owls.gif",
         "https://p.actionsack.com/hue/sdc.gif"
     ]
-    bot.say(random.choice(hue))
+    bot.say(secrets.choice(hue))
 
 
 @plugin.rule(r"^I am the machine\.(\s$|$)")
@@ -1454,7 +1453,7 @@ def idgaf(bot, trigger):
         "https://p.actionsack.com/idgaf/20thcentury.webp",
         "https://p.actionsack.com/idgaf/nophux.webp"
     ]
-    bot.say(random.choice(idgaf))
+    bot.say(secrets.choice(idgaf))
 
 
 @plugin.search("hugh mungus")
@@ -1490,7 +1489,7 @@ def killme(bot, trigger):
         "https://p.actionsack.com/killme/char.webp",
         "https://p.actionsack.com/killme/pika.webp",
     ]
-    bot.say(random.choice(killme))
+    bot.say(secrets.choice(killme))
 
 
 @plugin.rule(r".*((?<!\w)k(y|m)s(?!\w)|kill\syourself).*")
@@ -1519,7 +1518,7 @@ def kys(bot, trigger):
         "https://p.actionsack.com/kys/window.webp",
         "https://lostallhope.com/"
     ]
-    bot.say(random.choice(kys))
+    bot.say(secrets.choice(kys))
 
 
 @plugin.search("!music")
@@ -1541,7 +1540,7 @@ def legal(bot, trigger):
         "https://p.actionsack.com/misc/👍LEGAL👍.mp4",
         "https://p.actionsack.com/misc/🕺LEGAL🕺.mp4"
     ]
-    bot.say(random.choice(legal))
+    bot.say(secrets.choice(legal))
 
 
 @plugin.command("judge")
@@ -1562,7 +1561,7 @@ def judge(bot, trigger):
         bot.reply(msg)
         return
 
-    bot.say("{} is {}".format(text, random.choice(judges)))
+    bot.say("{} is {}".format(text, secrets.choice(judges)))
 
 
 @plugin.rule(r"^wat\b")
@@ -1599,7 +1598,7 @@ def wat(bot, trigger):
         "https://p.actionsack.com/wat/watwatwatwat.webp",
         "https://p.actionsack.com/wat/wow.webp"
     ]
-    bot.say(random.choice(wat))
+    bot.say(secrets.choice(wat))
 
 
 @plugin.search("✝")
@@ -1623,7 +1622,7 @@ def windowsten(bot, trigger):
         "https://p.actionsack.com/W10/stuck.png",
         "https://p.actionsack.com/W10/updates.webm"
     ]
-    bot.say(random.choice(w10))
+    bot.say(secrets.choice(w10))
 
 
 @plugin.search("!wizard", "wazard")
@@ -1643,7 +1642,7 @@ def wow(bot, trigger):
         "https://p.actionsack.com/wow/wow!!.mp4",
         "https://p.actionsack.com/wow/wow.webp"
     ]
-    bot.say(random.choice(wow))
+    bot.say(secrets.choice(wow))
 
 
 @plugin.search("whoa(?!mi)")
@@ -1667,7 +1666,7 @@ def uhh(bot, trigger):
         "https://p.actionsack.com/uh/uh04.webp",
         "https://p.actionsack.com/uh/uhbytes.webp"
     ]
-    bot.say(random.choice(uhh))
+    bot.say(secrets.choice(uhh))
 
 
 @plugin.search("swiggity swooty")
@@ -1676,7 +1675,7 @@ def swiggityswooty(bot, trigger):
         "https://p.actionsack.com/swiggityswooty/birb.gif",
         "https://p.actionsack.com/swiggityswooty/fatman.gif"
     ]
-    bot.say(random.choice(swiggity))
+    bot.say(secrets.choice(swiggity))
 
 
 @plugin.search("praise the sun")
@@ -1706,7 +1705,7 @@ def son(bot, trigger):
         "https://p.actionsack.com/son/teslas.webp",
         "https://p.actionsack.com/son/wieners.webp"
     ]
-    bot.say(random.choice(son))
+    bot.say(secrets.choice(son))
 
 
 @plugin.rule("^sh{2,}$")
@@ -1718,7 +1717,7 @@ def shh(bot, trigger):
         "https://p.actionsack.com/shh/stfub.mp4",
         "https://p.actionsack.com/shh/tlou.jpg"
     ]
-    bot.say(random.choice(shhh))
+    bot.say(secrets.choice(shhh))
 
 
 @plugin.search("sex robot")
@@ -1751,7 +1750,7 @@ def rimshot(bot, trigger):
         "https://p.actionsack.com/rimshot/mlp.gif",
         "https://p.actionsack.com/rimshot/rimshot.gif"
     ]
-    bot.say(random.choice(rim_shot))
+    bot.say(secrets.choice(rim_shot))
 
 
 @plugin.search("!newhouse")
@@ -1780,7 +1779,7 @@ def nickcage(bot, trigger):
         "https://p.actionsack.com/cage/side-to-side.webp",
         "https://p.actionsack.com/cage/wink.webp"
     ]
-    bot.say(random.choice(nick_cage))
+    bot.say(secrets.choice(nick_cage))
 
 
 @plugin.search("!va")
@@ -1809,7 +1808,7 @@ def voiceactor(bot, trigger):
         "My animation reel is good. You cannot fool me... You cannot weaken my defenses here... I acted those characters all on the fly and made up the scripts on the fly too... I think they are exceptional... Imagine when I actually TRY to make the proper reels... Why must I keep explaining myself to you narrow minded fools?! I can be such a wonderful and charming man... Yet, now you have made me into the dragon!",
         "https://p.actionsack.com/misc/'voiceactor'.png"
     ]
-    bot.say(random.choice(voice_actor), max_messages=3)
+    bot.say(secrets.choice(voice_actor), max_messages=3)
 
 
 @plugin.search("!baby")
@@ -1825,7 +1824,7 @@ def baby(bot, trigger):
         "https://p.actionsack.com/baby/rolling.gif",
         "https://p.actionsack.com/baby/spider.gif"
     ]
-    bot.say(random.choice(baby_pics))
+    bot.say(secrets.choice(baby_pics))
 
 
 @plugin.search("boom!")
@@ -1893,7 +1892,7 @@ def dance(bot, trigger):
         "https://p.actionsack.com/dance/jontron.gif",
         "https://p.actionsack.com/dance/skeleton.gif"
     ]
-    bot.say(random.choice(dance_gifs))
+    bot.say(secrets.choice(dance_gifs))
 
 
 @plugin.command("doomanimal")
@@ -1925,7 +1924,7 @@ def itwasme(bot, trigger):
         "https://p.actionsack.com/dio/sombra.png",
         "https://p.actionsack.com/dio/trumpva.gif"
     ]
-    bot.say(random.choice(me_dio))
+    bot.say(secrets.choice(me_dio))
 
 
 @plugin.rule(r"^god\sbless\s(.*)")
@@ -1939,7 +1938,7 @@ def hailsatan(bot, trigger):
         "https://p.actionsack.com/satan/mii.webm",
         "https://p.actionsack.com/satan/pooh.mp4"
     ]
-    bot.say(random.choice(hail_satan))
+    bot.say(secrets.choice(hail_satan))
 
 
 @plugin.search("have a seat")
@@ -1953,7 +1952,7 @@ def jews(bot, trigger):
         "https://p.actionsack.com/jews/blame.webp",
         "https://p.actionsack.com/jews/donate.webp"
     ]
-    bot.say(random.choice(jew_pics))
+    bot.say(secrets.choice(jew_pics))
 
 
 @plugin.rule("^k$")
@@ -1976,7 +1975,7 @@ def kay(bot, trigger):
         "https://p.actionsack.com/k/vldlk.webp",
         "https://p.actionsack.com/k/watch.webp"
     ]
-    bot.say(random.choice(kk))
+    bot.say(secrets.choice(kk))
 
 
 @plugin.search("!words")
@@ -1995,7 +1994,7 @@ def kiki(bot, trigger):
         formatting.monospace("[4:44 PM] Kiki: U sound so far right now"),
         "I S M A E L  C H I A  T O R R E S"
     ]
-    bot.say(random.choice(kiki))
+    bot.say(secrets.choice(kiki))
 
 
 @plugin.search("major spoiler")
@@ -2012,7 +2011,7 @@ def navyseal(bot, trigger):
         "https://p.actionsack.com/misc/navyseal.mp4",
         "What the fuck did you just fucking say about me, you little bitch? I'll have you know I graduated top of my class in the Navy Seals, and I've been involved in numerous secret raids on Al-Quaeda, and I have over 300 confirmed kills. I am trained in gorilla warfare and I'm the top sniper in the entire US armed forces. You are nothing to me but just another target. I will wipe you the fuck out with precision the likes of which has never been seen before on this Earth, mark my fucking words. You think you can get away with saying that shit to me over the Internet? Think again, fucker. As we speak I am contacting my secret network of spies across the USA and your IP is being traced right now so you better prepare for the storm, maggot. The storm that wipes out the pathetic little thing you call your life. You're fucking dead, kid. I can be anywhere, anytime, and I can kill you in over seven hundred ways, and that's just with my bare hands. Not only am I extensively trained in unarmed combat, but I have access to the entire arsenal of the United States Marine Corps and I will use it to its full extent to wipe your miserable ass off the face of the continent, you little shit. If only you could have known what unholy retribution your little ''clever'' comment was about to bring down upon you, maybe you would have held your fucking tongue. But you couldn't, you didn't, and now you're paying the price, you goddamn idiot. I will shit fury all over you and you will drown in it. You're fucking dead, kiddo."
     ]
-    bot.say(random.choice(navy_seal), max_messages=4)
+    bot.say(secrets.choice(navy_seal), max_messages=4)
 
 
 @plugin.search("racist")
@@ -2027,7 +2026,7 @@ def racist(bot, trigger):
         "https://p.actionsack.com/racist/shake.gif",
         "https://p.actionsack.com/racist/wash.png"
     ]
-    bot.say(random.choice(racists))
+    bot.say(secrets.choice(racists))
 
 
 @plugin.search("nigger")
@@ -2040,7 +2039,7 @@ def niggers(bot, trigger):
         "https://p.actionsack.com/racist/nig/welfare.png"
     ]
     if trigger.is_privmsg or trigger.sender == "#nsfw":
-        bot.say(random.choice(niggers))
+        bot.say(secrets.choice(niggers))
 
 
 @plugin.search("pasta disasta")
@@ -2059,7 +2058,7 @@ def panic(bot, trigger):
         "https://p.actionsack.com/panic/05.webp",
         "https://p.actionsack.com/panic/06.webp"
     ]
-    bot.say(random.choice(panic_room))
+    bot.say(secrets.choice(panic_room))
 
 
 @plugin.search("my brand")
@@ -2074,7 +2073,7 @@ def nms(bot, trigger):
         "https://p.actionsack.com/nms/legit.gif",
         "https://p.actionsack.com/nms/mike.png"
     ]
-    bot.say(random.choice(no_mans_sky))
+    bot.say(secrets.choice(no_mans_sky))
 
 
 @plugin.rule(r"^(nice|sick)\sgif.*")
@@ -2099,7 +2098,7 @@ def neat(bot, trigger):
         "https://p.actionsack.com/neat/spiderman.gif",
         "https://p.actionsack.com/neat/stare.gif"
     ]
-    bot.say(random.choice(neat))
+    bot.say(secrets.choice(neat))
 
 
 @plugin.require_admin
@@ -2109,7 +2108,7 @@ def myserver(bot, trigger):
         "https://p.actionsack.com/server/irl.jpg",
         "https://p.actionsack.com/server/weekend.png"
     ]
-    bot.say(random.choice(my_server))
+    bot.say(secrets.choice(my_server))
 
 
 @plugin.search(r"(?<!\w)moist(?!\w)")
@@ -2118,7 +2117,7 @@ def moist(bot, trigger):
         "https://p.actionsack.com/moist/asian.jpg",
         "https://p.actionsack.com/moist/old.jpg"
     ]
-    bot.say(random.choice(moist))
+    bot.say(secrets.choice(moist))
 
 
 @plugin.search("!manga")
@@ -2144,7 +2143,7 @@ def imadethis(bot, trigger):
         "https://p.actionsack.com/OC/iPickle.png",
         "https://p.actionsack.com/OC/starwars.png"
     ]
-    bot.say(random.choice(iMadeThis))
+    bot.say(secrets.choice(iMadeThis))
 
 
 @plugin.search(r"(?<!\w)eat shit")
@@ -2168,7 +2167,7 @@ def hwat(bot, trigger):
         "https://p.actionsack.com/wat/hwat01.webp",
         "https://p.actionsack.com/wat/hwat02.webp"
     ]
-    bot.say(random.choice(hwat))
+    bot.say(secrets.choice(hwat))
 
 
 @plugin.search(r"I see you(?!('|r))")
@@ -2206,7 +2205,7 @@ def eyes(bot, trigger):
         "https://p.actionsack.com/👀/walrus.png",
         "https://p.actionsack.com/👀/woody.png"
     ]
-    bot.say(random.choice(eyes))
+    bot.say(secrets.choice(eyes))
 
 
 @plugin.search(r"💩(|\s)💩")
@@ -2217,7 +2216,7 @@ def shit(bot, trigger):
         "https://p.actionsack.com/💩/McCafé.gif",
         "https://p.actionsack.com/💩/🚽.gif"
     ]
-    bot.say(random.choice(shit_gifs))
+    bot.say(secrets.choice(shit_gifs))
 
 
 @plugin.search("!tesla")
@@ -2296,7 +2295,7 @@ def vapenaysh(bot, trigger):
         "https://p.actionsack.com/vn/woodwork.png",
         "https://p.actionsack.com/vn/wut.png"
     ]
-    bot.say(random.choice(vape_naysh))
+    bot.say(secrets.choice(vape_naysh))
 
 
 @plugin.search("🦈")
@@ -2316,7 +2315,7 @@ def sharku(bot, trigger):
         "https://p.actionsack.com/🦈/leash.webp",
         "https://p.actionsack.com/🦈/pet.webp"
     ]
-    bot.say(random.choice(sharks))
+    bot.say(secrets.choice(sharks))
 
 
 @plugin.search(r"🦇(|\s)👨")
@@ -2333,7 +2332,7 @@ def batman(bot, trigger):
         "https://p.actionsack.com/🦇👨/ZmVja3Rr.webp",
         "https://p.actionsack.com/🦇👨/ZmVlaw==.webp"
     ]
-    bot.say(random.choice(bat_men))
+    bot.say(secrets.choice(bat_men))
 
 
 @plugin.search("🤔{3,}")
@@ -2353,7 +2352,7 @@ def think(bot, trigger):
         "https://p.actionsack.com/think/statue.webp",
         "https://p.actionsack.com/think/thonk.webp"
     ]
-    bot.say(random.choice(thinking))
+    bot.say(secrets.choice(thinking))
 
 
 @plugin.search("🚸")
@@ -2374,7 +2373,7 @@ def heli(bot, trigger):
         "https://p.actionsack.com/🚁/hair.webp",
         "https://p.actionsack.com/🚁/peewee.webp"
     ]
-    bot.say(random.choice(helicopter))
+    bot.say(secrets.choice(helicopter))
 
 
 @plugin.search("🍝")
@@ -2387,7 +2386,7 @@ def spaghetti(bot, trigger):
         "https://p.actionsack.com/🍝/lie.webm",
         "https://p.actionsack.com/🍝/mom's.webm"
     ]
-    bot.say(random.choice(spaghettis))
+    bot.say(secrets.choice(spaghettis))
 
 
 @plugin.search("svehla")
@@ -2416,7 +2415,7 @@ def cancer(bot, trigger):
         "https://p.actionsack.com/as/cancer-list.png",
         "https://p.actionsack.com/as/cancer-microscope.png"
     ]
-    bot.say(random.choice(cancer_images))
+    bot.say(secrets.choice(cancer_images))
 
 
 @plugin.search("!daquan")
@@ -2446,7 +2445,7 @@ def salty(bot, trigger):
         "https://p.actionsack.com/salt/salty-bitch.png",
         "https://p.actionsack.com/salt/super-salty.png"
     ]
-    bot.say(random.choice(salty))
+    bot.say(secrets.choice(salty))
 
 
 @plugin.search(r"\[laughs\]")
@@ -2494,7 +2493,7 @@ def asak(bot, trigger):
         "https://p.actionsack.com/as/snapchat.png",
         "https://p.actionsack.com/as/soup.png"
     ]
-    bot.say(random.choice(asak))
+    bot.say(secrets.choice(asak))
 
 
 @plugin.search("!bytes")
@@ -2511,7 +2510,7 @@ def ComputersByte(bot, trigger):
         "https://p.actionsack.com/bytes/hatched.png",
         "https://p.actionsack.com/bytes/syrup.png"
     ]
-    bot.say(random.choice(computers_byte))
+    bot.say(secrets.choice(computers_byte))
 
 
 @plugin.search("!fecktk")
@@ -2566,7 +2565,7 @@ def fecktk(bot, trigger):
         "https://p.actionsack.com/fecktk/strim.webp",
         "https://p.actionsack.com/fecktk/zoomies.webp"
     ]
-    bot.say(random.choice(fecktks))
+    bot.say(secrets.choice(fecktks))
 
 
 @plugin.search("!feek")
@@ -2595,7 +2594,7 @@ def feek(bot, trigger):
         "https://p.actionsack.com/feek/PokéKeith.webp",
         "https://p.actionsack.com/feek/rape.webp"
     ]
-    bot.say(random.choice(feeks))
+    bot.say(secrets.choice(feeks))
 
 
 @plugin.search("!jaja")
@@ -2623,7 +2622,7 @@ def jajabro(bot, trigger):
         "https://p.actionsack.com/jaja/smrt.gif",
         "https://p.actionsack.com/jaja/subwat.png"
     ]
-    bot.say(random.choice(jajabros))
+    bot.say(secrets.choice(jajabros))
 
 
 @plugin.search("!kristen")
@@ -2639,7 +2638,7 @@ def kristen(bot, trigger):
         "https://p.actionsack.com/kristen/repost.png",
         "https://p.actionsack.com/kristen/top.png"
     ]
-    bot.say(random.choice(kristen))
+    bot.say(secrets.choice(kristen))
 
 
 @plugin.search("!mike")
@@ -2717,7 +2716,7 @@ def mike(bot, trigger):
         "https://p.actionsack.com/mike/📖/📖.jpg",
         "https://p.actionsack.com/mike/📖/📖🐇.jpg"
     ]
-    bot.say(random.choice(mikes))
+    bot.say(secrets.choice(mikes))
 
 
 @plugin.search("!tasian")
@@ -2756,7 +2755,7 @@ def tasian(bot, trigger):
         "https://p.actionsack.com/tasian/val06.webp",
         "https://p.actionsack.com/tasian/val07.webp"
     ]
-    bot.say(random.choice(tasians))
+    bot.say(secrets.choice(tasians))
 
 
 @plugin.search("!viz")
@@ -2785,7 +2784,7 @@ def viz(bot, trigger):
         "https://p.actionsack.com/viz/tree.webp",
         "https://p.actionsack.com/viz/whoknows.webp"
     ]
-    bot.say(random.choice(vizs))
+    bot.say(secrets.choice(vizs))
 
 
 @plugin.search("!voodoo")
@@ -2799,7 +2798,7 @@ def voodoo(bot, trigger):
         "https://p.actionsack.com/voodoo/pewpew.webp",
         "I fantasize about fucking California's earthquake fault line. The dirt, the debris, the thought of the earth quivering under me as I slowly stick my dick into its gaping wide entrance. I keep looking at news stories and getting the firmest erections of my life seeing those beautiful cracks. She's so open and so wanting. Each earthquake is like another whimper just begging for me to take her. The amount of cum I've lost just thinking about thrusting my rod into our beloved planet. Talk about getting my rocks off. Fuck I'm hard."
     ]
-    bot.say(random.choice(voodoos), max_messages=2)
+    bot.say(secrets.choice(voodoos), max_messages=2)
 
 
 @plugin.search("!xnaas")
@@ -2839,7 +2838,7 @@ def xnaas(bot, trigger):
         "https://p.actionsack.com/xnaas/yeehaw.webp",
         "https://p.actionsack.com/v/tesla.webm"
     ]
-    bot.say(random.choice(xnass))
+    bot.say(secrets.choice(xnass))
 
 
 @plugin.search("!JTL")
@@ -2855,7 +2854,7 @@ def JTL(bot, trigger):
         "https://p.actionsack.com/JTL/bushes.webp",
         "https://p.actionsack.com/JTL/sendit.webp"
     ]
-    bot.say(random.choice(JTL))
+    bot.say(secrets.choice(JTL))
 
 
 @plugin.search("!nC")
@@ -2868,7 +2867,7 @@ def nC(bot, trigger):
         "https://p.actionsack.com/nC/gambler.webp",
         "https://p.actionsack.com/nC/ttv.webp"
     ]
-    bot.say(random.choice(nC))
+    bot.say(secrets.choice(nC))
 
 # /Action Sack People Section
 
@@ -2886,7 +2885,7 @@ def savage(bot, trigger):
         "https://p.actionsack.com/savage/fury.webp",
         "https://p.actionsack.com/savage/savage.webp"
     ]
-    bot.say(random.choice(savages))
+    bot.say(secrets.choice(savages))
 
 
 @plugin.search("🥗")
@@ -2915,7 +2914,7 @@ def urtooslow(bot, trigger):
         "https://p.actionsack.com/sanic/master.png",
         "https://p.actionsack.com/sanic/running.gif"
     ]
-    bot.say(random.choice(too_slow))
+    bot.say(secrets.choice(too_slow))
 
 
 @plugin.search("whale rape")
@@ -2935,7 +2934,7 @@ def kfc(bot, trigger):
         "https://p.actionsack.com/kfc/01.png",
         "https://p.actionsack.com/kfc/02.png",
     ]
-    bot.say(random.choice(kfc))
+    bot.say(secrets.choice(kfc))
 
 
 @plugin.search("(?<!en)joy!")
@@ -2976,7 +2975,7 @@ def chief(bot, trigger):
         "https://p.actionsack.com/halo/❔.png",
         "https://p.actionsack.com/halo/🗑.png"
     ]
-    bot.say(random.choice(master_chef))
+    bot.say(secrets.choice(master_chef))
 
 
 @plugin.search("!drphil")
@@ -2988,7 +2987,7 @@ def drphil(bot, trigger):
         "https://p.actionsack.com/drphil/ride.webp",
         "https://p.actionsack.com/drphil/WSTYAHHWASFOH.webp"
     ]
-    bot.say(random.choice(dr_phil))
+    bot.say(secrets.choice(dr_phil))
 
 
 @plugin.search("🌀")
@@ -2997,7 +2996,7 @@ def hurricane(bot, trigger):
         "https://p.actionsack.com/🌀/AD.png",
         "https://p.actionsack.com/🌀/matthew.png"
     ]
-    bot.say(random.choice(hurricanes))
+    bot.say(secrets.choice(hurricanes))
 
 
 @plugin.search("!pepe")
@@ -3019,7 +3018,7 @@ def pepe(bot, trigger):
         "https://p.actionsack.com/pepe/sub.png",
         "https://p.actionsack.com/pepe/trump.png"
     ]
-    bot.say(random.choice(rare_pepes))
+    bot.say(secrets.choice(rare_pepes))
 
 
 @plugin.search("repost")
@@ -3053,7 +3052,7 @@ def repost(bot, trigger):
         "https://p.actionsack.com/repost/soflo.png",
         "https://p.actionsack.com/repost/wait....gif"
     ]
-    bot.say(random.choice(reposts))
+    bot.say(secrets.choice(reposts))
 
 
 @plugin.rule("^🪦$")
@@ -3101,7 +3100,7 @@ def trump(bot, trigger):
         "https://p.actionsack.com/trump/WOF.png",
         "https://p.actionsack.com/trump/トランプ.webm"
     ]
-    bot.say(random.choice(trumps))
+    bot.say(secrets.choice(trumps))
 
 
 @plugin.command("downvote")
@@ -3109,7 +3108,7 @@ def downvote(bot, trigger):
     downvotes = [
         "https://p.actionsack.com/vote/down/00.gif"
     ]
-    bot.say(random.choice(downvotes))
+    bot.say(secrets.choice(downvotes))
 
 
 @plugin.command("upvote")
@@ -3118,7 +3117,7 @@ def upvote(bot, trigger):
         "https://p.actionsack.com/vote/up/00.mp4",
         "https://p.actionsack.com/vote/up/01.mp4"
     ]
-    bot.say(random.choice(upvotes))
+    bot.say(secrets.choice(upvotes))
 
 
 @plugin.search("!apologize")
@@ -3132,7 +3131,7 @@ def happening(bot, trigger):
         "https://p.actionsack.com/halo/happening.gif",
         "https://p.actionsack.com/misc/happening.gif"
     ]
-    bot.say(random.choice(its_happening))
+    bot.say(secrets.choice(its_happening))
 
 
 @plugin.rule("^It's time to stop!$")
@@ -3143,7 +3142,7 @@ def timetostop(bot, trigger):
         "https://p.actionsack.com/🛑/02.webp",
         "https://p.actionsack.com/🛑/03.webp",
     ]
-    bot.say(random.choice(time_to_stop))
+    bot.say(secrets.choice(time_to_stop))
 
 
 @plugin.rule("pepsi")
@@ -3162,7 +3161,7 @@ def spacepants(bot, trigger):
         "https://p.actionsack.com/misc/spacepants.gif",
         "https://p.actionsack.com/v/spacepants.mp4"
     ]
-    bot.say(random.choice(space_pants))
+    bot.say(secrets.choice(space_pants))
 
 
 @plugin.search("!peep")
@@ -3208,7 +3207,7 @@ def shitpost(bot, trigger):
         "https://p.actionsack.com/shitpost/dbz.png",
         "https://p.actionsack.com/shitpost/shitpost.png"
     ]
-    bot.say(random.choice(shit_post))
+    bot.say(secrets.choice(shit_post))
 
 
 @plugin.rule("^No!$")
@@ -3217,7 +3216,7 @@ def no(bot, trigger):
         "https://p.actionsack.com/no/00.mp4",
         "https://p.actionsack.com/no/01.mp4",
     ]
-    bot.say(random.choice(nonono))
+    bot.say(secrets.choice(nonono))
 
 
 @plugin.rule(r"^just\.\.\.no$")
@@ -3231,7 +3230,7 @@ def horses(bot, trigger):
         "https://p.actionsack.com/🏇/girl.gif",
         "https://p.actionsack.com/🏇/hoh.gif"
     ]
-    bot.say(random.choice(race_horses))
+    bot.say(secrets.choice(race_horses))
 
 
 @plugin.search("👽")
@@ -3252,7 +3251,7 @@ def spider(bot, trigger):
         "https://p.actionsack.com/🕷/song.webp",
         "https://p.actionsack.com/🕷/swing.webp"
     ]
-    bot.say(random.choice(spiders))
+    bot.say(secrets.choice(spiders))
 
 
 @plugin.search(r"🕷(|\s)👨")
@@ -3263,7 +3262,7 @@ def spiderman(bot, trigger):
         "https://p.actionsack.com/🕷👨/orphans.webp",
         "https://p.actionsack.com/🕷👨/smell.webp"
     ]
-    bot.say(random.choice(spider_man))
+    bot.say(secrets.choice(spider_man))
 
 
 @plugin.search("shitstorm")
@@ -3317,7 +3316,7 @@ def explosion(bot, trigger):
         "https://p.actionsack.com/v/explosion/02.mp4",
         "https://p.actionsack.com/v/explosion/03.mp4"
     ]
-    bot.say(random.choice(explosion))
+    bot.say(secrets.choice(explosion))
 
 
 @plugin.search("I need a hero")
@@ -3382,7 +3381,7 @@ def thisisfine(bot, trigger):
         "https://p.actionsack.com/fine/reverse.webp",
         "https://p.actionsack.com/fine/ricky.mp4"
     ]
-    bot.say(random.choice(this_is_fine))
+    bot.say(secrets.choice(this_is_fine))
 
 
 @plugin.search("efnet")
