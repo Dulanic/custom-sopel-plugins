@@ -1,17 +1,12 @@
 # Deep Rock Galactic
 from sopel import plugin
-import random
+import secrets
 
 
 @plugin.command("salute")
 @plugin.rule("^V$")
 @plugin.search("!salute", "rock and stone", "⛏️")
 def drg_salute(bot, trigger):
-    if trigger.sender == "#drg":
-        pass
-    else:
-        return
-
     drg_salutes = [
         "By the beard!",
         "Come on, guys! Rock and Stone!",
@@ -40,17 +35,12 @@ def drg_salute(bot, trigger):
         "We rock!",
         "Yaaaah, Rock and Stone!"
     ]
-    bot.say(random.choice(drg_salutes))
+    bot.say(secrets.choice(drg_salutes))
 
 
 @plugin.command("toast")
 @plugin.search("cheers")
 def drg_toast(bot, trigger):
-    if trigger.sender == "#drg":
-        pass
-    else:
-        return
-
     drg_toasts = [
         "Bottoms up, friends!",
         "Cheers!",
@@ -82,16 +72,11 @@ def drg_toast(bot, trigger):
         "To the fallen!",
         "To those we lost!"
     ]
-    bot.say(random.choice(drg_toasts))
+    bot.say(secrets.choice(drg_toasts))
 
 
 @plugin.search("karl")
 def karl(bot, trigger):
-    if trigger.sender == "#drg":
-        pass
-    else:
-        return
-
     karls = [
         "This one's for Karl!",
         "For Karl!",
@@ -107,4 +92,4 @@ def karl(bot, trigger):
         "I'm gonna wear this in honor of Karl!",
         "People ask why we remember Karl. People ask what made him a legend. Rumor has it Skull Crusher Ale is at least partly to blame. Make of that what you will. Beware."
     ]
-    bot.say(random.choice(karls))
+    bot.say(secrets.choice(karls))
