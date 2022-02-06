@@ -74,6 +74,10 @@ def ytdl(bot, trigger):
             return
 
     try:
+        # https://github.com/yt-dlp/yt-dlp/issues/2396#issuecomment-1021210484
+        if re.search("tiktok", url):
+            youtube_dl.utils.std_headers["User-Agent"] = "facebookexternalhit/1.1"
+
         with youtube_dl.YoutubeDL(ytdl_opts) as ytdl:
             bot.say(italic("Processing..."))
             meta = ytdl.extract_info(url, download=False)
