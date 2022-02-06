@@ -3,6 +3,7 @@ from sopel.formatting import bold, italic, plain
 from datetime import datetime, timedelta
 import random
 import re
+import secrets
 import sqlite3
 import time
 import unicodedata
@@ -370,7 +371,7 @@ def gamble_betflip(bot, trigger):
 
     # Flip coin and complete transaction
     heads_or_tails = ["heads", "tails"]
-    flip_result = random.choice(heads_or_tails)
+    flip_result = secrets.choice(heads_or_tails)
 
     if flip_result == user_choice:
         winnings = bet * 2
@@ -421,7 +422,7 @@ def gamble_betroll(bot, trigger):
     bot.db.set_nick_value(gambler, "currency_amount", spend_on_bet)
 
     # Roll a number 0-100
-    roll = random.randint(0, 100)
+    roll = secrets.randbelow(101)
     # Determine multiplier
     if 0 <= roll <= 66:
         multiplier = 0
@@ -502,7 +503,7 @@ def gamble_oddsevens(bot, trigger):
         user_choice = "even"
 
     # Roll and complete transaction
-    roll_num = random.randint(0, 100)
+    roll_num = secrets.randbelow(101)
     if (roll_num % 2) == 0:
         roll = "even"
     else:
@@ -593,7 +594,7 @@ def gamble_wheel(bot, trigger):
     # Stress user with delay
     bot.action(
         "spins the wheel...{0}{0}{0}".format(
-            random.choice(wheel_direction)))
+            secrets.choice(wheel_direction)))
     time.sleep(4)
     bot.say(italic("The wheel slows to a stop..."))
     time.sleep(2)
