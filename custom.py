@@ -3438,3 +3438,8 @@ def piracy(bot, trigger):
 @plugin.rule("^🦆$")
 def duck_gif(bot, trigger):
     bot.say("https://p.actionsack.com/emoji/duck.webp")
+
+
+@plugin.search("!peacemaker")
+def peacemaker(bot, trigger):
+    bot.say("https://p.actionsack.com/v/peacemaker.mp4")
