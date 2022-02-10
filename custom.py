@@ -3443,3 +3443,18 @@ def duck_gif(bot, trigger):
 @plugin.search("!peacemaker")
 def peacemaker(bot, trigger):
     bot.say("https://p.actionsack.com/v/peacemaker.mp4")
+
+
+@plugin.search(r"\bselfie\b")
+def selfie(bot, trigger):
+    bot.say("https://p.actionsack.com/a/selfie.flac")
+
+
+@plugin.search("!surface")
+def surface(bot, trigger):
+    bot.say("https://p.actionsack.com/a/surface.flac")
+
+
+@plugin.search(r"\bSOPA\b")
+def fuck_sopa(bot, trigger):
+    bot.say("https://p.actionsack.com/a/FUCK_SOPA.flac")
