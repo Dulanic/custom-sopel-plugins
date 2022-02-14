@@ -1301,6 +1301,7 @@ def swat(bot, trigger):
 
 
 @plugin.search("(▫|◽|◻|⬜|▪|◾|◼|⬛|🟥|🟧|🟨|🟩|🟦|🟪|🟫)")
+@plugin.rate(channel=5400)
 def square(bot, trigger):
     bot.say("https://p.actionsack.com/v/square.mp4")
 
