@@ -5,6 +5,10 @@ import re
 import yt_dlp as youtube_dl
 
 
+# Should match all valid YouTube links.
+VALID_YT_LINK = r"(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})"
+
+
 # YouTube Link Logger
 def setup(bot):
     if "youtube_ids" not in bot.memory:
@@ -23,8 +27,7 @@ def shutdown(bot):
 @plugin.echo
 @plugin.priority("low")
 @plugin.require_chanmsg
-@plugin.search(
-    r"(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})")
+@plugin.search(VALID_YT_LINK)
 @plugin.unblockable
 def youtube_link_log(bot, trigger):
     video_id = trigger.group(6)
@@ -51,7 +54,7 @@ def temp_youtube_id(bot, trigger):
 # Download MP4-compatible formats for MP4 container
 ytdl_opts = {
     "format": "bestvideo[height<=?1080]+bestaudio/best",
-    "format_sort": ["+codec:avc:m4a"], # prioritize h264 and m4a
+    "format_sort": ["+codec:avc:m4a"],  # prioritize h264 and m4a
     "merge_output_format": "mp4",
     "noplaylist": True,
     "forcejson": True,
@@ -124,3 +127,73 @@ def ytdl(bot, trigger):
             bot.reply(
                 "This video has no duration (livestream?) and won't be downloaded.")
             return
+
+
+# Download mp4/audio (m4a)
+ytdla_opts = {
+    "format": "bestaudio/best",
+    "format_sort": ["+codec:avc:m4a"],  # prioritize m4a
+    "merge_output_format": "m4a",
+    "final_ext": "m4a",
+    "noplaylist": True,
+    "forcejson": True,
+    "outtmpl": "/mnt/media/websites/actionsack.com/tmp/%(id)s.%(ext)s",
+    "postprocessors": [{
+        "key": "FFmpegExtractAudio",
+        "preferredcodec": "m4a"
+    }]
+}
+
+
+@plugin.command("ytdla")
+@plugin.output_prefix("[youtube-dl] ")
+def ytdla(bot, trigger):
+    """Uses youtube-dl to download audio from a video and post it to chat."""
+    url = trigger.group(3)
+    from_id = False
+
+    # If no url, check memory for a stored YouTube ID
+    if not url:
+        try:
+            url = bot.memory["youtube_ids"][trigger.sender]
+            from_id = True
+        except KeyError:
+            bot.reply(
+                "You've given me nothing to work with...what the Hell do you want?!")
+            return
+
+    # Check if "url" is a valid YouTube ID
+    if re.search(r"^[^&=%\?]{11}$", url):
+        from_id = True
+
+    if re.search(VALID_YT_LINK, url) or from_id:
+        pass
+    else:
+        return bot.reply("YouTube links or IDs only.")
+
+    try:
+        with youtube_dl.YoutubeDL(ytdla_opts) as ytdl:
+            bot.say(italic("Processing..."))
+            meta = ytdl.extract_info(url, download=False)
+            id = meta["id"]
+            ext = meta["audio_ext"]
+            dur = meta["duration"]
+            if not dur:
+                bot.reply(
+                    "This video has no duration (livestream?) and won't be downloaded.")
+                return
+            if dur > 600:
+                bot.reply(
+                    "This video is longer than 10 minutes and won't be downloaded.")
+                return
+            else:
+                bot.say(italic("Downloading..."))
+                ytdl.download([url])
+                bot.say("https://actionsack.com/tmp/{}.{}".format(id, ext))
+                return
+    except youtube_dl.utils.DownloadError:
+        bot.reply("Please submit a valid link.")
+    except KeyError:
+        bot.reply(
+            "This video has no duration (livestream?) and won't be downloaded.")
+        return
