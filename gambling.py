@@ -522,7 +522,7 @@ def gamble_oddsevens(bot, trigger):
             roll_num, roll, user_choice, bet, bold(balance))
 
     # Stress user with delay
-    bot.action("flips a coin...")
+    bot.action("rolls a bunch of dice or something...")
     time.sleep(1.5)
     bot.reply(msg)
 
