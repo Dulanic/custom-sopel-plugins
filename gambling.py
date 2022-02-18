@@ -265,7 +265,7 @@ def init_money(bot, trigger):
 @plugin.require_chanmsg  # Forcing public claiming serves as a reminder to all.
 @plugin.command("timely")
 def claim_money(bot, trigger):
-    """Claim $10 every hour. ($100 for first claim!)"""
+    """Claim $50 every 12 hours. ($100 for first claim!)"""
     # We're not using gambling_checks() because it's
     # tuned for most other commands in this plugin.
     # Channel Check
@@ -290,20 +290,20 @@ def claim_money(bot, trigger):
         bot.db.set_nick_value(target, "currency_amount", claim)
         balance = "${:,}".format(claim)
         return bot.reply(
-            "New balance: {}. Don't forget to claim again in an hour! ($10/hr going forward.)".format(bold(balance)))
+            "Here's $100. New balance: {}. Don't forget to claim again in 12 hours! ($50/12h going forward.)".format(bold(balance)))
 
-    check_1_hour = now - check_for_timely
-    if check_1_hour >= 3600:
+    check_12_hour = now - check_for_timely
+    if check_12_hour >= 43200:
         bot.db.set_nick_value(target, "currency_timely", now)
-        claim = check_for_money + 10
+        claim = check_for_money + 50
         bot.db.set_nick_value(target, "currency_amount", claim)
         balance = "${:,}".format(claim)
         return bot.reply(
-            "New balance: {}. Don't forget to claim again in an hour!".format(
+            "Here's $50. New balance: {}. Don't forget to claim again in 12 hours!".format(
                 bold(balance)))
     else:
-        to_1_hour = 3600 - check_1_hour
-        time_remaining = str(timedelta(seconds=round(to_1_hour)))
+        to_12_hour = 43200 - check_12_hour
+        time_remaining = str(timedelta(seconds=round(to_12_hour)))
         bot.reply("{} until you can claim again, greedy!".format(time_remaining))
 
 
@@ -630,7 +630,8 @@ def gamble_leadboard(bot, trigger):
 
     # Do it through Sopel, not SQL
     # Need to add back error handling later
-    lb_base = bot.db.execute("SELECT canonical, key, value FROM nick_values a join nicknames b on a.nick_id = b.nick_id WHERE key='currency_amount' ORDER BY cast(value as int) DESC;")
+    lb_base = bot.db.execute(
+        "SELECT canonical, key, value FROM nick_values a join nicknames b on a.nick_id = b.nick_id WHERE key='currency_amount' ORDER BY cast(value as int) DESC;")
 
     # go through db for results
     for index, person in enumerate(lb_base):
