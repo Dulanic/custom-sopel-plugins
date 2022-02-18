@@ -3346,7 +3346,7 @@ def little_swing(bot, trigger):
     bot.say("https://p.actionsack.com/a/swing.flac")
 
 
-@plugin.search("!rimg") # 'rimg' command taken already, so search only
+@plugin.search("!rimg", "rave in my garage") # 'rimg' command taken already, so search only
 def rave_in_my_garage(bot, trigger):
     bot.say("https://p.actionsack.com/a/RIMG.flac")
 
@@ -3459,3 +3459,8 @@ def surface(bot, trigger):
 @plugin.search(r"\bSOPA\b")
 def fuck_sopa(bot, trigger):
     bot.say("https://p.actionsack.com/a/FUCK_SOPA.flac")
+
+
+@plugin.search("shit's on fire( |, )yo")
+def shits_on_fire_yo(bot, trigger):
+    bot.say("https://p.actionsack.com/misc/sofy.webp")
