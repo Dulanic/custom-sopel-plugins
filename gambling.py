@@ -9,16 +9,19 @@ import time
 import unicodedata
 
 
+GCHAN = "#casino"
+
+
 # Various Gambling Checks
 def gambling_checks(bot, trigger):
     # Set keys to None for checks
     data = {"bet": None, "msg": None, "target": None}
 
     # Channel Checker – perhaps make this configurable in the future
-    if trigger.sender == "#casino":
+    if trigger.sender == GCHAN:
         pass
     else:
-        data["msg"] = "This command can only be used in #casino"
+        data["msg"] = "This command can only be used in {}".format(GCHAN)
         return data
 
     # Target Check
@@ -213,10 +216,10 @@ def check_money(bot, trigger):
     # We're not using gambling_checks() because it's
     # tuned for most other commands in this plugin.
     # Channel Check
-    if trigger.sender == "#casino":
+    if trigger.sender == GCHAN:
         pass
     else:
-        return bot.reply("This command can only be used in #casino")
+        return bot.reply("This command can only be used in {}".format(GCHAN))
 
     # Target Check
     target = plain(trigger.group(3) or trigger.nick)
@@ -247,10 +250,10 @@ def init_money(bot, trigger):
     # We're not using gambling_checks() because it's
     # tuned for most other commands in this plugin.
     # Channel Check
-    if trigger.sender == "#casino":
+    if trigger.sender == GCHAN:
         pass
     else:
-        return bot.reply("This command can only be used in #casino")
+        return bot.reply("This command can only be used in {}".format(GCHAN))
 
     target = trigger.nick
 
@@ -269,10 +272,10 @@ def claim_money(bot, trigger):
     # We're not using gambling_checks() because it's
     # tuned for most other commands in this plugin.
     # Channel Check
-    if trigger.sender == "#casino":
+    if trigger.sender == GCHAN:
         pass
     else:
-        return bot.reply("This command can only be used in #casino")
+        return bot.reply("This command can only be used in {}".format(GCHAN))
 
     target = trigger.nick
 
@@ -606,10 +609,10 @@ def gamble_wheel(bot, trigger):
 @plugin.require_chanmsg
 def gamble_leadboard(bot, trigger):
     """Posts the top 5 richest gamblers."""
-    if trigger.sender == "#casino":
+    if trigger.sender == GCHAN:
         pass
     else:
-        return bot.reply("This command can only be used in #casino")
+        return bot.reply("This command can only be used in {}".format(GCHAN))
 
     """
     try:
@@ -656,3 +659,76 @@ def gamble_leadboard(bot, trigger):
         # We only want to print up to 5 people
         if rank == 5:
             break
+
+
+# Random Money Spawner
+# Every 90 minutes:
+#   • check if random money is spawned already
+#   • randomly spawn money if there isn't any
+@plugin.interval(5400)
+def casino_random_money(bot):
+    # Check if there's random money spawned
+    amount = bot.db.get_channel_value(GCHAN, "random_money", 0)
+
+    # If there's no random_money...
+    if not amount:
+        # ...generate a number 0-10
+        roll = secrets.randbelow(11)
+        # chose 6 just because
+        if roll == 6:
+            # set how much money a user can claim ($10-$100)
+            amount = random.randint(10, 100)
+            # set random_money in the db
+            bot.db.set_channel_value(GCHAN, "random_money", amount)
+            # See something, say something!
+            # TODO: add some randomness to the message to
+            #       prevent notifications and botting.
+            return bot.say("${} appeared on the ground.".format(amount), GCHAN)
+        else:
+            return
+    # If the money has been picked...
+    elif 10 <= amount <= 100:
+        return  # nothing to do
+    else:
+        return bot.say(
+            "xnaas: Error in casino_random_money(). Good luck!",
+            GCHAN)
+
+
+@plugin.command("pick")
+@plugin.require_chanmsg
+def pick_random_money(bot, trigger):
+    """Pick up some money the bot has randomly dropped on the ground."""
+    # We're not using gambling_checks() because it's
+    # tuned for most other commands in this plugin.
+    if trigger.sender == GCHAN:
+        pass
+    else:
+        return bot.reply("This command can only be used in {}".format(GCHAN))
+
+    target = trigger.nick
+
+    check_for_money = bot.db.get_nick_value(target, "currency_amount")
+    if check_for_money is None:
+        return bot.reply(
+            "You can't do this yet! Please run the `.iwantmoney` command.")
+
+    amount = bot.db.get_channel_value(GCHAN, "random_money", 0)
+
+    if not amount:
+        insults = [
+            "There's no money to pick up, greedy fuck.",
+            "Sorry you're poor, but there's no money for you."
+        ]
+        return bot.reply(secrets.choice(insults))
+    elif 10 <= amount <= 100:
+        bot.db.set_channel_value(GCHAN, "random_money", 0)
+        new_balance = check_for_money + amount
+        bot.db.set_nick_value(target, "currency_amount", new_balance)
+        balance = "${:,}".format(new_balance)
+        bot.reply(
+            "Congrats! You picked up ${}. Now you have {}.".format(
+                amount, bold(balance)))
+    else:
+        return bot.say(
+            "xnaas: Error in pick_random_money() or casino_random_money(). Good luck!")
