@@ -3464,3 +3464,8 @@ def fuck_sopa(bot, trigger):
 @plugin.search("shit's on fire( |, )yo")
 def shits_on_fire_yo(bot, trigger):
     bot.say("https://p.actionsack.com/misc/sofy.webp")
+
+
+@plugin.search("🦞")
+def lobster(bot, trigger):
+    bot.say("https://p.actionsack.com/v/lobster.mp4")
