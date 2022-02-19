@@ -3469,3 +3469,8 @@ def shits_on_fire_yo(bot, trigger):
 @plugin.search("🦞")
 def lobster(bot, trigger):
     bot.say("https://p.actionsack.com/v/lobster.mp4")
+
+
+@plugin.search("friday night")
+def friday_nights(bot, trigger):
+    bot.say("https://p.actionsack.com/v/friday_nights.mp4")
