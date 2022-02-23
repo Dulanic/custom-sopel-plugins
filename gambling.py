@@ -268,7 +268,7 @@ def init_money(bot, trigger):
 @plugin.require_chanmsg  # Forcing public claiming serves as a reminder to all.
 @plugin.command("timely")
 def claim_money(bot, trigger):
-    """Claim $50 every 12 hours. ($100 for first claim!)"""
+    """Claim $25 every 4 hours. ($100 for first claim!)"""
     # We're not using gambling_checks() because it's
     # tuned for most other commands in this plugin.
     # Channel Check
@@ -293,20 +293,20 @@ def claim_money(bot, trigger):
         bot.db.set_nick_value(target, "currency_amount", claim)
         balance = "${:,}".format(claim)
         return bot.reply(
-            "Here's $100. New balance: {}. Don't forget to claim again in 12 hours! ($50/12h going forward.)".format(bold(balance)))
+            "Here's $100. New balance: {}. Don't forget to claim again in 4 hours! ($25/4h going forward.)".format(bold(balance)))
 
-    check_12_hour = now - check_for_timely
-    if check_12_hour >= 43200:
+    check_4_hour = now - check_for_timely
+    if check_4_hour >= 14400:
         bot.db.set_nick_value(target, "currency_timely", now)
-        claim = check_for_money + 50
+        claim = check_for_money + 25
         bot.db.set_nick_value(target, "currency_amount", claim)
         balance = "${:,}".format(claim)
         return bot.reply(
-            "Here's $50. New balance: {}. Don't forget to claim again in 12 hours!".format(
+            "Here's $25. New balance: {}. Don't forget to claim again in 4 hours!".format(
                 bold(balance)))
     else:
-        to_12_hour = 43200 - check_12_hour
-        time_remaining = str(timedelta(seconds=round(to_12_hour)))
+        to_4_hour = 14400 - check_4_hour
+        time_remaining = str(timedelta(seconds=round(to_4_hour)))
         bot.reply("{} until you can claim again, greedy!".format(time_remaining))
 
 
