@@ -30,6 +30,10 @@ Uses the [icanhazdadjoke API](https://icanhazdadjoke.com/api) to post dad jokes.
 Some custom stuff for [Deep Rock Galactic](https://www.deeprockgalactic.com/).
 
 
+## [ercot.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/ercot.py)
+Pulls basic grid status from [ERCOT](https://www.ercot.com/).
+
+
 ## [gambling.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/gambling.py)
 Allows users to make and gamble away virtual currency.
 
