@@ -48,16 +48,16 @@ def domain_reg_check(bot, trigger):
             }
             result = requests.get(url, params=params).json()
 
+            # return domain to normal text
+            domain = domain.encode('ascii').decode('idna')
+
             # Error Handling from API
             if "ErrorMessage" in result:
                 error_message = result["ErrorMessage"]["msg"]
-                domain = domain.encode('ascii').decode('idna')
                 return bot.say("{}: {}".format(domain, error_message))
             # Print domain availability
             elif "DomainInfo" in result:
                 domain_avail = result["DomainInfo"]["domainAvailability"]
-                # domain = result["DomainInfo"]["domainName"]
-                domain = domain.encode('ascii').decode('idna')
                 return bot.say("{} is {}.".format(domain, domain_avail))
             else:
                 return bot.reply("Issue with API.")
