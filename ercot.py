@@ -12,7 +12,6 @@ def ercot_status(bot, trigger):
         result = requests.get(url_status).json()["current_condition"]
         status = result["title"]
         op_res = result["prc_value"]
-
         # Frequency
         url_freq = "{}/ancillaryServices.json".format(base_url)
         freq = requests.get(url_freq).json()["data"][0]["currentFrequency"]
