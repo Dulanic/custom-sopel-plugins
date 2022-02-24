@@ -74,6 +74,10 @@ Uses [PlexAPI](https://github.com/pkkid/python-plexapi) to interface your Sopel 
 Uses [Merriam-Webster's Collegiate Thesaurus API](https://www.dictionaryapi.com/products/api-collegiate-thesaurus) to query synonyms and antonyms.
 
 
+## ⚠[whois.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/whois.py)
+⚠ WIP. It "works" but...
+
+
 ## [yourmom.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/yourmom.py)
 Posts a random joke from [yourmom.txt](https://github.com/xnaas/custom-sopel-plugins/blob/master/yourmom.txt).
 
