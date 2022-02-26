@@ -21,8 +21,8 @@ def configure(config):
     config.whois.configure_setting("api_key", "whoisxmlapi api key")
 
 
-# TODO: https://data.iana.org/TLD/tlds-alpha-by-domain.txt
-VALID_DOMAIN = r"^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\.)+[A-Za-z]{2,6}$"
+# this is not 100% foolproof, but it catches a lot
+VALID_SLD = "^((?=[a-z0-9-]{1,63})(xn--)?[a-z0-9]+(-[a-z0-9]+)*)+$"
 
 
 @plugin.commands("whois")
@@ -32,37 +32,69 @@ def domain_reg_check(bot, trigger):
     domain = trigger.group(3)
 
     if not domain:
-        return bot.reply("I need a domain, idiot.")
+        return bot.reply("I need a domain to check.")
 
-    # convert to punycode if needed
-    domain = domain.encode('idna').decode('ascii')
+    # normal text → punycode
+    # catches some invalid domain stuff
+    try:
+        domain = domain.encode('idna').decode('ascii')
+    except UnicodeError:
+        return bot.reply("I need a valid domain to check.")
 
-    if re.search(VALID_DOMAIN, domain):
-        try:
-            url = "https://domain-availability.whoisxmlapi.com/api/v1"
-            params = {
-                "apiKey": bot.config.whois.api_key,
-                "domainName": domain,
-                "mode": "DNS_AND_WHOIS",
-                "credits": "DA"
-            }
-            result = requests.get(url, params=params).json()
+    # get SLD and TLD for validation checks
+    try:
+        host = domain.lower().split(".", 1)
+        sld = host[0]  # second-level domain
+        tld = host[1]  # top-level domain
+    except IndexError:
+        return bot.reply("I need a valid domain to check.")
 
-            # return domain to normal text
-            domain = domain.encode('ascii').decode('idna')
-
-            # Error Handling from API
-            if "ErrorMessage" in result:
-                error_message = result["ErrorMessage"]["msg"]
-                return bot.say("{}: {}".format(domain, error_message))
-            # Print domain availability
-            elif "DomainInfo" in result:
-                domain_avail = result["DomainInfo"]["domainAvailability"]
-                return bot.say("{} is {}.".format(domain, domain_avail))
-            else:
-                return bot.reply("Issue with API.")
-
-        except Exception as e:
-            return bot.reply(e)
+    # filter out most invalid SLDs
+    if re.search(VALID_SLD, sld):
+        pass
     else:
-        return bot.reply("I need a valid domain, el stupido.")
+        return bot.reply("I need a valid domain to check.")
+
+    # set valid TLD list from core tld.py
+    TLD_LIST = bot.memory["tld_list_cache"]
+
+    # if TLD in invalid, stop now
+    if tld not in TLD_LIST:
+        return bot.reply("I need a valid domain to check.")
+
+    # re-combine punycode SLD and TLD for API call
+    domain = "{}.{}".format(sld, tld)
+
+    # punycode → normal text
+    # catches remaining invalid domain stuff
+    try:
+        sld = sld.encode('ascii').decode('idna')
+        tld = tld.encode('ascii').decode('idna')
+    except UnicodeError:
+        return bot.reply("I need a valid domain to check.")
+
+    try:
+        url = "https://domain-availability.whoisxmlapi.com/api/v1"
+        params = {
+            "apiKey": bot.config.whois.api_key,
+            "domainName": domain,
+            "mode": "DNS_AND_WHOIS",
+            "credits": "DA"
+        }
+        result = requests.get(url, params=params).json()
+
+        # re-combine normal text SLD and TLD for pretty output
+        domain = "{}.{}".format(sld, tld)
+
+        # Print domain availability
+        if "DomainInfo" in result:
+            domain_avail = result["DomainInfo"]["domainAvailability"]
+            return bot.say("{} is {}.".format(domain, domain_avail))
+        # Error Handling from API
+        elif "ErrorMessage" in result:
+            error_message = result["ErrorMessage"]["msg"]
+            return bot.say("{}: {}".format(domain, error_message))
+        else:
+            return bot.reply("Issue with API.")
+    except requests.exceptions.RequestException:
+        return bot.reply("Issue with API.")
