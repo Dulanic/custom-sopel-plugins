@@ -1,7 +1,3 @@
-"""
-This is a huge WIP. Needs a lot of work, still.
-"""
-
 from sopel import config, plugin
 from sopel.config.types import StaticSection, ValidatedAttribute
 import re
