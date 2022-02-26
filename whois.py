@@ -24,7 +24,8 @@ VALID_SLD = "^((?=[a-z0-9-]{1,63})(xn--)?[a-z0-9]+(-[a-z0-9]+)*)+$"
 @plugin.commands("whois")
 @plugin.example(".whois actionsack.com")
 def domain_reg_check(bot, trigger):
-    """Check if a domain is registered."""
+    """Check if a domain is registered.
+    Doesn't work on stuff like .co.uk or .com.au"""
     domain = trigger.group(3)
 
     if not domain:
