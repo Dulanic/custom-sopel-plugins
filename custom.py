@@ -2454,7 +2454,7 @@ def laughs(bot, trigger):
     bot.say("https://p.actionsack.com/misc/laughs.jpg")
 
 
-@plugin.search(r"\[raughs\]")
+@plugin.search(r"\[raughs\]", "!raughs")
 def raughs(bot, trigger):
     bot.say("https://p.actionsack.com/tasian/raughs.webp")
 
