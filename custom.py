@@ -819,18 +819,21 @@ def mirai(bot, trigger):
     bot.say("https://p.actionsack.com/putin/🐻.mp4")
 
 
-@plugin.search("!putin")
-@plugin.command("putin")
+#@plugin.search("!putin")
+#@plugin.command("putin")
+#def putin(bot, trigger):
+#    """Posts a Putin meme of some sort.
+#    Can also be triggered with '!putin' anywhere in a message."""
+#    putin = [
+#        "https://p.actionsack.com/putin/dance.mp4",
+#        "https://p.actionsack.com/putin/pigeon.mp4",
+#        "https://p.actionsack.com/putin/ritz.gif",
+#        "https://p.actionsack.com/putin/🐻.mp4"
+#    ]
+#    bot.say(secrets.choice(putin))
+@plugin.search(r"\bputin\b")
 def putin(bot, trigger):
-    """Posts a Putin meme of some sort.
-    Can also be triggered with '!putin' anywhere in a message."""
-    putin = [
-        "https://p.actionsack.com/putin/dance.mp4",
-        "https://p.actionsack.com/putin/pigeon.mp4",
-        "https://p.actionsack.com/putin/ritz.gif",
-        "https://p.actionsack.com/putin/🐻.mp4"
-    ]
-    bot.say(secrets.choice(putin))
+    bot.say("Fuck Putin. All my homies hate Putin.")
 
 
 @plugin.command("aidsclub")
