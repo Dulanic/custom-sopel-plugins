@@ -40,4 +40,4 @@ def commodities_oil(bot, trigger):
     except KeyError:
         return bot.reply("API key missing, most likely.")
 
-    bot.say("PPB: ${} (€{}, C${})".format(USD, EUR, CAD))
+    bot.say("PPB: ${:.2f} (€{:.2f}, C${:.2f})".format(USD, EUR, CAD))
