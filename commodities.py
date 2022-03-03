@@ -22,6 +22,7 @@ BASE_URL = "https://commodities-api.com/api/latest"
 
 @plugin.commands("oil")
 @plugin.output_prefix("[OIL] ")
+@plugin.require_chanmsg
 def commodities_oil(bot, trigger):
     # TODO: config all the things, obviously
     PARAMS = {
