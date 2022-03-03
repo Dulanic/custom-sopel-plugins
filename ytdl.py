@@ -65,7 +65,7 @@ ytdl_opts = {
 @plugin.command("ytdl")
 @plugin.output_prefix("[youtube-dl] ")
 def ytdl(bot, trigger):
-    """Uses youtube-dl to download a video and post it to chat."""
+    """Uses yt-dlp to download a video and post it to chat."""
     url = trigger.group(3)
 
     if not url:
@@ -91,9 +91,9 @@ def ytdl(bot, trigger):
                 bot.reply(
                     "This video has no duration (livestream?) and won't be downloaded.")
                 return
-            if dur > 600:
+            if dur > 480:
                 bot.reply(
-                    "This video is longer than 10 minutes and won't be downloaded.")
+                    "This video is longer than 8 minutes and won't be downloaded.")
                 return
             else:
                 bot.say(italic("Downloading..."))
@@ -148,7 +148,7 @@ ytdla_opts = {
 @plugin.command("ytdla")
 @plugin.output_prefix("[youtube-dl] ")
 def ytdla(bot, trigger):
-    """Uses youtube-dl to download audio from a video and post it to chat."""
+    """Uses yt-dlp to download audio from a YouTube video and post it to chat."""
     url = trigger.group(3)
     from_id = False
 
@@ -182,9 +182,9 @@ def ytdla(bot, trigger):
                 bot.reply(
                     "This video has no duration (livestream?) and won't be downloaded.")
                 return
-            if dur > 600:
+            if dur > 900:
                 bot.reply(
-                    "This video is longer than 10 minutes and won't be downloaded.")
+                    "This video is longer than 15 minutes and won't be downloaded.")
                 return
             else:
                 bot.say(italic("Downloading..."))
