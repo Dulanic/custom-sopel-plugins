@@ -833,7 +833,11 @@ def mirai(bot, trigger):
 #    bot.say(secrets.choice(putin))
 @plugin.search(r"\bputin\b")
 def putin(bot, trigger):
-    bot.say("Fuck Putin. All my homies hate Putin.")
+    fuck_putin = [
+        "Fuck Putin. All my homies hate Putin.",
+        "Putin is a little bitch boy."
+    ]
+    bot.say(secrets.choice(fuck_putin))
 
 
 @plugin.command("aidsclub")
@@ -2931,7 +2935,7 @@ def kwaken(bot, trigger):
     bot.say("https://p.actionsack.com/misc/kwaken.png")
 
 
-@plugin.search("KFC")
+@plugin.search("!KFC")
 def kfc(bot, trigger):
     kfc = [
         "https://p.actionsack.com/kfc/00.png",
