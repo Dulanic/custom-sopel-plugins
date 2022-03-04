@@ -18,10 +18,6 @@ Encode or decode base64 data.
 Moved from [sopel-color-text](https://github.com/xnaas/sopel-color-text) — don't want to actually deal with publishing to pypi in the future.
 
 
-## [commodities.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/commodities.py)
-Uses the [Commodities API](https://commodities-api.com) to get the Brent Crude Oil price ber barrel.
-
-
 ## custom.py
 Custom commands for [Action Sack](https://actionsack.com)'s Sopel bot. Many of these are highly inappropriate.
 
@@ -94,6 +90,10 @@ Posts a random joke from [yourmom.txt](https://github.com/xnaas/custom-sopel-plu
 Stop spelling y'all wrong.
 
 
+## [yf.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/yf.py)
+Uses the unofficial Yahoo Finance API for things.
+
+
 ## [ytdl.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/ytdl.py)
 Uses [youtube-dl](https://youtube-dl.org/) to download and share a video. Would require editing to be useful to anyone else.
 
@@ -102,6 +102,13 @@ Uses [youtube-dl](https://youtube-dl.org/) to download and share a video. Would 
 ### Deprecated Plugins
 
 These plugins are deprecated and no longer used or updated.
+
+#### [commodities.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/commodities.py)
+This was abandoned because Yahoo Finance can do this and more much better and with no limits.
+
+Use [yf.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/yf.py) instead.
+
+Used the [Commodities API](https://commodities-api.com) to get the Brent Crude Oil price ber barrel.
 
 #### [imgur.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/deprecated/imgur.py)
 This was abandoned because the Imgur API isn't great for this purpose.
