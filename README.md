@@ -103,7 +103,7 @@ Uses [youtube-dl](https://youtube-dl.org/) to download and share a video. Would 
 
 These plugins are deprecated and no longer used or updated.
 
-#### [commodities.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/commodities.py)
+#### [commodities.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/deprecated/commodities.py)
 This was abandoned because Yahoo Finance can do this and more much better and with no limits.
 
 Use [yf.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/yf.py) instead.
