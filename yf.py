@@ -31,7 +31,7 @@ YHEAD = {"User-Agent": "actionsack.com"}
 @plugin.output_prefix("[OIL] ")
 # @plugin.require_chanmsg
 def yf_oil(bot, trigger):
-    """Test help message."""
+    """Get the latest Brent Crude Oil price per barrel."""
     PARAMS = {"symbols": "BZ=F"}
 
     try:
