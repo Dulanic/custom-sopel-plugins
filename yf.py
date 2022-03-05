@@ -46,7 +46,7 @@ def get_quote(bot, symbol):
     data.clear()
 
     # TODO: dict with lots of data
-    data = {"price": "{}".format(r["result"][0]["regularMarketPrice"])}
+    data = {"price": r["result"][0]["regularMarketPrice"]}
 
     return data
 
@@ -89,7 +89,7 @@ def yf_oil(bot, trigger):
         return bot.say(str(e))
 
     # TODO: Additional data points
-    price = data
+    price = data["price"]
     bot.say("PPB: ${:.2f}".format(price))
 
 
