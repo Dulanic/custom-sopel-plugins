@@ -28,7 +28,10 @@ YHEAD = {"User-Agent": "thx 4 the API <3"}
 
 
 def get_quote(bot, symbols):
-    r = requests.get(url=URL, params=symbols, headers=YHEAD)
+    try:
+        r = requests.get(url=URL, params=symbols, headers=YHEAD)
+    except requests.exceptions.ConnectionError:
+        raise Exception("Unable to reach Yahoo Finance.")
 
     if r.status_code != 200:
         raise Exception("HTTP Error {}".format(r.status_code))
