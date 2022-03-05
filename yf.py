@@ -24,23 +24,68 @@ import requests
 
 URL = "https://query1.finance.yahoo.com/v7/finance/quote"
 # Yahoo ignores the default python requests ua
-YHEAD = {"User-Agent": "actionsack.com"}
+YHEAD = {"User-Agent": "thx 4 the API <3"}
+
+
+def get_quote(bot, symbols):
+    r = requests.get(url=URL, params=symbols, headers=YHEAD)
+
+    if r.status_code != 200:
+        raise Exception("HTTP Error {}".format(r.status_code))
+
+    r = r.json()["quoteResponse"]
+
+    if not r["result"]:
+        raise Exception("No data found. Input data likely bad.")
+
+    data = {}
+    data.clear()  # probably not necessary
+
+    for q in r["result"]:
+        data.update({"{}".format(q["symbol"])
+                    : "{}".format(q["regularMarketPrice"])})
+
+    return data
 
 
 @plugin.command("oil")
 @plugin.output_prefix("[OIL] ")
-# @plugin.require_chanmsg
 def yf_oil(bot, trigger):
     """Get the latest Brent Crude Oil price per barrel."""
-    PARAMS = {"symbols": "BZ=F"}
+    # hardcode "Brent Crude Oil Last Day Financ"
+    symbols = {"symbols": "BZ=F"}
 
     try:
-        data = requests.get(url=URL, params=PARAMS, headers=YHEAD).json()["quoteResponse"]["result"][0]
-        price = data["regularMarketPrice"]
-        # TODO: Additional data points
-    except requests.exceptions.RequestException:
-        return bot.reply("Issue with API.")
-    except KeyError:
-        return bot.reply("Issue with API.")
+        data = get_quote(bot, symbols)
+    except Exception as e:
+        return bot.say(str(e))
 
+    # TODO: Additional data points
+    price = float(data["BZ=F"])
     bot.say("PPB: ${:.2f}".format(price))
+
+
+@plugin.command("stockb")
+@plugin.output_prefix("[STOCKS BETA] ")
+def yf_stock(bot, trigger):
+    if not trigger.group(2):
+        return bot.reply("I need a (list of) stock ticker(s).")
+
+    # TODO: get as many stocks as we want
+    symbols = trigger.group(2).upper()
+    symbols = {"symbols": symbols}
+
+    try:
+        data = get_quote(bot, symbols)
+    except Exception as e:
+        return bot.say(str(e))
+
+    # DEBUG
+    data = data.items()
+    bot.say("[DEBUG] {}".format(data))
+    return
+    # TODO: Get more data lol
+    price = data["result"][0]["regularMarketPrice"]
+    ticker = data["result"][0]["symbol"]
+
+    bot.say("{}: ${:.2f}".format(ticker, price))
