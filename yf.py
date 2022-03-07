@@ -41,12 +41,58 @@ def get_quote(bot, symbol):
     if not r["result"]:
         raise Exception("No data found. Input data likely bad.")
 
-    # probably not necessary:
-    data = {}
-    data.clear()
+    q = r["result"][0]
+    marketState = q["marketState"]
+    quoteType = q["quoteType"]
 
-    # TODO: dict with lots of data
-    data = {"price": r["result"][0]["regularMarketPrice"]}
+    if quoteType == "EQUITY" and marketState == "PRE":
+        data = {
+            "price": q["preMarketPrice"],
+            "change": q["preMarketChange"],
+            "percentchange": q["preMarketChangePercent"],
+            "low": q["regularMarketDayLow"],
+            "high": q["regularMarketDayHigh"],
+            "cap": int_to_human(q["marketCap"]),
+            "name": q["longName"],
+            "close": q["regularMarketPreviousClose"],
+            "currencySymbol": cur_to_symbol(q["currency"]),
+            "marketState": marketState
+        }
+    elif quoteType == "EQUITY" and marketState == "REGULAR":
+        data = {
+            "price": q["regularMarketPrice"],
+            "change": q["regularMarketChange"],
+            "percentchange": q["regularMarketChangePercent"],
+            "low": q["regularMarketDayLow"],
+            "high": q["regularMarketDayHigh"],
+            "cap": int_to_human(q["marketCap"]),
+            "name": q["longName"],
+            "close": q["regularMarketPreviousClose"],
+            "currencySymbol": cur_to_symbol(q["currency"]),
+            "marketState": marketState
+        }
+    elif quoteType == "EQUITY" and ((marketState == "POST" or marketState == "POSTPOST") and "postMarketPrice" in q):
+        data = {
+            "price": q["postMarketPrice"],
+            "change": q["postMarketChange"],
+            "percentchange": q["postMarketChangePercent"],
+            "low": q["regularMarketDayLow"],
+            "high": q["regularMarketDayHigh"],
+            "cap": int_to_human(q["marketCap"]),
+            "name": q["longName"],
+            "close": q["regularMarketPreviousClose"],
+            "rmchange": q["regularMarketChange"],
+            "rmpercentchange": q["regularMarketChangePercent"],
+            "currencySymbol": cur_to_symbol(q["currency"]),
+            "marketState": marketState
+        }
+    elif quoteType == "FUTURE":
+        # TODO: more data
+        data = {"price": q["regularMarketPrice"]}
+    else:
+        return bot.say(
+            "[DEBUG] Unsupported or other issue. Type: {}, State: {}".format(
+                quoteType, marketState))
 
     return data
 
@@ -65,15 +111,70 @@ def get_quote_multi(bot, symbols):
     if not r["result"]:
         raise Exception("No data found. Input data likely bad.")
 
-    # probably not necessary:
+    r = r["result"]
+
+    # might not need this?
     data = {}
     data.clear()
 
     # TODO: import more data, better:
-    for q in r["result"]:
-        data.update({"{}".format(q["symbol"]): "{}".format(q["regularMarketPrice"])})
+    # for Quote in Results
+    for q in r:
+        marketState = q["marketState"]
+        if marketState == "PRE":
+            data.update({
+                "{}".format(q["symbol"]): "{}".format(q["regularMarketPrice"])
+            })
+        elif marketState == "REGULAR":
+            data.update({
+                "{}".format(q["symbol"]): "{}".format(q["regularMarketPrice"])
+            })
+        elif marketState == "POST" or marketState == "POSTPOST":
+            data.update({
+                "{}".format(q["symbol"]): "{}".format(q["regularMarketPrice"])
+            })
+        else:
+            return bot.say(
+                "[DEBUG] Error: Unknown market state: {}".format(marketState))
 
     return data
+
+
+def int_to_human(n):
+    # If a stock hits a quadrillion dollar value...jesus.
+    if n >= 1e15:
+        return "Holy shit!"
+    # Trillions
+    elif n >= 1e12:
+        n = str(round(n / 1e12, 2))
+        return n + "T"
+    # Billions
+    elif n >= 1e9:
+        n = str(round(n / 1e9, 2))
+        return n + "B"
+    # Millions
+    elif n >= 1e6:
+        n = str(round(n / 1e6, 2))
+        return n + "M"
+    # Shouldn't be anything lower than millions, but...
+    return str(n)
+
+
+def cur_to_symbol(currency):
+    # not exhaustive
+    currencies = {
+        "USD": "$",
+        "CAD": "C$",
+        "JPY": "JP¥",
+        "CNY": "CN¥",
+        "EUR": "€"
+    }
+    # default to $
+    if currency not in currencies:
+        cs = "$"
+    else:
+        cs = currencies[currency]
+    return cs
 
 
 @plugin.command("oil")
@@ -116,9 +217,11 @@ def yf_stock(bot, trigger):
             return bot.say(str(e))
 
     # DEBUG
-    data = data.items()
-    bot.say("[DEBUG] {}".format(data))
-    return
+    try:
+        data = data.items()
+    except AttributeError:
+        return bot.say("[DEBUG] No dict to output.")
+    return bot.say("[DEBUG] {}".format(data))
 
     # price = data["result"][0]["regularMarketPrice"]
     # ticker = data["result"][0]["symbol"]
