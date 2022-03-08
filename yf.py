@@ -207,7 +207,7 @@ def yf_stock(bot, trigger):
     if not trigger.group(2):
         return bot.reply("I need a (list of) stock ticker(s).")
 
-    symbols = trigger.group(2).upper()
+    symbols = trigger.group(3).upper()
 
     if re.search(",", symbols):
         symbols = {"symbols": symbols}
@@ -229,6 +229,8 @@ def yf_stock(bot, trigger):
     #     return bot.say("[DEBUG] No dict to output.")
     # return bot.say("[DEBUG] {}".format(data))
     # bot.say("[DEBUG] {}".format(data))
+    if not data:
+        return
 
     # if multi-stock
     if "price" not in data:
