@@ -59,7 +59,7 @@ def get_quote(bot, symbol):
             "currencySymbol": cur_to_symbol(q["currency"]),
             "marketState": marketState
         }
-    elif quoteType == "EQUITY" and marketState == "REGULAR":
+    elif quoteType == "EQUITY" and (marketState == "REGULAR" or marketState == "PREPRE"):
         data = {
             "price": q["regularMarketPrice"],
             "change": q["regularMarketChange"],
@@ -133,7 +133,8 @@ def get_quote_multi(bot, symbols):
     for q in r:
         data[q["symbol"]] = {
             "price": q["regularMarketPrice"],
-            "percentchange": q["regularMarketChangePercent"]
+            "percentchange": q["regularMarketChangePercent"],
+            "currencySymbol": cur_to_symbol(q["currency"])
         }
     return data
 
@@ -240,16 +241,18 @@ def yf_stock(bot, trigger):
                 percentchange = color(
                     "{:+,.2f}%".format(attr["percentchange"]), colors.GREEN)
                 items.append(
-                    "{}: ${:,.2f} ({})".format(
+                    "{}: {}{:,.2f} ({})".format(
                         symbol,
+                        attr["currencySymbol"],
                         attr["price"],
                         percentchange))
             else:
                 percentchange = color(
                     "{:+,.2f}%".format(attr["percentchange"]), colors.RED)
                 items.append(
-                    "{}: ${:,.2f} ({})".format(
+                    "{}: {}{:,.2f} ({})".format(
                         symbol,
+                        attr["currencySymbol"],
                         attr["price"],
                         percentchange))
         return bot.say(" | ".join(items))
