@@ -43,10 +43,11 @@ def get_quote(bot, symbol):
         raise Exception("No data found. Input data likely bad.")
 
     q = r["result"][0]
+    exchange = q["exchange"]
     marketState = q["marketState"]
     quoteType = q["quoteType"]
 
-    if quoteType == "EQUITY" and marketState == "PRE":
+    if quoteType == "EQUITY" and marketState == "PRE" and exchange == "NMS":
         data = {
             "price": q["preMarketPrice"],
             "change": q["preMarketChange"],
@@ -60,21 +61,9 @@ def get_quote(bot, symbol):
             "marketState": marketState,
             "symbol": q["symbol"]
         }
-    elif quoteType == "EQUITY" and (marketState == "REGULAR" or marketState == "PREPRE"):
-        data = {
-            "price": q["regularMarketPrice"],
-            "change": q["regularMarketChange"],
-            "percentchange": q["regularMarketChangePercent"],
-            "low": q["regularMarketDayLow"],
-            "high": q["regularMarketDayHigh"],
-            "cap": int_to_human(q["marketCap"]),
-            "name": q["longName"],
-            "close": q["regularMarketPreviousClose"],
-            "currencySymbol": cur_to_symbol(q["currency"]),
-            "marketState": marketState,
-            "symbol": q["symbol"]
-        }
-    elif quoteType == "EQUITY" and ((marketState == "POST" or marketState == "POSTPOST") and "postMarketPrice" in q):
+        return data
+    elif quoteType == "EQUITY" and ((marketState == "POST" or marketState == "POSTPOST")
+        and "postMarketPrice" in q) and exchange == "NMS":
         data = {
             "price": q["postMarketPrice"],
             "change": q["postMarketChange"],
@@ -90,7 +79,8 @@ def get_quote(bot, symbol):
             "marketState": marketState,
             "symbol": q["symbol"]
         }
-    elif quoteType == "FUTURE":
+        return data
+    elif quoteType == "FUTURE" or quoteType == "INDEX" or quoteType == "CURRENCY":
         data = {
             "price": q["regularMarketPrice"],
             "change": q["regularMarketChange"],
@@ -104,11 +94,38 @@ def get_quote(bot, symbol):
             "marketState": marketState,
             "symbol": q["symbol"]
         }
-    else:
-        return bot.say(
-            "[DEBUG] Unsupported or other issue. Type: {}, State: {}".format(
-                quoteType, marketState))
+        return data
+    elif quoteType == "CRYPTOCURRENCY":
+        data = {
+            "price": q["regularMarketPrice"],
+            "change": q["regularMarketChange"],
+            "percentchange": q["regularMarketChangePercent"],
+            "low": q["regularMarketDayLow"],
+            "high": q["regularMarketDayHigh"],
+            "cap": int_to_human(q["marketCap"]),
+            "name": q["shortName"],
+            "close": q["regularMarketPreviousClose"],
+            "currencySymbol": cur_to_symbol(q["currency"]),
+            "marketState": marketState,
+            "symbol": q["symbol"]
+        }
+        return data
 
+    # marketState REGULAR and PREPRE appear to be the same thing
+    # set default/catch-all data
+    data = {
+        "price": q["regularMarketPrice"],
+        "change": q["regularMarketChange"],
+        "percentchange": q["regularMarketChangePercent"],
+        "low": q["regularMarketDayLow"],
+        "high": q["regularMarketDayHigh"],
+        "cap": int_to_human(q["marketCap"]),
+        "name": q["longName"],
+        "close": q["regularMarketPreviousClose"],
+        "currencySymbol": cur_to_symbol(q["currency"]),
+        "marketState": marketState,
+        "symbol": q["symbol"]
+    }
     return data
 
 
