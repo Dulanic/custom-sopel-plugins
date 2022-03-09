@@ -1,4 +1,4 @@
-from sopel import plugin, formatting
+from sopel import plugin
 from sopel.formatting import bold, color, colors
 # from sopel import config, plugin
 # from sopel.config.types import StaticSection, ValidatedAttribute
