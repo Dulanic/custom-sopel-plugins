@@ -59,7 +59,8 @@ def get_quote(bot, symbol):
             "close": q["regularMarketPreviousClose"],
             "currencySymbol": cur_to_symbol(q["currency"]),
             "marketState": marketState,
-            "symbol": q["symbol"]
+            "symbol": q["symbol"],
+            "exchange": q["exchange"]
         }
         return data
     elif quoteType == "EQUITY" and ((marketState == "POST" or marketState == "POSTPOST")
@@ -77,7 +78,8 @@ def get_quote(bot, symbol):
             "rmpercentchange": q["regularMarketChangePercent"],
             "currencySymbol": cur_to_symbol(q["currency"]),
             "marketState": marketState,
-            "symbol": q["symbol"]
+            "symbol": q["symbol"],
+            "exchange": q["exchange"]
         }
         return data
     elif quoteType == "FUTURE" or quoteType == "INDEX" or quoteType == "CURRENCY":
@@ -92,7 +94,8 @@ def get_quote(bot, symbol):
             "close": q["regularMarketPreviousClose"],
             "currencySymbol": cur_to_symbol(q["currency"]),
             "marketState": marketState,
-            "symbol": q["symbol"]
+            "symbol": q["symbol"],
+            "exchange": q["exchange"]
         }
         return data
     elif quoteType == "CRYPTOCURRENCY":
@@ -107,7 +110,8 @@ def get_quote(bot, symbol):
             "close": q["regularMarketPreviousClose"],
             "currencySymbol": cur_to_symbol(q["currency"]),
             "marketState": marketState,
-            "symbol": q["symbol"]
+            "symbol": q["symbol"],
+            "exchange": q["exchange"]
         }
         return data
 
@@ -124,7 +128,8 @@ def get_quote(bot, symbol):
         "close": q["regularMarketPreviousClose"],
         "currencySymbol": cur_to_symbol(q["currency"]),
         "marketState": marketState,
-        "symbol": q["symbol"]
+        "symbol": q["symbol"],
+        "exchange": q["exchange"]
     }
     return data
 
@@ -304,11 +309,12 @@ def yf_stock(bot, trigger):
         msg = msg.format(**data)
 
     # add info if pre- or post-market
+    exchange = data["exchange"]
     marketState = data["marketState"]
-    if marketState == "PRE":
+    if exchange == "NMS" and marketState == "PRE":
         msg += color(" PREMARKET", colors.LIGHT_GREY)
         msg2 += " | CLOSE {currencySymbol}{close:,.2f} "
-    elif marketState == "POST" or marketState == "POSTPOST":
+    elif exchange == "NMS" and (marketState == "POST" or marketState == "POSTPOST"):
         msg += color(" POSTMARKET", colors.LIGHT_GREY)
         msg2 += " | CLOSE {currencySymbol}{close:,.2f} "
         if data["rmchange"] >= 0:
