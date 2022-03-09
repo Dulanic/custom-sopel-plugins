@@ -835,7 +835,8 @@ def mirai(bot, trigger):
 def putin(bot, trigger):
     fuck_putin = [
         "Fuck Putin. All my homies hate Putin.",
-        "Putin is a little bitch boy."
+        "Putin is a little bitch boy.",
+        "https://p.actionsack.com/putin/pootin.webp"
     ]
     bot.say(secrets.choice(fuck_putin))
 
@@ -2461,13 +2462,13 @@ def laughs(bot, trigger):
     bot.say("https://p.actionsack.com/misc/laughs.jpg")
 
 
-@plugin.search(r"\[raughs\]", "!raughs")
+@plugin.action_command("raughs")
+@plugin.search(r"\[raughs\]")
 def raughs(bot, trigger):
     bot.say("https://p.actionsack.com/tasian/raughs.webp")
 
+
 # Action Sack People Section
-
-
 @plugin.search("!asak")
 @plugin.command("asak")
 def asak(bot, trigger):
