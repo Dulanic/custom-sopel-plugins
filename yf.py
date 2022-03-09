@@ -289,6 +289,7 @@ def yf_stock(bot, trigger):
 
     # set base msg
     msg = "{name} ({symbol}) | {currencySymbol}" + bold("{price:,.2f} ")
+    msg2 = ""
 
     # Change is None, usually on IPOs
     if not data["change"]:
@@ -302,7 +303,7 @@ def yf_stock(bot, trigger):
 
         msg = msg.format(**data)
 
-    msg2 = ""
+    # add info if pre- or post-market
     marketState = data["marketState"]
     if marketState == "PRE":
         msg += color(" PREMARKET", colors.LIGHT_GREY)
