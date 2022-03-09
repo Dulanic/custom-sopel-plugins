@@ -201,8 +201,7 @@ def yf_oil(bot, trigger):
     bot.say("PPB: ${:.2f}".format(price))
 
 
-@plugin.command("stockb")
-@plugin.output_prefix("[STOCKS BETA] ")
+@plugin.command("stock")
 def yf_stock(bot, trigger):
     """Get stock(s) info."""
     if not trigger.group(2):
