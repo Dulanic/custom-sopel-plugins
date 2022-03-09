@@ -201,7 +201,9 @@ def cur_to_symbol(currencySymbol):
         # Europe
         "CHF": "CHF ",
         "EUR": "€",
-        "GBp": "£",
+        "GBP": "£",  # yes, YF really supplies both GBP and GBp...
+        "GBp": "£",  # yes, YF really supplies both GBP and GBp...
+        "RUB": "₽",
         # South/East Asia
         "INR": "₹",
         "IRR": "IRR ",  # Iranian rial, not messing with RTL text...
