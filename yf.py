@@ -1,4 +1,4 @@
-from sopel import plugin
+from sopel import plugin, formatting
 from sopel.formatting import bold, color, colors
 # from sopel import config, plugin
 # from sopel.config.types import StaticSection, ValidatedAttribute
@@ -57,7 +57,8 @@ def get_quote(bot, symbol):
             "name": q["longName"],
             "close": q["regularMarketPreviousClose"],
             "currencySymbol": cur_to_symbol(q["currency"]),
-            "marketState": marketState
+            "marketState": marketState,
+            "symbol": q["symbol"]
         }
     elif quoteType == "EQUITY" and (marketState == "REGULAR" or marketState == "PREPRE"):
         data = {
@@ -70,7 +71,8 @@ def get_quote(bot, symbol):
             "name": q["longName"],
             "close": q["regularMarketPreviousClose"],
             "currencySymbol": cur_to_symbol(q["currency"]),
-            "marketState": marketState
+            "marketState": marketState,
+            "symbol": q["symbol"]
         }
     elif quoteType == "EQUITY" and ((marketState == "POST" or marketState == "POSTPOST") and "postMarketPrice" in q):
         data = {
@@ -85,7 +87,8 @@ def get_quote(bot, symbol):
             "rmchange": q["regularMarketChange"],
             "rmpercentchange": q["regularMarketChangePercent"],
             "currencySymbol": cur_to_symbol(q["currency"]),
-            "marketState": marketState
+            "marketState": marketState,
+            "symbol": q["symbol"]
         }
     elif quoteType == "FUTURE":
         data = {
@@ -98,7 +101,8 @@ def get_quote(bot, symbol):
             "name": q["shortName"],
             "close": q["regularMarketPreviousClose"],
             "currencySymbol": cur_to_symbol(q["currency"]),
-            "marketState": marketState
+            "marketState": marketState,
+            "symbol": q["symbol"]
         }
     else:
         return bot.say(
@@ -159,33 +163,48 @@ def int_to_human(n):
     return str(n)
 
 
-def cur_to_symbol(currency):
-    # not exhaustive
+def cur_to_symbol(currencySymbol):
+    # not exhaustive; covers the top 21 exchanges https://w.wiki/4w3j
     currencies = {
-        "USD": "$",
+        # Dollars
+        "AUD": "AU$",
+        "BRL": "R$",
         "CAD": "C$",
-        "JPY": "JP¥",
+        "HKD": "HK$",
+        "TWD": "NT$",
+        "USD": "$",
+        # Yen/Yuan
         "CNY": "CN¥",
-        "EUR": "€"
+        "JPY": "JP¥",
+        # Europe
+        "CHF": "CHF ",
+        "EUR": "€",
+        "GBp": "£",
+        # South/East Asia
+        "INR": "₹",
+        "IRR": "IRR ",  # Iranian rial, not messing with RTL text...
+        "KRW": "₩",
+        "SAR": "SAR ",  # Saudi riyal, not messing with RTL text...
+        # Africa
+        "ZAR": "R "
     }
-    # default to $
-    if currency not in currencies:
-        cs = "$"
+    # identify currencies that need to be added
+    if currencySymbol not in currencies:
+        cs = "?$"
     else:
-        cs = currencies[currency]
+        cs = currencies[currencySymbol]
     return cs
 
 
 # shout-out to MrTap for this one
 def name_scrubber(name):
-    p = re.compile(
-        ',? (ltd|ltee|llc|corp(oration)?|inc(orporated)?|limited|plc)\\.?$',
-        re.I)
-    return p.sub('', name)
+    p = re.compile(r",? (ltd|ltee|llc|corp(oration)?|inc(orporated)?|limited|plc)\.?$", re.I)
+    return p.sub("", name)
 
 
 @plugin.command("oil")
 @plugin.output_prefix("[OIL] ")
+@plugin.rate(server=1)
 def yf_oil(bot, trigger):
     """Get the latest Brent Crude Oil price per barrel."""
     # hardcode "Brent Crude Oil Last Day Financ"
@@ -196,12 +215,17 @@ def yf_oil(bot, trigger):
     except Exception as e:
         return bot.say(str(e))
 
-    # TODO: Additional data points
-    price = data["price"]
-    bot.say("PPB: ${:.2f}".format(price))
+    pchange = data["percentchange"]
+    if pchange >= 0:
+        pchange = color("{:+,.2f}%".format(pchange), colors.GREEN)
+    else:
+        pchange = color("{:+,.2f}%".format(pchange), colors.RED)
+    price = "{:.2f}".format(data["price"])
+    bot.say("PPB: ${} ({})".format(bold(price), pchange))
 
 
 @plugin.command("stock")
+@plugin.rate(server=1)
 def yf_stock(bot, trigger):
     """Get stock(s) info."""
     if not trigger.group(2):
@@ -222,13 +246,6 @@ def yf_stock(bot, trigger):
         except Exception as e:
             return bot.say(str(e))
 
-    # DEBUG
-    # try:
-    #     data = data.items()
-    # except AttributeError:
-    #     return bot.say("[DEBUG] No dict to output.")
-    # return bot.say("[DEBUG] {}".format(data))
-    # bot.say("[DEBUG] {}".format(data))
     if not data:
         return
 
@@ -236,69 +253,59 @@ def yf_stock(bot, trigger):
     if "price" not in data:
         items = []
         for symbol, attr in data.items():
-            if attr["percentchange"] >= 0:
-                percentchange = color(
-                    "{:+,.2f}%".format(attr["percentchange"]), colors.GREEN)
-                items.append(
-                    "{}: {}{:,.2f} ({})".format(
-                        symbol,
-                        attr["currencySymbol"],
-                        attr["price"],
-                        percentchange))
+            # set attrs
+            cs = attr["currencySymbol"]
+            pchange = attr["percentchange"]
+            price = attr["price"]
+            # determine good or bad
+            if pchange >= 0:
+                pchange = color("{:+,.2f}%".format(pchange), colors.GREEN)
+                items.append("{}: {}{:,.2f} ({})".format(symbol, cs, price, pchange))
             else:
-                percentchange = color(
-                    "{:+,.2f}%".format(attr["percentchange"]), colors.RED)
-                items.append(
-                    "{}: {}{:,.2f} ({})".format(
-                        symbol,
-                        attr["currencySymbol"],
-                        attr["price"],
-                        percentchange))
+                pchange = color("{:+,.2f}%".format(pchange), colors.RED)
+                items.append("{}: {}{:,.2f} ({})".format(symbol, cs, price, pchange))
+        # create and post msg
         return bot.say(" | ".join(items))
 
-    # cleanup symbol
-    symbol = symbol["symbols"]
-    # cleanup full name
+    # cleanup name
     data["name"] = name_scrubber(data["name"])
 
     # set base msg
-    msg = "{d[name]} ({symbol}) | {d[currencySymbol]}" + \
-        bold("{d[price]:,.2f} ")
+    msg = "{name} ({symbol}) | {currencySymbol}" + bold("{price:,.2f} ")
 
     # Change is None, usually on IPOs
     if not data["change"]:
-        msg = msg.format(symbol=symbol, d=data)
+        msg = msg.format(**data)
     # Otherwise, check change vs previous day
     else:
         if data["change"] >= 0:
-            msg += color("{d[change]:+,.2f} {d[percentchange]:+,.2f}%",
-                         colors.GREEN)
+            msg += color("{change:+,.2f} {percentchange:+,.2f}%", colors.GREEN)
         else:
-            msg += color("{d[change]:+,.2f} {d[percentchange]:+,.2f}%", colors.RED)
+            msg += color("{change:+,.2f} {percentchange:+,.2f}%", colors.RED)
 
-        msg = msg.format(symbol=symbol, d=data)
+        msg = msg.format(**data)
 
     msg2 = ""
     marketState = data["marketState"]
     if marketState == "PRE":
         msg += color(" PREMARKET", colors.LIGHT_GREY)
-        msg2 += " | CLOSE {d[currencySymbol]}{d[close]:,.2f} "
+        msg2 += " | CLOSE {currencySymbol}{close:,.2f} "
     elif marketState == "POST" or marketState == "POSTPOST":
         msg += color(" POSTMARKET", colors.LIGHT_GREY)
-        msg2 += " | CLOSE {d[currencySymbol]}{d[close]:,.2f} "
+        msg2 += " | CLOSE {currencySymbol}{close:,.2f} "
         if data["rmchange"] >= 0:
-            msg2 += color("{d[rmchange]:+,.2f} {d[rmpercentchange]:+,.2f}%", colors.GREEN)
+            msg2 += color("{rmchange:+,.2f} {rmpercentchange:+,.2f}%", colors.GREEN)
         else:
-            msg2 += color("{d[rmchange]:+,.2f} {d[rmpercentchange]:+,.2f}%", colors.RED)
+            msg2 += color("{rmchange:+,.2f} {rmpercentchange:+,.2f}%", colors.RED)
 
     # add some more shit to the message
     msg2 += " | "
-    msg2 += color("L {d[low]:,.2f}", colors.RED) + " "
-    msg2 += color("H {d[high]:,.2f}", colors.GREEN)
-    msg2 += " | Cap {d[currencySymbol]}{d[cap]}"
+    msg2 += color("L {low:,.2f}", colors.RED) + " "
+    msg2 += color("H {high:,.2f}", colors.GREEN)
+    msg2 += " | Cap {currencySymbol}{cap}"
 
     # set final message
-    msg = ("{msg}" + msg2).format(msg=msg, d=data)
+    msg = ("{msg}" + msg2).format(msg=msg, **data)
 
     # finally, the bot says something!
     return bot.say(msg)
