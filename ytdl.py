@@ -64,6 +64,7 @@ ytdl_opts = {
 
 @plugin.command("ytdl")
 @plugin.output_prefix("[youtube-dl] ")
+@plugin.rate(user=3600)
 def ytdl(bot, trigger):
     """Uses yt-dlp to download a video and post it to chat."""
     url = trigger.group(3)
