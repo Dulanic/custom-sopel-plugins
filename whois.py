@@ -76,7 +76,7 @@ def domain_reg_check(bot, trigger):
             "apiKey": bot.config.whois.api_key,
             "domainName": domain,
             "mode": "DNS_AND_WHOIS",
-            "credits": "DA"
+            "credits": "WHOIS"
         }
         result = requests.get(url, params=params).json()
 
