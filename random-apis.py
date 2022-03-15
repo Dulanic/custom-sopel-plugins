@@ -16,10 +16,13 @@ def rbot(bot, trigger):
             string.ascii_letters +
             string.digits +
             string.punctuation) for _ in range(random_length))
-    string_urlsafe = urllib.parse.quote_plus(random_string)
+    string_urlsafe = urllib.parse.quote(random_string)
     url = "https://robohash.org/{}.png".format(string_urlsafe)
     try:
         image = requests.get(url)
+        # API recently started to fail a lot... (2022-03-15)
+        if image.status_code == 500:
+            return bot.reply("API returned HTTP 500 Internal Server Error")
         filename = ''.join(
             random.SystemRandom().choice(
                 string.ascii_letters +
@@ -27,7 +30,7 @@ def rbot(bot, trigger):
         with open("/mnt/media/websites/actionsack.com/tmp/rh_{}.png".format(filename), "wb") as file:
             file.write(image.content)
         bot.say("https://actionsack.com/tmp/rh_{}.png".format(filename))
-    except:
+    except BaseException:
         bot.reply("Error reaching API, probably.")
 
 
@@ -46,7 +49,7 @@ def fakeperson(bot, trigger):
             file.write(image.content)
         bot.say(
             "https://actionsack.com/tmp/fp_{}.jpg".format(filename))
-    except:
+    except BaseException:
         bot.reply("Error reaching API, probably.")
 
 
@@ -56,7 +59,7 @@ def advice(bot, trigger):
     try:
         advice = requests.get(url).json()["slip"]["advice"]
         bot.reply(advice)
-    except:
+    except BaseException:
         bot.reply("Error reaching API, probably.")
 
 
@@ -67,5 +70,5 @@ def ronswanson(bot, trigger):
     try:
         quote = requests.get(url).json()[0]
         bot.say("Ron Swanson says: {}".format(quote))
-    except:
+    except BaseException:
         bot.reply("Error reaching API, probably.")
