@@ -35,6 +35,7 @@ def rbot(bot, trigger):
 
 
 @plugin.command("fakeperson")
+@plugin.rate(server=2)  # endpoint doesn't generate a new image more than once per second anyway
 def fakeperson(bot, trigger):
     """Posts a not real person. 😱
     Uses thispersondoesnotexist.com"""
