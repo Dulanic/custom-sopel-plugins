@@ -31,6 +31,19 @@ def domain_reg_check(bot, trigger):
     if not domain:
         return bot.reply("I need a domain to check.")
 
+    # credit check
+    if domain == "credits":
+        url = "https://user.whoisxmlapi.com/user-service/account-balance"
+        params = {
+            "productId": 1,
+            "apiKey": bot.config.whois.api_key
+        }
+        try:
+            credits = requests.get(url, params=params).json()["data"][0]["credits"]
+            return bot.say("[WHOIS] {} credits remaining.".format(credits))
+        except requests.exceptions.RequestException:
+            return bot.reply("Issue with API.")
+
     # normal text → punycode
     # catches some invalid domain stuff
     try:
