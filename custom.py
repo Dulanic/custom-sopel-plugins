@@ -3064,7 +3064,7 @@ def repost(bot, trigger):
     bot.say(secrets.choice(reposts))
 
 
-@plugin.rule("^🪦$")
+@plugin.command("rip")
 def rip(bot, trigger):
     bot.say("https://p.actionsack.com/emoji/rip.webp")
 
