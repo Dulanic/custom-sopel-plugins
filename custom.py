@@ -119,6 +119,7 @@ def fourtwenty(bot, trigger):
         "https://p.actionsack.com/420/dr.webp",
         "https://p.actionsack.com/420/exp.webp",
         "https://p.actionsack.com/420/gravityfalls.webp",
+        "https://p.actionsack.com/420/grounded.webp",
         "https://p.actionsack.com/420/highnoon-a.webp",
         "https://p.actionsack.com/420/highnoon.webp",
         "https://p.actionsack.com/420/lisa.webp",
