@@ -2,9 +2,10 @@ from sopel import plugin
 import random
 import requests
 import rule34
+import secrets
 
 
-def nsfw_check(bot, trigger):
+def nsfw_check(trigger):
     # TODO: Make this configurable
     if trigger.is_privmsg or trigger.sender == "#nsfw":
         msg = None
@@ -16,7 +17,7 @@ def nsfw_check(bot, trigger):
 @plugin.commands("ass", "butt", "booty")
 def ass_api(bot, trigger):
     """Posts a random ass pic. #nsfw only."""
-    msg = nsfw_check(bot, trigger)
+    msg = nsfw_check(trigger)
     if msg:
         return bot.reply(msg)
 
@@ -32,7 +33,7 @@ def ass_api(bot, trigger):
 @plugin.commands("boobs", "tits", "titties")
 def boobs_api(bot, trigger):
     """Posts a random boobs pic. #nsfw only."""
-    msg = nsfw_check(bot, trigger)
+    msg = nsfw_check(trigger)
     if msg:
         return bot.reply(msg)
 
@@ -54,7 +55,7 @@ reddit_headers = {
 @plugin.command("rboobs")
 def reddit_boobs(bot, trigger):
     """Posts a random boob pic from Reddit. #nsfw only."""
-    msg = nsfw_check(bot, trigger)
+    msg = nsfw_check(trigger)
     if msg:
         return bot.reply(msg)
 
@@ -75,7 +76,7 @@ def reddit_boobs(bot, trigger):
 @plugin.command("rass")
 def reddit_ass(bot, trigger):
     """Posts a random ass pic from Reddit. #nsfw only."""
-    msg = nsfw_check(bot, trigger)
+    msg = nsfw_check(trigger)
     if msg:
         return bot.reply(msg)
 
@@ -101,7 +102,7 @@ r34 = rule34.Sync()
 def rule34_cmd(bot, trigger):
     """Search rule34.xxx by tags. You can type multiple words to chain together tags.
     Full Tag List: rule34.xxx/index.php?page=tags&s=list"""
-    msg = nsfw_check(bot, trigger)
+    msg = nsfw_check(trigger)
     if msg:
         return bot.reply(msg)
 
@@ -117,3 +118,24 @@ def rule34_cmd(bot, trigger):
         bot.say(random.choice(images))
     except TypeError:
         bot.reply("No results. Try refining your tags.")
+
+
+@plugin.commands("cock", "dick")
+def reddit_cock(bot, trigger):
+    """Posts a random /r/cospenis pic from Reddit. #nsfw only."""
+    msg = nsfw_check(trigger)
+    if msg:
+        return bot.reply(msg)
+
+    url = "https://old.reddit.com/r/cospenis/search.json"
+    params = {
+        "q": "site:i.redd.it",
+        "restrict_sr": "on",
+        "include_over_18": "on",
+        "sort": "top",
+        "t": "month",
+        "type": "link",
+        "limit": "100"}
+    penises = requests.get(url, params=params, headers=reddit_headers).json()["data"]["children"]
+    penis_img = secrets.choice(penises)["data"]["url"]
+    bot.say(penis_img)
