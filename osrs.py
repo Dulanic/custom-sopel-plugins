@@ -1,7 +1,6 @@
 from math import floor as round_down
 from sopel import plugin, tools
 from sopel.formatting import bold, plain
-import re
 import requests
 
 
@@ -12,9 +11,9 @@ BASE_URL = "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws"
 @plugin.output_prefix("[OSRS] ")
 @plugin.require_chanmsg
 def osrs_base(bot, trigger):
-    cmd = trigger.group(1)
+    cmd = trigger.group(1).lower()
 
-    if re.fullmatch("osrs", cmd, re.IGNORECASE):
+    if cmd == "osrs":
         target = plain(trigger.group(3) or trigger.nick)
         target = tools.Identifier(target)
         if target == bot.nick:
@@ -25,21 +24,21 @@ def osrs_base(bot, trigger):
         if target not in bot.channels[trigger.sender].users:
             return bot.reply("Please provide a valid user.")
         msg = osrs(bot, trigger, target)
-    elif re.fullmatch("osrs set", cmd, re.IGNORECASE):
+    elif cmd == "osrs set":
         user = trigger.nick
         osrs_name = plain(trigger.group(2) or '')
         if not osrs_name:
             return bot.reply("Please provide your OSRS character name.")
         msg = osrs_set(bot, trigger, user, osrs_name)
-    elif re.fullmatch("osrs stats", cmd, re.IGNORECASE):
+    elif cmd == "osrs stats":
         target = plain(trigger.group(2))
         if not target:
             return bot.reply("Please provide an OSRS character name.")
         msg = osrs(bot, trigger, target, general_check=True)
-    elif re.fullmatch("osrs wiki", cmd, re.IGNORECASE):
+    elif cmd == "osrs wiki":
         # msg = osrs_wiki()
         return bot.say("Wiki commands not implemented yet.")
-    elif re.fullmatch("osrs help", cmd, re.IGNORECASE):
+    elif cmd == "osrs help":
         msg = "I am DM'ing you all OSRS help, as it's quite long."
         bot.say(msg)
         msg1 = "`.osrs` or `.osrs <nick>` is used to lookup your or another IRC user's OSRS character. "
