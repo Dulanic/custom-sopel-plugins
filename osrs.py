@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from math import floor as round_down
 from sopel import plugin, tools
 from sopel.formatting import bold, plain
@@ -7,7 +8,7 @@ import requests
 BASE_URL = "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws"
 
 
-@plugin.commands("osrs set", "osrs stats", "osrs wiki", "osrs help", "osrs")
+@plugin.commands("osrs set", "osrs stats", "osrs pcount", "osrs wiki", "osrs help", "osrs")
 @plugin.output_prefix("[OSRS] ")
 @plugin.require_chanmsg
 def osrs_base(bot, trigger):
@@ -35,19 +36,21 @@ def osrs_base(bot, trigger):
         if not target:
             return bot.reply("Please provide an OSRS character name.")
         msg = osrs(bot, trigger, target, general_check=True)
+    elif cmd == "osrs pcount":
+        msg = osrs_pcount()
     elif cmd == "osrs wiki":
         # msg = osrs_wiki()
         return bot.say("Wiki commands not implemented yet.")
     elif cmd == "osrs help":
         msg = "I am DM'ing you all OSRS help, as it's quite long."
         bot.say(msg)
-        msg1 = "`.osrs` or `.osrs <nick>` is used to lookup your or another IRC user's OSRS character. "
-        msg2 = "`.osrs set <name>` is used to set your OSRS character name for use with `.osrs`. "
-        msg3 = "`.osrs stats <name>` is used to lookup the stats of any OSRS character name. "
-        msg4 = "`.osrs wiki <search terms>` is not yet implemented. Sorry!"
-        msgs = [msg1, msg2, msg3, msg4]
-        for msg_id in msgs:
-            bot.notice(msg_id, trigger.nick)
+        msg = "`.osrs` or `.osrs <nick>` is used to lookup your or another IRC user's OSRS character.\n"
+        msg += "`.osrs set <name>` is used to set your OSRS character name for use with `.osrs`.\n"
+        msg += "`.osrs stats <name>` is used to lookup the stats of any OSRS character name.\n"
+        msg += "`.osrs pcount` will list the current number of OSRS players in-game.\n"
+        msg += "`.osrs wiki <search terms>` is not yet implemented. Sorry!"
+        for line in msg.splitlines():
+            bot.notice(line, trigger.nick)
         return
 
     return bot.say("{}".format(msg))
@@ -137,3 +140,17 @@ def osrs_cmbt_lvl(skills):
 
     # return combat lvl
     return cmbt_lvl
+
+
+def osrs_pcount():
+    url = "https://oldschool.runescape.com"
+    try:
+        raw = requests.get(url)
+    except requests.exceptions.ConnectionError:
+        msg = "Error reaching API."
+        return msg
+
+    html = BeautifulSoup(raw.text, "html.parser")
+    msg = html.select_one(".player-count").string
+
+    return msg
