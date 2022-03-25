@@ -42,15 +42,7 @@ def osrs_base(bot, trigger):
         # msg = osrs_wiki()
         return bot.say("Wiki commands not implemented yet.")
     elif cmd == "osrs help":
-        msg = "I am DM'ing you all OSRS help, as it's quite long."
-        bot.say(msg)
-        msg = "`.osrs` or `.osrs <nick>` is used to lookup your or another IRC user's OSRS character.\n"
-        msg += "`.osrs set <name>` is used to set your OSRS character name for use with `.osrs`.\n"
-        msg += "`.osrs stats <name>` is used to lookup the stats of any OSRS character name.\n"
-        msg += "`.osrs pcount` will list the current number of OSRS players in-game.\n"
-        msg += "`.osrs wiki <search terms>` is not yet implemented. Sorry!"
-        for line in msg.splitlines():
-            bot.notice(line, trigger.nick)
+        osrs_help(bot, trigger)
         return
 
     return bot.say("{}".format(msg))
@@ -154,3 +146,18 @@ def osrs_pcount():
     msg = html.select_one(".player-count").string
 
     return msg
+
+
+def osrs_help(bot, trigger):
+    # inform about DM spam
+    dm_warn = "I am DM'ing you all OSRS help, as it's quite long."
+    bot.say(dm_warn)
+    # DM spam
+    msg = "`.osrs` or `.osrs <nick>` is used to lookup your or another IRC user's OSRS character.\n"
+    msg += "`.osrs set <name>` is used to set your OSRS character name for use with `.osrs`.\n"
+    msg += "`.osrs stats <name>` is used to lookup the stats of any OSRS character name.\n"
+    msg += "`.osrs pcount` will list the current number of OSRS players in-game.\n"
+    msg += "`.osrs wiki <search terms>` is not yet implemented. Sorry!"
+    for line in msg.splitlines():
+        bot.notice(line, trigger.nick)
+    return
