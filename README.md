@@ -78,6 +78,11 @@ Adds [Smite's VGS](https://smite.gamepedia.com/Voice_Guided_System) to Sopel.
 Uses [PlexAPI](https://github.com/pkkid/python-plexapi) to interface your Sopel bot with your Plex server.
 
 
+## [steam.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/steam.py)
+Uses the [Steam Web API](https://developer.valvesoftware.com/wiki/Steam_Web_API) and some jank
+to get Steam store links and player counts.
+
+
 ## [thesaurus.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/thesaurus.py)
 Uses [Merriam-Webster's Collegiate Thesaurus API](https://www.dictionaryapi.com/products/api-collegiate-thesaurus) to query synonyms and antonyms.
 
