@@ -17,14 +17,14 @@ def steam_base(bot, trigger):
     if not search_terms:
         return bot.reply("I need something to lookup, dummy!")
 
-    msg, appid, app_name, app_url = steam_search(search_terms)
+    msg, appid, app_name, app_price, app_url = steam_search(search_terms)
     if msg:
         return bot.say(msg)
 
     if cmd == "steam pcount" or cmd == "steam players":
         msg = steam_pcount(appid, app_name)
     elif cmd == "steam search" or cmd == "steam store" or cmd == "steam":
-        msg = app_url
+        msg = "{} ({})".format(app_url, app_price)
 
     bot.say(msg)
 
@@ -68,9 +68,10 @@ def steam_search(search_terms):
     try:
         appid = html.select_one("a.match:nth-child(1)").attrs["data-ds-appid"]
         app_name = html.select_one("a.match:nth-child(1) > div:nth-child(1)").string
+        app_price = html.select_one("a.match:nth-child(1) > div:nth-child(3)").string
         app_url = html.select_one("a.match:nth-child(1)").attrs["href"].split("?")[0]
     except AttributeError:
         msg = "No results for {}".format(bold(search_terms))
         return msg, appid, app_name, app_url
 
-    return msg, appid, app_name, app_url
+    return msg, appid, app_name, app_price, app_url
