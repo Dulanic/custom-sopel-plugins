@@ -73,7 +73,7 @@ def get_quote(bot, symbol):
             "high": q["regularMarketDayHigh"],
             "cap": int_to_human(q["marketCap"]),
             "name": q["longName"],
-            "close": q["regularMarketPreviousClose"],
+            "close": q["regularMarketPrice"],
             "rmchange": q["regularMarketChange"],
             "rmpercentchange": q["regularMarketChangePercent"],
             "currencySymbol": cur_to_symbol(q["currency"]),
