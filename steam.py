@@ -29,14 +29,19 @@ def steam_base(bot, trigger):
     bot.say(msg)
 
 
-def steam_pcount(appid, app_name):
+def steam_pcount(appid, app_name, msg=None):
     param = {"appid": appid}
     try:
         pcount = requests.get(PCOUNT_URL, params=param).json()["response"]["player_count"]
     except requests.exceptions.ConnectionError:
-        return bot.reply("Error reaching Steam Web API.")
+        msg = "Error reaching Steam Web API."
     except AttributeError:
-        return bot.reply("Invalid AppID somehow...good luck fixing this one, xnaas!")
+        msg = "Invalid AppID somehow...good luck fixing this one, xnaas!"
+    except KeyError:
+        msg = "No player count data for {}.".format(bold(app_name))
+
+    if msg:
+        return msg
 
     # configure and send player count
     pcount = "{:,}".format(pcount)
