@@ -46,7 +46,7 @@ def steam_pcount(appid, app_name):
 
 def steam_search(search_terms):
     # init everything as None
-    msg = appid = app_name = app_url = None
+    msg = appid = app_name = app_price = app_url = None
 
     # ISSUE: only supports US English searches
     params = {
@@ -62,7 +62,7 @@ def steam_search(search_terms):
         r = requests.get(SEARCH_URL, params=params)
     except requests.exceptions.ConnectionError:
         msg = "Error reaching Steam Web API."
-        return msg, appid, app_name, app_url
+        return msg, appid, app_name, app_price, app_url
 
     html = BeautifulSoup(r.text, "html.parser")
     try:
@@ -72,6 +72,6 @@ def steam_search(search_terms):
         app_url = html.select_one("a.match:nth-child(1)").attrs["href"].split("?")[0]
     except AttributeError:
         msg = "No results for {}".format(bold(search_terms))
-        return msg, appid, app_name, app_url
+        return msg, appid, app_name, app_price, app_url
 
     return msg, appid, app_name, app_price, app_url
