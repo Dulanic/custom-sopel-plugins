@@ -13,7 +13,7 @@ SEARCH_URL = "https://store.steampowered.com/search/suggest"
 def steam_base(bot, trigger):
     cmd = trigger.group(1).lower()
 
-    search_terms = plain(trigger.group(2)) or ''
+    search_terms = plain(trigger.group(2) or '')
     if not search_terms:
         return bot.reply("I need something to lookup, dummy!")
 
