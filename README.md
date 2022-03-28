@@ -54,6 +54,11 @@ Uses the [Open Library Books API](https://openlibrary.org/dev/docs/api/books) to
 Queries the [whenisthenextmcufilm API](https://whenisthenextmcufilm.com) for upcoming MCU movie and show info.
 
 
+## [nitter.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/nitter.py)
+Reads nitter.actionsack.com links and sends data to
+[sopel-twitter](https://github.com/sopel-irc/sopel-twitter/) for pretty output.
+
+
 ## [nsfw.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/nsfw.py)
 RNG of NSFW things.
 
