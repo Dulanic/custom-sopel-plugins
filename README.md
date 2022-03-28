@@ -55,8 +55,8 @@ Queries the [whenisthenextmcufilm API](https://whenisthenextmcufilm.com) for upc
 
 
 ## [nitter.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/nitter.py)
-Reads nitter.actionsack.com links and sends data to
-[sopel-twitter](https://github.com/sopel-irc/sopel-twitter/) for pretty output.
+Reads nitter links and sends data to [sopel-twitter](https://github.com/sopel-irc/sopel-twitter/)
+for pretty output.
 
 
 ## [nsfw.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/nsfw.py)
