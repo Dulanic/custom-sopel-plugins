@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 from sopel import plugin
 from sopel_modules import twitter
 import re
