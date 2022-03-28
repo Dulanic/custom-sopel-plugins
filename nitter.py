@@ -63,10 +63,9 @@ def nitter_loader(settings):
 
 @plugin.url_lazy(nitter_loader)
 def nitter_to_twitter(bot, trigger):
-    tweet = trigger.group("status")
-    user = trigger.group("user")
-
     try:
+        tweet = trigger.group("status")
+        user = trigger.group("user")
         if tweet:
             twitter.output_status(bot, trigger, tweet)
         elif user:
