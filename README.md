@@ -38,6 +38,10 @@ Pulls basic grid status from [ERCOT](https://www.ercot.com/).
 Allows users to make and gamble away virtual currency.
 
 
+## [hn.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/hn.py)
+Gets details from [Hacker News API](https://github.com/HackerNews/API) for HN links.
+
+
 ## [img.py](https://github.com/xnaas/custom-sopel-plugins/blob/master/img.py)
 Image searching with [DuckDuckGo Instant Answers API](https://duckduckgo.com/api) and [Google CSE](https://programmablesearchengine.google.com/about/).
 
