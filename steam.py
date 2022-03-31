@@ -79,4 +79,7 @@ def steam_search(search_terms):
         msg = "No results for {}".format(bold(search_terms))
         return msg, appid, app_name, app_price, app_url
 
+    if not app_price:
+        app_price = italic("No Price Data")
+
     return msg, appid, app_name, app_price, app_url
