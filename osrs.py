@@ -5,10 +5,20 @@ from sopel.formatting import bold, plain
 import requests
 
 
-BASE_URL = "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws"
+HISCORES_ALL = "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws"
+HISCORES_IM = "https://secure.runescape.com/m=hiscore_oldschool_ironman/index_lite.ws"
+HISCORES_UIM = "https://secure.runescape.com/m=hiscore_oldschool_ultimate/index_lite.ws"
+HISCORES_HCIM = "https://secure.runescape.com/m=hiscore_oldschool_hardcore_ironman/index_lite.ws"
+SKILL_LIST = [  # order from API
+    "Overall", "Attack", "Defence", "Strength", "Hitpoints", "Ranged", "Prayer",
+    "Magic", "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking",
+    "Crafting", "Smithing", "Mining", "Herblore", "Agility", "Thieving", "Slayer",
+    "Farming", "Runecrafting", "Hunter", "Construction"]
+VALID_TYPES = ["im", "hcim", "uim"]
 
 
-@plugin.commands("osrs set", "osrs stats", "osrs pcount", "osrs wiki", "osrs help", "osrs")
+@plugin.commands("osrs settype", "osrs set", "osrs stats",
+                "osrs pcount", "osrs wiki", "osrs help", "osrs")
 @plugin.output_prefix("[OSRS] ")
 @plugin.require_chanmsg
 def osrs_base(bot, trigger):
@@ -25,27 +35,37 @@ def osrs_base(bot, trigger):
         if target not in bot.channels[trigger.sender].users:
             return bot.reply("Please provide a valid user.")
         msg = osrs(bot, trigger, target)
+
     elif cmd == "osrs set":
         user = trigger.nick
         osrs_name = plain(trigger.group(2) or '')
         if not osrs_name:
             return bot.reply("Please provide your OSRS character name.")
         msg = osrs_set(bot, trigger, user, osrs_name)
+
+    elif cmd == "osrs settype":
+        user = trigger.nick
+        type = plain(trigger.group(2).lower() or '')
+        msg = osrs_settype(bot, trigger, user, type)
+
     elif cmd == "osrs stats":
         target = plain(trigger.group(2))
         if not target:
             return bot.reply("Please provide an OSRS character name.")
         msg = osrs(bot, trigger, target, general_check=True)
+
     elif cmd == "osrs pcount":
         msg = osrs_pcount()
+
     elif cmd == "osrs wiki":
         # msg = osrs_wiki()
         return bot.say("Wiki commands not implemented yet.")
+
     elif cmd == "osrs help":
         osrs_help(bot, trigger)
         return
 
-    return bot.say("{}".format(msg))
+    return bot.say(msg)
 
 
 def osrs_set(bot, trigger, user, osrs_name):
@@ -54,18 +74,42 @@ def osrs_set(bot, trigger, user, osrs_name):
     return msg
 
 
+def osrs_settype(bot, trigger, user, type):
+    if type in VALID_TYPES:
+        bot.db.set_nick_value(user, "osrs_type", type)
+        msg = "You've configured your character to use the {} hiscores, {}.".format(type, user)
+    else:
+        msg = "Please provide a valid type: {}".format(", ".join(VALID_TYPES))
+    return msg
+
+
 def osrs(bot, trigger, target, general_check=False):
     if general_check == False:
         name = bot.db.get_nick_value(target, "osrs_name")
+        type = bot.db.get_nick_value(target, "osrs_type")
         if not name:
             msg = "{} has no OSRS name set. They must use `.osrs set <name>`".format(target)
             return msg
     elif general_check == True:
         name = target
+        type = None
+
+    # configure which URL to use
+    if not type:
+        url = HISCORES_ALL
+    elif type == "im":
+        url = HISCORES_IM
+    elif type == "hcim":
+        url = HISCORES_HCIM
+    elif type == "uim":
+        url = HISCORES_UIM
+    else:
+        msg = "Invalid type set for {}.".format(bold(target))
+        return msg
 
     param = {"player": name}
     try:
-        data = requests.get(BASE_URL, params=param)
+        data = requests.get(url, params=param)
     except requests.exceptions.ConnectionError:
         msg = "Error reaching API."
         return msg
@@ -78,44 +122,44 @@ def osrs(bot, trigger, target, general_check=False):
 
     data = data.text.rsplit(maxsplit=60)[0]  # cut off all non-skill data
     data = data.split()  # split each skill
-    skills = []  # blank list
+    skills = {}  # init empty dict
+    i = 0
     for skill in data:
         skill = skill.split(",")
-        skills.append(skill[1])
+        skills.update({SKILL_LIST[i]: skill[1]})
+        i += 1
 
     # check for max
-    if skills[0] == "2277":
+    if skills["Overall"] == "2277":
         msg = "{name} has their Max Cape! 🎊".format(name=bold(name))
         return msg
 
-    # get combat lvl
+    # get combat lvl, set total xp
     cmbt_lvl = osrs_cmbt_lvl(skills)
+    skills.update({"XP": "{:,}".format(int(data[0].split(",")[2]))})
 
     # layout msg
-    msg = "{name} (⚔{cmbt_lvl}): Total {s[0]}"
-    msg += " | Atk {s[1]} | Def {s[2]} | Str {s[3]} | HP {s[4]}"
-    msg += " | Range {s[5]} | Pray {s[6]} | Mage {s[7]} | Cook {s[8]}"
-    msg += " | WC {s[9]} | Fletch {s[10]} | Fish {s[11]} | FM {s[12]}"
-    msg += " | Craft {s[13]} | Smith {s[14]} | Mine {s[15]} | Herb {s[16]}"
-    msg += " | Agi {s[17]} | Thief {s[18]} | Slayer {s[19]} | Farm {s[20]}"
-    msg += " | RC {s[21]} | Hunt {s[22]} | Con {s[23]}"
-
-    # TODO: perhaps craft a dict instead of a list
-    #       so we can just do format(**skills) or
-    #       something like that.
-    msg = msg.format(name=name, s=skills, cmbt_lvl=cmbt_lvl)
+    msg = "{name} (⚔{cmbt_lvl}):".format(name=name, cmbt_lvl=cmbt_lvl)
+    msg += " Total {Overall} | XP {XP}"
+    msg += " | Atk {Attack} | Str {Strength} | Def {Defence} | Range {Ranged}"
+    msg += " | Pray {Prayer} | Mage {Magic} | RC {Runecrafting} | Con {Construction}"
+    msg += " | HP {Hitpoints} | Agi {Agility} | Herb {Herblore} | Thief {Thieving}"
+    msg += " | Craft {Crafting} | Fletch {Fletching} | Slayer {Slayer} | Hunt {Hunter}"
+    msg += " | Mine {Mining} | Smith {Smithing} | Fish {Fishing} | Cook {Cooking}"
+    msg += " | FM {Firemaking} | WC {Woodcutting} | Farm {Farming}"
+    msg = msg.format(**skills)
     return msg
 
 
 def osrs_cmbt_lvl(skills):
     # set skills to calc combat lvl
-    atk = int(skills[1])
-    defence = int(skills[2])
-    strength = int(skills[3])
-    hp = int(skills[4])
-    ranged = int(skills[5])
-    prayer = int(skills[6])
-    mage = int(skills[7])
+    atk = int(skills["Attack"])
+    defence = int(skills["Defence"])
+    strength = int(skills["Strength"])
+    hp = int(skills["Hitpoints"])
+    ranged = int(skills["Ranged"])
+    prayer = int(skills["Prayer"])
+    mage = int(skills["Magic"])
 
     # calc base combat lvl
     base_cmbt_lvl = round_down(prayer/2)
@@ -155,6 +199,9 @@ def osrs_help(bot, trigger):
     # DM spam
     msg = "`.osrs` or `.osrs <nick>` is used to lookup your or another IRC user's OSRS character.\n"
     msg += "`.osrs set <name>` is used to set your OSRS character name for use with `.osrs`.\n"
+    msg += "`.osrs settype <type>` is used to set which hiscores table to lookup your character on."
+    msg += " Valid types are: {}.".format(", ".join(VALID_TYPES))
+    msg += " If no type is specified, then the regular hiscores table will be used.\n"
     msg += "`.osrs stats <name>` is used to lookup the stats of any OSRS character name.\n"
     msg += "`.osrs pcount` will list the current number of OSRS players in-game.\n"
     msg += "`.osrs wiki <search terms>` is not yet implemented. Sorry!"
