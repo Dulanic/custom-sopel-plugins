@@ -981,7 +981,7 @@ def brony(bot, trigger):
     bot.say("https://p.actionsack.com/mike/brony.png")
 
 
-@plugin.rule("^banned.*")
+@plugin.search(r"\bbanned\b")
 def banned(bot, trigger):
     banned = [
         "https://p.actionsack.com/banned/beetlejuice.mp4",
