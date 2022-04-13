@@ -1168,7 +1168,7 @@ def fuckyeah(bot, trigger):
     bot.say("https://p.actionsack.com/fuck/fuckyeah!.webp")
 
 
-@plugin.search("fuck everything")
+@plugin.search(r"\bfuck everything\b")
 def fuckeverything(bot, trigger):
     bot.say("https://p.actionsack.com/fuck/fuckeverything.webp")
 
