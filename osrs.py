@@ -120,7 +120,7 @@ def osrs(bot, trigger, target, general_check=False):
             msg = "{} not found.".format(bold(name))
         return msg
 
-    data = data.text.rsplit(maxsplit=60)[0]  # cut off all non-skill data
+    data = data.text.rsplit(maxsplit=61)[0]  # cut off all non-skill data
     data = data.split()  # split each skill
     skills = {}  # init empty dict
     i = 0
