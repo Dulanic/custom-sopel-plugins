@@ -227,7 +227,7 @@ def vgs_vf3(bot, trigger):
 # </VF – MIA>
 
 
-# <VF – Gank>
+# <VG – Gank>
 @plugin.rule("^VGG$")
 def vgs_vgg(bot, trigger):
     bot.say("{}{}{}: [VGG] Gank!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
@@ -243,7 +243,7 @@ def vgs_vg2(bot, trigger):
 @plugin.rule("^VG2$")
 def vgs_vg2(bot, trigger):
     bot.say("{}{}{}: [VG2] Gank right lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VF – Gank>
+# </VG – Gank>
 
 
 # <VH – Help>
