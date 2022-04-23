@@ -1,674 +1,212 @@
-# Smite VGS
-# \x0311 – Start Light Cyan
-# \u200B – ZWSP
-# \x0315 – Start Light Grey
 from sopel import plugin
-import random
-
-
-# <VA – Attack>
-@plugin.rule("^VAA$")
-def vgs_vaa(bot, trigger):
-    bot.say("{}{}{}: [VAA] Attack!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VAF$")
-def vgs_vaf(bot, trigger):
-    bot.say("{}{}{}: [VAF] Attack Fire Giant!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VAG$")
-def vgs_vag(bot, trigger):
-    bot.say("{}{}{}: [VAG] Attack the Gold Fury!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VAM$")
-def vgs_vam(bot, trigger):
-    bot.say("{}{}{}: [VAM] Attack the Titan!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VAN$")
-def vgs_van(bot, trigger):
-    bot.say("{}{}{}: [VAN] Attack the Minions!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VA1$")
-def vgs_va1(bot, trigger):
-    bot.say("{}{}{}: [VA1] Attack left lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VA2$")
-def vgs_va2(bot, trigger):
-    bot.say("{}{}{}: [VA2] Attack middle lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VA3$")
-def vgs_va3(bot, trigger):
-    bot.say("{}{}{}: [VA3] Attack right lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VAT1$")
-def vgs_vat1(bot, trigger):
-    tof = [
-        "left tower",
-        "the left phoenix"
-    ]
-    bot.say("{}{}{}: [VAT1] Attack {}!".format("\x0311", "\u200B".join(trigger.nick), "\x0315", random.choice(tof)))
-
-@plugin.rule("^VAT2$")
-def vgs_vat2(bot, trigger):
-    tof= [
-        "middle tower",
-        "the middle phoenix"
-    ]
-    bot.say("{}{}{}: [VAT2] Attack {}!".format("\x0311", "\u200B".join(trigger.nick), "\x0315", random.choice(tof)))
-
-@plugin.rule("^VAT3$")
-def vgs_vat3(bot, trigger):
-    tof=[
-        "right tower",
-        "the right phoenix"
-    ]
-    bot.say("{}{}{}: [VAT3] Attack {}!".format("\x0311", "\u200B".join(trigger.nick), "\x0315", random.choice(tof)))
-# </VA – Attack>
-
-
-# <VB – Enemy>
-@plugin.rule("^VBA$")
-def vgs_vba(bot, trigger):
-    bot.say("{}{}{}: [VBA] Enemy ultimate incoming!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VBB$")
-def vgs_vbb(bot, trigger):
-    bot.say("{}{}{}: [VBB] Enemies have returned to base.".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VBD$")
-def vgs_vbd(bot, trigger):
-    bot.say("{}{}{}: [VBD] Enemy ultimate down!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VBE$")
-def vgs_vbe(bot, trigger):
-    bot.say("{}{}{}: [VBE] Enemies behind us!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VBF$")
-def vgs_vbf(bot, trigger):
-    bot.say("{}{}{}: [VBF] Enemies at the Fire Giant!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VBG$")
-def vgs_vbg(bot, trigger):
-    bot.say("{}{}{}: [VBG] Enemies at the Gold Fury!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VBJJ$")
-def vgs_vbjj(bot, trigger):
-    bot.say("{}{}{}: [VBJJ] Enemies in the jungle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VBJ1$")
-def vgs_vbj1(bot, trigger):
-    bot.say("{}{}{}: [VBJ1] Enemies in the left jungle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VBJ2$")
-def vgs_vbj3(bot, trigger):
-    bot.say("{}{}{}: [VBJ3] Enemies in the right jungle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VBM$")
-def vgs_vbm(bot, trigger):
-    bot.say("{}{}{}: [VBM] Enemies at our Titan!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VBS$")
-def vgs_vbs(bot, trigger):
-    bot.say("{}{}{}: [VBS] Enemy spotted!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VB1$")
-def vgs_vb1(bot, trigger):
-    bot.say("{}{}{}: [VB1] Enemies in left lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VB2$")
-def vgs_vb2(bot, trigger):
-    bot.say("{}{}{}: [VB2] Enemies in middle lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VB3$")
-def vgs_vb3(bot, trigger):
-    bot.say("{}{}{}: [VB3] Enemies in right lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VB – Enemy>
-
-
-# <VC – Careful>
-@plugin.rule("^VCB$")
-def vgs_vcb(bot, trigger):
-    bot.say("{}{}{}: [VCB] Return to base!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VCC$")
-def vgs_vcc(bot, trigger):
-    bot.say("{}{}{}: [VCC] Be careful!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VCJ$")
-def vgs_vcj(bot, trigger):
-    bot.say("{}{}{}: [VCJ] Be careful in the jungle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VC1$")
-def vgs_vc1(bot, trigger):
-    bot.say("{}{}{}: [VC1] Be careful left!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VC2$")
-def vgs_vc2(bot, trigger):
-    bot.say("{}{}{}: [VC2] Be careful middle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VC3$")
-def vgs_vc3(bot, trigger):
-    bot.say("{}{}{}: [VC3] Be careful right!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VC – Careful>
-
-
-# <VD – Defend>
-@plugin.rule("^VDD$")
-def vgs_vdd(bot, trigger):
-    bot.say("{}{}{}: [VDD] Defend!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VDF$")
-def vgs_vdf(bot, trigger):
-    bot.say("{}{}{}: [VDF] Defend the Fire Giant!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VDG$")
-def vgs_vdg(bot, trigger):
-    bot.say("{}{}{}: [VDG] Defend the Gold Fury!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VD1$")
-def vgs_vd1(bot, trigger):
-    bot.say("{}{}{}: [VD1] Defend left lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VD2$")
-def vgs_vd2(bot, trigger):
-    bot.say("{}{}{}: [VD2] Defend middle lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VD3$")
-def vgs_vd3(bot, trigger):
-    bot.say("{}{}{}: [VD3] Defend right lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VDM$")
-def vgs_vdm(bot, trigger):
-    defend=[
-        "Titan",
-        "Portal"
-    ]
-    bot.say("{}{}{}: [VDM] Defend the {}!".format("\x0311", "\u200B".join(trigger.nick), "\x0315", random.choice(defend)))
-# </VD – Defend>
-
-
-# <VE – Emote>
-# VEJ = No solution for God jokes atm
-# VEL = No solution for God laughs atm
-# VET = No solution for God taunts atm
-@plugin.rule("^VEA$")
-def vgs_vea(bot, trigger):
-    bot.say("{}{}{}: [VEA] Awesome!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VEG$")
-def vgs_veg(bot, trigger):
-    bot.say("{}{}{}: [VEG] I'm the greatest!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VER$")
-def vgs_ver(bot, trigger):
-    bot.say("{}{}{}: [VER] You rock!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VEW$")
-def vgs_vew(bot, trigger):
-    bot.say("{}{}{}: [VEW] Woohoo!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VE – Emote>
-
-
-# <VF – MIA>
-@plugin.rule("^VFF$")
-def vgs_vff(bot, trigger):
-    bot.say("{}{}{}: [VFF] Enemy missing!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VF1$")
-def vgs_vf1(bot, trigger):
-    bot.say("{}{}{}: [VF1] Enemy missing left!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VF2$")
-def vgs_vf2(bot, trigger):
-    bot.say("{}{}{}: [VF2] Enemy missing middle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VF3$")
-def vgs_vf3(bot, trigger):
-    bot.say("{}{}{}: [VF3] Enemy missing right!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VF – MIA>
-
-
-# <VG – Gank>
-@plugin.rule("^VGG$")
-def vgs_vgg(bot, trigger):
-    bot.say("{}{}{}: [VGG] Gank!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VG1$")
-def vgs_vg1(bot, trigger):
-    bot.say("{}{}{}: [VG1] Gank left lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VG2$")
-def vgs_vg2(bot, trigger):
-    bot.say("{}{}{}: [VG2] Gank middle lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VG3$")
-def vgs_vg3(bot, trigger):
-    bot.say("{}{}{}: [VG3] Gank right lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VG – Gank>
-
-
-# <VH – Help>
-@plugin.rule("^VHH$")
-def vgs_vhh(bot, trigger):
-    bot.say("{}{}{}: [VHH] Help!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VHS$")
-def vgs_vhs(bot, trigger):
-    bot.say("{}{}{}: [VHS] Need healing!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VH1$")
-def vgs_vh1(bot, trigger):
-    bot.say("{}{}{}: [VH1] Help left lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VH2$")
-def vgs_vh2(bot, trigger):
-    bot.say("{}{}{}: [VH2] Help middle lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VH3$")
-def vgs_vh3(bot, trigger):
-    bot.say("{}{}{}: [VH3] Help right lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VH – Help>
-
-
-# <VI – Incoming>
-@plugin.rule("^VII$")
-def vgs_vii(bot, trigger):
-    bot.say("{}{}{}: [VII] Enemies incoming!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VI1$")
-def vgs_vi1(bot, trigger):
-    bot.say("{}{}{}: [VI1] Enemies incoming left!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VI2$")
-def vgs_vi2(bot, trigger):
-    bot.say("{}{}{}: [VI2] Enemies incoming middle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VI3$")
-def vgs_vi3(bot, trigger):
-    bot.say("{}{}{}: [VI3] Enemies incoming right!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VI – Incoming>
-
-
-# <VQ – Ward>
-@plugin.rule("^VQF$")
-def vgs_vqf(bot, trigger):
-    bot.say("{}{}{}: [VQF] Ward Fire Giant!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VQG$")
-def vgs_vqg(bot, trigger):
-    bot.say("{}{}{}: [VQG] Ward Gold Fury!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VQN$")
-def vgs_vqn(bot, trigger):
-    bot.say("{}{}{}: [VQN] Need Wards!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VQQ$")
-def vgs_vqq(bot, trigger):
-    bot.say("{}{}{}: [VQQ] Ward Here!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VQ1$")
-def vgs_vq1(bot, trigger):
-    bot.say("{}{}{}: [VQ1] Ward Left!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VQ2$")
-def vgs_vq2(bot, trigger):
-    bot.say("{}{}{}: [VQ2] Ward middle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VQ3$")
-def vgs_vq3(bot, trigger):
-    bot.say("{}{}{}: [VQ3] Ward Right!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VQ – Ward>
-
-
-# <VR – Retreat>
-@plugin.rule("^VRJ$")
-def vgs_vrj(bot, trigger):
-    bot.say("{}{}{}: [VRJ] Retreat from the Jungle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VRR$")
-def vgs_vrr(bot, trigger):
-    bot.say("{}{}{}: [VRR] Retreat!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VRS$")
-def vgs_vrs(bot, trigger):
-    bot.say("{}{}{}: [VRS] Save yourself!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VR1$")
-def vgs_vr1(bot, trigger):
-    bot.say("{}{}{}: [VR1] Retreat left lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VR2$")
-def vgs_vr2(bot, trigger):
-    bot.say("{}{}{}: [VR2] Retreat middle lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VR3$")
-def vgs_vr3(bot, trigger):
-    bot.say("{}{}{}: [VR3] Retreat right late!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VR – Retreat>
-
-
-# <VS – Self>
-@plugin.rule("^VSO$")
-def vgs_vso(bot, trigger):
-    bot.say("{}{}{}: [VSO] I'm on it!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSR$")
-def vgs_vsr(bot, trigger):
-    bot.say("{}{}{}: [VSR] Falling back!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSS$")
-def vgs_vss(bot, trigger):
-    bot.say("{}{}{}: [VSS] I'm building Stacks!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# <VSA – Self Attack>
-@plugin.rule("^VSAA$")
-def vgs_vsaa(bot, trigger):
-    bot.say("{}{}{}: [VSAA] I'll attack!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSAF$")
-def vgs_vsaf(bot, trigger):
-    bot.say("{}{}{}: [VSAF] I'll attack Fire Giant!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSAG$")
-def vgs_vsag(bot, trigger):
-    bot.say("{}{}{}: [VSAG] I'll attack the Gold Fury!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSAM$")
-def vgs_vsam(bot, trigger):
-    bot.say("{}{}{}: [VSAM] I'll attack the Titan!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSA1$")
-def vgs_vsa1(bot, trigger):
-    bot.say("{}{}{}: [VSA1] I'll attack left lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSA2$")
-def vgs_vsa2(bot, trigger):
-    bot.say("{}{}{}: [VSA2] I'll attack middle lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSA3$")
-def vgs_vsa3(bot, trigger):
-    bot.say("{}{}{}: [VSA3] I'll attack right lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VSA – Self Attack>
-# <VSB – Self Buff>
-@plugin.rule("^VSBB$")
-def vgs_vsbb(bot, trigger):
-    bot.say("{}{}{}: [VSBB] I'm going for jungle buff!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSBN$")
-def vgs_vsbn(bot, trigger):
-    bot.say("{}{}{}: [VSBN] I need the jungle buff!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSBT$")
-def vgs_vsbt(bot, trigger):
-    bot.say("{}{}{}: [VSBT] Take this jungle buff!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VSB – Self Buff>
-# <VSD – Self Defend>
-@plugin.rule("^VSDD$")
-def vgs_vsdd(bot, trigger):
-    bot.say("{}{}{}: [VSDD] I'll defend!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSDF$")
-def vgs_vsdf(bot, trigger):
-    bot.say("{}{}{}: [VSDF] I'll defend the Fire Giant!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSDG$")
-def vgs_vsdg(bot, trigger):
-    bot.say("{}{}{}: [VSDG] I'll defend the Gold Fury!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSDM$")
-def vgs_vsdm(bot, trigger):
-    bot.say("{}{}{}: [VSDM] I'll defend the Titan!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSD1$")
-def vgs_vsd1(bot, trigger):
-    bot.say("{}{}{}: [VSD1] I'll defend left lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSD2$")
-def vgs_vsd2(bot, trigger):
-    bot.say("{}{}{}: [VSD2] I'll defend middle lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSD3$")
-def vgs_vsd3(bot, trigger):
-    bot.say("{}{}{}: [VSD3] I'll defend right lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VSD – Self Defend>
-# <VSG – Self Gank>
-@plugin.rule("^VSGG$")
-def vgs_vsgg(bot, trigger):
-    bot.say("{}{}{}: [VSGG] I'll gank!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSG1$")
-def vgs_vsg1(bot, trigger):
-    bot.say("{}{}{}: [VSG1] I'll gank left lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSG2$")
-def vgs_vsg2(bot, trigger):
-    bot.say("{}{}{}: [VSG2] I'll gank middle lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSG3$")
-def vgs_vsg3(bot, trigger):
-    bot.say("{}{}{}: [VSG3] I'll gank right lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VSG – Self Gank>
-# <VSQ – Self Ward>
-@plugin.rule("^VSQQ$")
-def vgs_vsqq(bot, trigger):
-    bot.say("{}{}{}: [VSQQ] I will ward!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSQ1$")
-def vgs_vsq1(bot, trigger):
-    bot.say("{}{}{}: [VSQ1] I will ward left!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSQ2$")
-def vgs_vsq2(bot, trigger):
-    bot.say("{}{}{}: [VSQ2] I will ward middle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSQ3$")
-def vgs_vsq3(bot, trigger):
-    bot.say("{}{}{}: [VSQ3] I will ward right!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VSQ – Self Ward>
-# <VST – Self Returned>
-@plugin.rule("^VSTB$")
-def vgs_vstb(bot, trigger):
-    bot.say("{}{}{}: [VSTB] I'm returning to base!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VSTT$")
-def vgs_vstt(bot, trigger):
-    bot.say("{}{}{}: [VSTT] I have returned!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VST1$")
-def vgs_vst1(bot, trigger):
-    bot.say("{}{}{}: [VST1] I'm returning left lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VST2$")
-def vgs_vst2(bot, trigger):
-    bot.say("{}{}{}: [VST2] I'm returning middle lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VST3$")
-def vgs_vst3(bot, trigger):
-    bot.say("{}{}{}: [VST3] I'm returning right lane!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VST – Self Returned>
-# </VS – Self>
-
-
-# <VT – Enemies Returned>
-@plugin.rule("^VTT$")
-def vgs_vtt(bot, trigger):
-    bot.say("{}{}{}: [VTT] Enemies have returned!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VT1$")
-def vgs_vt1(bot, trigger):
-    bot.say("{}{}{}: [VT1] Enemies have returned left!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VT2$")
-def vgs_vt2(bot, trigger):
-    bot.say("{}{}{}: [VT2] Enemies have returned middle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VT3$")
-def vgs_vt3(bot, trigger):
-    bot.say("{}{}{}: [VT3] Enemies have returned right!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VT – Enemies Returned>
-
-
-# <VV – Other>
-@plugin.rule("^VVA$")
-def vgs_vva(bot, trigger):
-    bot.say("{}{}{}: [VVA] Ok!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVB$")
-def vgs_vvb(bot, trigger):
-    bot.say("{}{}{}: [VVB] Be right back!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVC$")
-def vgs_vvc(bot, trigger):
-    bot.say("{}{}{}: [VVC] Completed!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVK$")
-def vgs_vvk(bot, trigger):
-    bot.say("{}{}{}: [VVK] Stepping away for a moment.".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVM$")
-def vgs_vvm(bot, trigger):
-    bot.say("{}{}{}: [VVM] Out of mana!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVN$")
-def vgs_vvn(bot, trigger):
-    bot.say("{}{}{}: [VVN] No!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVP$")
-def vgs_vvp(bot, trigger):
-    bot.say("{}{}{}: [VVP] Please?".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVS$")
-def vgs_vvs(bot, trigger):
-    bot.say("{}{}{}: [VVS] Sorry!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVT$")
-def vgs_vvt(bot, trigger):
-    bot.say("{}{}{}: [VVT] Thanks!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVW$")
-def vgs_vvw(bot, trigger):
-    bot.say("{}{}{}: [VVW] Wait!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVX$")
-def vgs_vvx(bot, trigger):
-    bot.say("{}{}{}: [VVX] Cancel that!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVY$")
-def vgs_vvy(bot, trigger):
-    bot.say("{}{}{}: [VVY] Yes!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# <VVG – General>
-@plugin.rule("^VVGB$")
-def vgs_vvgb(bot, trigger):
-    bot.say("{}{}{}: [VVGB] Bye!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVGF$")
-def vgs_vvgf(bot, trigger):
-    bot.say("{}{}{}: [VVGF] Have fun!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVGG$")
-def vgs_vvgg(bot, trigger):
-    bot.say("{}{}{}: [VVGG] Good game!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVGH$")
-def vgs_vvgh(bot, trigger):
-    bot.say("{}{}{}: [VVGH] Hi!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVGL$")
-def vgs_vvgl(bot, trigger):
-    bot.say("{}{}{}: [VVGL] Good luck!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVGN$")
-def vgs_vvgn(bot, trigger):
-    bot.say("{}{}{}: [VVGN] Nice job!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVGO$")
-def vgs_vvgo(bot, trigger):
-    bot.say("{}{}{}: [VVGO] Oops!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVGQ$")
-def vgs_vvgq(bot, trigger):
-    bot.say("{}{}{}: [VVGQ] Quiet!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVGR$")
-def vgs_vvgr(bot, trigger):
-    bot.say("{}{}{}: [VVGR] No problem!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVGS$")
-def vgs_vvgs(bot, trigger):
-    bot.say("{}{}{}: [VVGS] Curses!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVGT$")
-def vgs_vvgt(bot, trigger):
-    bot.say("{}{}{}: [VVGT] That's too bad!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVGW$")
-def vgs_vvgw(bot, trigger):
-    bot.say("{}{}{}: [VVGW] You're welcome!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VVG – General>
-# <VVV – Position>
-@plugin.rule("^VVVA$")
-def vgs_vvva(bot, trigger):
-    bot.say("{}{}{}: [VVVA] Set up an ambush here!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVB$")
-def vgs_vvvb(bot, trigger):
-    bot.say("{}{}{}: [VVVB] Behind us!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVC$")
-def vgs_vvvc(bot, trigger):
-    bot.say("{}{}{}: [VVVC] Chase the enemy!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVD$")
-def vgs_vvvd(bot, trigger):
-    bot.say("{}{}{}: [VVVD] Ultimate is down! ({:0.2f} remaining)".format("\x0311", "\u200B".join(trigger.nick), "\x0315", random.randrange(0, 1401) / 10))
-
-@plugin.rule("^VVVE$")
-def vgs_vvve(bot, trigger):
-    bot.say("{}{}{}: [VVVE] On my way!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVF$")
-def vgs_vvvf(bot, trigger):
-    bot.say("{}{}{}: [VVVF] Follow me!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVG$")
-def vgs_vvvg(bot, trigger):
-    bot.say("{}{}{}: [VVVG] Group up!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVJ$")
-def vgs_vvvj(bot, trigger):
-    bot.say("{}{}{}: [VVVJ] Going into the jungle!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVP$")
-def vgs_vvvp(bot, trigger):
-    bot.say("{}{}{}: [VVVP] Split push!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVR$")
-def vgs_vvvr(bot, trigger):
-    bot.say("{}{}{}: [VVVR] Ultimate is ready!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVS$")
-def vgs_vvvs(bot, trigger):
-    bot.say("{}{}{}: [VVVS] Stay here!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVT$")
-def vgs_vvvt(bot, trigger):
-    bot.say("{}{}{}: [VVVT] It's a trap!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVW$")
-def vgs_vvvw(bot, trigger):
-    bot.say("{}{}{}: [VVVW] Place a Ward for teleport!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-
-@plugin.rule("^VVVX$")
-def vgs_vvvx(bot, trigger):
-    bot.say("{}{}{}: [VVVX] Spread Out!".format("\x0311", "\u200B".join(trigger.nick), "\x0315"))
-# </VVV – Position>
-# </VV – Other>
-
-
-# <VX – Social Emotes>
-# VXW = No solution for [Wave] atm
-# VXD = No solution for [Dance] atm
-# VXC = No solution for [Clap] atm
-# VXS = No solution for [Special] atm
-# VXF = No solution for [Furious] atm
-# VXG = No solution for [Special 2] atm
-# VXE = No solution for [Global Emote] atm
-# </VX – Social Emotes>
+from sopel.formatting import color, colors
+import secrets
+
+
+V_CMDS = {
+    # VA - Attack
+    "VAA": "Attack!",
+    "VAF": "Attack Fire Giant!",
+    "VAG": "Attack the Gold Fury!",
+    "VAM": "Attack the Titan!",
+    "VAN": "Attack the Minions!",
+    "VA1": "Attack left lane!",
+    "VA2": "Attack middle lane!",
+    "VA3": "Attack right lane!",
+    "VAT1": ("Attack {}!", ("left tower", "the left phoenix")),
+    "VAT2": ("Attack {}!", ("middle tower", "the middle phoenix")),
+    "VAT3": ("Attack {}!", ("right tower", "the right phoenix")),
+    # VB - Enemy
+    "VBA": "Enemy ultimate incoming!",
+    "VBB": "Enemies have returned to base.",
+    "VBD": "Enemy ultimate down!",
+    "VBE": "Enemies behind us!",
+    "VBF": "Enemies at the Fire Giant!",
+    "VBG": "Enemies at the Gold Fury!",
+    "VBJJ": "Enemies in the jungle!",
+    "VBJ1": "Enemies in the left jungle!",
+    "VBJ3": "Enemies in the right jungle!",
+    "VBM": "Enemies at our Titan!",
+    "VBS": "Enemy spotted!",
+    "VB1": "Enemies in left lane!",
+    "VB2": "Enemies in middle lane!",
+    "VB3": "Enemies in right lane!",
+    # VC - Careful
+    "VCB": "Return to base!",
+    "VCC": "Be careful!",
+    "VCJ": "Be careful in the jungle!",
+    "VC1": "Be careful left!",
+    "VC2": "Be careful middle!",
+    "VC3": "Be careful right!",
+    # VD - Defend
+    "VDD": "Defend!",
+    "VDF": "Defend the Fire Giant!",
+    "VDG": "Defend the Gold Fury!",
+    "VD1": "Defend left lane!",
+    "VD2": "Defend middle lane!",
+    "VD3": "Defend right lane!",
+    "VDM": ("Defend the {}!", ("Titan", "Portal")),
+    # VE - Emote
+    "VEA": "Awesome!",
+    "VEG": "I'm the greatest!",
+    # VEJ God jokes
+    # VEL God laughs
+    "VER": "You rock!",
+    # VET God taunts
+    "VEW": "Woohoo!",
+    # VF - MIA
+    "VFF": "Enemy missing!",
+    "VF1": "Enemy missing left!",
+    "VF2": "Enemy missing middle!",
+    "VF3": "Enemy missing right!",
+    # VG - Gank
+    "VGG": "Gank!",
+    "VG1": "Gank left lane!",
+    "VG2": "Gank middle lane!",
+    "VG3": "Gank right lane!",
+    # VH - Help
+    "VHH": "Help!",
+    "VHS": "Need healing!",
+    "VH1": "Help left lane!",
+    "VH2": "Help middle lane!",
+    "VH3": "Help right lane!",
+    # VI - Incoming
+    "VII": "Enemies incoming!",
+    "VI1": "Enemies incoming left!",
+    "VI2": "Enemies incoming middle!",
+    "VI3": "Enemies incoming right!",
+    # VQ - Ward
+    "VQF": "Ward Fire Giant!",
+    "VQG": "Ward Gold Fury!",
+    "VQN": "Need Wards!",
+    "VQQ": "Ward Here!",
+    "VQ1": "Ward Left!",
+    "VQ2": "Ward middle!",
+    "VQ3": "Ward Right!",
+    # VR - Retreat
+    "VRJ": "Retreat from the Jungle!",
+    "VRR": "Retreat!",
+    "VRS": "Save yourself!",
+    "VR1": "Retreat left lane!",
+    "VR2": "Retreat middle lane!",
+    "VR3": "Retreat right late!",
+    # VS - Self
+    "VSO": "I'm on it!",
+    "VSR": "Falling back!",
+    "VSS": "I'm building Stacks!",
+    # VSA - Self Attack
+    "VSAA": "I'll attack!",
+    "VSAF": "I'll attack Fire Giant!",
+    "VSAG": "I'll attack the Gold Fury!",
+    "VSAM": "I'll attack the Titan!",
+    "VSA1": "I'll attack left lane!",
+    "VSA2": "I'll attack middle lane!",
+    "VSA3": "I'll attack right lane!",
+    # VSB - Self Buff
+    "VSBB": "I'm going for jungle buff!",
+    "VSBN": "I need the jungle buff!",
+    "VSBT": "Take this jungle buff!",
+    # VSD - Self Defend
+    "VSDD": "I'll defend!",
+    "VSDF": "I'll defend the Fire Giant!",
+    "VSDG": "I'll defend the Gold Fury!",
+    "VSDM": "I'll defend the Titan!",
+    "VSD1": "I'll defend left lane!",
+    "VSD2": "I'll defend middle lane!",
+    "VSD3": "I'll defend right lane!",
+    # VSG - Self Gank
+    "VSGG": "I'll gank!",
+    "VSG1": "I'll gank left lane!",
+    "VSG2": "I'll gank middle lane!",
+    "VSG3": "I'll gank right lane!",
+    # VSQ - Self Ward
+    "VSQQ": "I will ward!",
+    "VSQ1": "I will ward left!",
+    "VSQ2": "I will ward middle!",
+    "VSQ3": "I will ward right!",
+    # VST - Self Returned
+    "VSTB": "I'm returning to base!",
+    "VSTT": "I have returned!",
+    "VST1": "I'm returning left lane!",
+    "VST2": "I'm returning middle lane!",
+    "VST3": "I'm returning right lane!",
+    # VT - Enemies Returned
+    "VTT": "Enemies have returned!",
+    "VT1": "Enemies have returned left!",
+    "VT2": "Enemies have returned middle!",
+    "VT3": "Enemies have returned right!",
+    # VV - Other
+    "VVA": "Ok!",
+    "VVB": "Be right back!",
+    "VVC": "Completed!",
+    "VVK": "Stepping away for a moment.",
+    "VVM": "Out of mana!",
+    "VVN": "No!",
+    "VVP": "Please?",
+    "VVS": "Sorry!",
+    "VVT": "Thanks!",
+    "VVW": "Wait!",
+    "VVX": "Cancel that!",
+    "VVY": "Yes!",
+    # VVG - General
+    "VVGB": "Bye!",
+    "VVGF": "Have fun!",
+    "VVGG": "Good game!",
+    "VVGH": "Hi!",
+    "VVGL": "Good luck!",
+    "VVGN": "Nice job!",
+    "VVGO": "Oops!",
+    "VVGQ": "Quiet!",
+    "VVGR": "No problem!",
+    "VVGS": "Curses!",
+    "VVGT": "That's too bad!",
+    "VVGW": "You're welcome!",
+    # VVG - Position
+    "VVVA": "Set up an ambush here!",
+    "VVVB": "Behind us!",
+    "VVVC": "Chase the enemy!",
+    # VVVD Ultimate is down! - special case
+    "VVVE": "On my way!",
+    "VVVF": "Follow me!",
+    "VVVG": "Group up!",
+    "VVVJ": "Going into the jungle!",
+    "VVVP": "Split push!",
+    "VVVR": "Ultimate is ready!",
+    "VVVS": "Stay here!",
+    "VVVT": "It's a trap!",
+    "VVVW": "Place a Ward for teleport!",
+    "VVVX": "Spread Out!",
+    # VX - Social Emotes
+    # VXW [Wave]
+    # VXD [Dance]
+    # VXC [Clap]
+    # VXS [Special]
+    # VXF [Furious]
+    # VXG [Special 2]
+    # VXE [Global Emote]
+}
+
+
+@plugin.rule(r"^V[ABCDEFGHIQRSTVX][A-Z1-9]{1,2}$")
+def vgs_va_easy(bot, trigger):
+    command = trigger.group(0).upper()
+    zwsp_nick = "\u200B".join(trigger.nick)
+    if command in V_CMDS:
+        message = V_CMDS[command]
+        if type(message) is tuple:
+            message = message[0].format(secrets.choice(message[1]))
+        bot.say(
+            color(zwsp_nick, colors.CYAN)
+            + color(f": [{command}] " + message, colors.SILVER)
+        )
+    elif command == "VVVD":
+        time = secrets.randbelow(1401) / 10
+        bot.say(
+            color(zwsp_nick, colors.CYAN)
+            + color(
+                f": [{command}] Ultimate is down! ({time:0.2f} remaining)",
+                colors.SILVER,
+            )
+        )
+    else:
+        return plugin.NOLIMIT
