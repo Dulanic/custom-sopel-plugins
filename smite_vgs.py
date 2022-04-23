@@ -161,7 +161,7 @@ V_CMDS = {
     "VVGS": "Curses!",
     "VVGT": "That's too bad!",
     "VVGW": "You're welcome!",
-    # VVG - Position
+    # VVV - Position
     "VVVA": "Set up an ambush here!",
     "VVVB": "Behind us!",
     "VVVC": "Chase the enemy!",
@@ -189,24 +189,19 @@ V_CMDS = {
 
 @plugin.rule(r"^V[ABCDEFGHIQRSTVX][A-Z1-9]{1,2}$")
 def vgs_va_easy(bot, trigger):
-    command = trigger.group(0).upper()
-    zwsp_nick = "\u200B".join(trigger.nick)
-    if command in V_CMDS:
-        message = V_CMDS[command]
-        if type(message) is tuple:
-            message = message[0].format(secrets.choice(message[1]))
-        bot.say(
-            color(zwsp_nick, colors.CYAN)
-            + color(f": [{command}] " + message, colors.SILVER)
-        )
-    elif command == "VVVD":
+    cmd = trigger.group(0).upper()
+    nick_fmt = color("\u200B".join(trigger.nick), colors.CYAN)
+    if cmd in V_CMDS:
+        msg = V_CMDS[cmd]
+        if isinstance(msg, tuple):
+            msg = msg[0].format(secrets.choice(msg[1]))
+        bot.say(nick_fmt + color(f": [{cmd}] {msg}", colors.SILVER))
+    elif cmd == "VVVD":
         time = secrets.randbelow(1401) / 10
         bot.say(
-            color(zwsp_nick, colors.CYAN)
-            + color(
-                f": [{command}] Ultimate is down! ({time:0.2f} remaining)",
-                colors.SILVER,
-            )
-        )
+            nick_fmt +
+            color(
+                f": [{cmd}] Ultimate is down! ({time:0.2f} remaining)",
+                colors.SILVER))
     else:
         return plugin.NOLIMIT
