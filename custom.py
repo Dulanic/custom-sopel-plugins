@@ -1035,7 +1035,7 @@ def marcopolo(bot, trigger):
 
 
 @plugin.rule("^(W)ee!$")
-def marcopolo(bot, trigger):
+def weewoo(bot, trigger):
     bot.say(f"{trigger.group(1)}oo!")
 
 
