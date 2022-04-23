@@ -1,4 +1,5 @@
-from sopel import plugin, formatting
+from sopel import plugin
+from sopel.formatting import bold, italic, monospace, plain
 import secrets
 
 
@@ -27,7 +28,7 @@ def trek_cube(bot, trigger):
 
 @plugin.rule(r"^Hello(\?|!)$")
 def hi(bot, trigger):
-    bot.say("Hello, {}!".format(trigger.nick))
+    bot.say(f"Hello, {trigger.nick}!")
 
 
 @plugin.rule(r"^(Nice\.)(\s$|$)")
@@ -359,7 +360,7 @@ def dotdotdot(bot, trigger):
 def deeznutz(bot, trigger):
     """Can also be triggered with "deez nutz" or "deez nuts" anywhere in a message."""
     deez_nutz = [
-        formatting.bold("DEEZ NUTZ!"),
+        bold("DEEZ NUTZ!"),
         "https://p.actionsack.com/nutz/aldeez.webp",
         "https://p.actionsack.com/nutz/dd.webp",
         "https://p.actionsack.com/nutz/dragon.webp",
@@ -409,7 +410,7 @@ def tableflip(bot, trigger):
 
 @plugin.search(r"\(╯°□°）╯︵ ┻━┻")
 def unflip(bot, trigger):
-    bot.say("┬─┬﻿ ノ( ゜-゜ノ) — Please respect tables, {}.".format(trigger.nick))
+    bot.say(f"┬─┬﻿ ノ( ゜-゜ノ) — Please respect tables, {trigger.nick}.")
 
 
 @plugin.rule("^pranked!$")
@@ -458,7 +459,7 @@ def upsidedown(bot, trigger):
 
 @plugin.rule("^🖕(|🏻|🏼|🏽|🏾|🏿)$")
 def fuckyouback(bot, trigger):
-    bot.say("Fuck you, {}!".format(trigger.nick))
+    bot.say(f"Fuck you, {trigger.nick}!")
 
 
 @plugin.rule("^👏$")
@@ -1025,7 +1026,7 @@ def censor(bot, trigger):
 
 @plugin.rule("^(P|B|Ch|D|S|W)ing!$")
 def pingpong(bot, trigger):
-    bot.say("{}ong!".format(trigger.group(1)))
+    bot.say(f"{trigger.group(1)}ong!")
 
 
 @plugin.rule("^Marco!$")
@@ -1035,7 +1036,7 @@ def marcopolo(bot, trigger):
 
 @plugin.rule("^(W)ee!$")
 def marcopolo(bot, trigger):
-    bot.say("{}oo!".format(trigger.group(1)))
+    bot.say(f"{trigger.group(1)}oo!")
 
 
 @plugin.search("!work")
@@ -1047,7 +1048,7 @@ def worktoday(bot, trigger):
 
 @plugin.search("stbyn")
 def stbyn(bot, trigger):
-    bot.say("Sucks to be you, {}!".format(formatting.italic("nerd")))
+    bot.say(f"Sucks to be you, {italic('nerd')}!")
 
 
 @plugin.search("🥓")
@@ -1322,9 +1323,8 @@ def dblflip(bot, trigger):
 
 
 @plugin.search("bite me")
-@plugin.require_chanmsg
 def bitesback(bot, trigger):
-    bot.action("bites {}".format(trigger.nick))
+    bot.action(f"bites {trigger.nick}")
 
 
 @plugin.rule("^Bye!$")
@@ -1561,17 +1561,10 @@ def judge(bot, trigger):
         "not guilty! https://p.actionsack.com/misc/not-guilty.png",
         "guilty! https://p.actionsack.com/misc/guilty.png"
     ]
-    text = formatting.plain(trigger.group(2) or '')
-
+    text = plain(trigger.group(2) or '')
     if not text:
-        try:
-            msg = "I need someone or something to judge!"
-        except KeyError:
-            msg = "How did you do that?!"
-        bot.reply(msg)
-        return
-
-    bot.say("{} is {}".format(text, secrets.choice(judges)))
+        return bot.reply("I need someone or something to judge!")
+    bot.say(f"{text} is {secrets.choice(judges)}")
 
 
 @plugin.rule(r"^wat\b")
@@ -1939,7 +1932,7 @@ def itwasme(bot, trigger):
 
 @plugin.rule(r"^god\sbless\s(.*)")
 def godbless(bot, trigger):
-    bot.action("blesses {}".format(trigger.group(1)))
+    bot.action(f"blesses {trigger.group(1)}")
 
 
 @plugin.search("hail satan!")
@@ -2001,7 +1994,7 @@ def kiki(bot, trigger):
     kiki = [
         "https://p.actionsack.com/kiki/sauce.png",
         "https://p.actionsack.com/kiki/snoop.png",
-        formatting.monospace("[4:44 PM] Kiki: U sound so far right now"),
+        monospace("[4:44 PM] Kiki: U sound so far right now"),
         "I S M A E L  C H I A  T O R R E S"
     ]
     bot.say(secrets.choice(kiki))
@@ -3297,8 +3290,7 @@ def thatsmyfetish(bot, trigger):
 
 @plugin.rule("^NDA$")
 def nda(bot, trigger):
-    bot.say(formatting.bold(
-        "⚠️ That's ⚠️ some ⚠️ NDA ⚠️ shit ⚠️ right ⚠️ there! ⚠️"))
+    bot.say(bold("⚠️ That's ⚠️ some ⚠️ NDA ⚠️ shit ⚠️ right ⚠️ there! ⚠️"))
 
 
 @plugin.search("darude")
