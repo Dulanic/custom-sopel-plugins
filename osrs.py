@@ -70,16 +70,16 @@ def osrs_base(bot, trigger):
 
 def osrs_set(bot, trigger, user, osrs_name):
     bot.db.set_nick_value(user, "osrs_name", osrs_name)
-    msg = "Successfully set your OSRS name as {}.".format(bold(osrs_name))
+    msg = f"Successfully set your OSRS name as {bold(osrs_name)}."
     return msg
 
 
 def osrs_settype(bot, trigger, user, type):
     if type in VALID_TYPES:
         bot.db.set_nick_value(user, "osrs_type", type)
-        msg = "You've configured your character to use the {} hiscores, {}.".format(type, user)
+        msg = f"You've configured your character to use the {type} hiscores, {user}."
     else:
-        msg = "Please provide a valid type: {}".format(", ".join(VALID_TYPES))
+        msg = f"Please provide a valid type: {', '.join(VALID_TYPES)}"
     return msg
 
 
@@ -88,7 +88,7 @@ def osrs(bot, trigger, target, general_check=False):
         name = bot.db.get_nick_value(target, "osrs_name")
         type = bot.db.get_nick_value(target, "osrs_type")
         if not name:
-            msg = "{} has no OSRS name set. They must use `.osrs set <name>`".format(target)
+            msg = f"{target} has no OSRS name set. They must use `.osrs set <name>`"
             return msg
     elif general_check == True:
         name = target
@@ -104,7 +104,7 @@ def osrs(bot, trigger, target, general_check=False):
     elif type == "uim":
         url = HISCORES_UIM
     else:
-        msg = "Invalid type set for {}.".format(bold(target))
+        msg = f"Invalid type set for {bold(target)}."
         return msg
 
     param = {"player": name}
@@ -115,9 +115,9 @@ def osrs(bot, trigger, target, general_check=False):
         return msg
 
     if data.status_code != 200:
-        msg = "HTTP Error {}".format(data.status_code)
+        msg = "HTTP Error {data.status_code}"
         if data.status_code == 404:
-            msg = "{} not found.".format(bold(name))
+            msg = "{bold(name)} not found."
         return msg
 
     data = data.text.split(maxsplit=24)[:-1]  # cut off non-skill data
@@ -130,15 +130,16 @@ def osrs(bot, trigger, target, general_check=False):
 
     # check for max
     if skills["Overall"] == "2277":
-        msg = "{name} has their Max Cape! 🎊".format(name=bold(name))
+        msg = f"{bold(name)} has their Max Cape! 🎊"
         return msg
 
     # get combat lvl, set total xp
     cmbt_lvl = osrs_cmbt_lvl(skills)
-    skills.update({"XP": "{:,}".format(int(data[0].split(",")[2]))})
+    total_xp = int(data[0].split(",")[2])
+    skills.update({"XP": f"{total_xp:,}"})
 
     # layout msg
-    msg = "{name} (⚔{cmbt_lvl}):".format(name=name, cmbt_lvl=cmbt_lvl)
+    msg = f"{name} (⚔{cmbt_lvl}):"
     msg += " Total {Overall} | XP {XP}"
     msg += " | Atk {Attack} | Str {Strength} | Def {Defence} | Range {Ranged}"
     msg += " | Pray {Prayer} | Mage {Magic} | RC {Runecrafting} | Con {Construction}"
@@ -199,7 +200,7 @@ def osrs_help(bot, trigger):
     msg = "`.osrs` or `.osrs <nick>` is used to lookup your or another IRC user's OSRS character.\n"
     msg += "`.osrs set <name>` is used to set your OSRS character name for use with `.osrs`.\n"
     msg += "`.osrs settype <type>` is used to set which hiscores table to lookup your character on."
-    msg += " Valid types are: {}.".format(", ".join(VALID_TYPES))
+    msg += f" Valid types are: {', '.join(VALID_TYPES)}."
     msg += " If no type is specified, then the regular hiscores table will be used.\n"
     msg += "`.osrs stats <name>` is used to lookup the stats of any OSRS character name.\n"
     msg += "`.osrs pcount` will list the current number of OSRS players in-game.\n"
