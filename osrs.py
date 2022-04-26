@@ -115,9 +115,9 @@ def osrs(bot, trigger, target, general_check=False):
         return msg
 
     if data.status_code != 200:
-        msg = "HTTP Error {data.status_code}"
+        msg = f"HTTP Error {data.status_code}"
         if data.status_code == 404:
-            msg = "{bold(name)} not found."
+            msg = f"{bold(name)} not found."
         return msg
 
     data = data.text.split(maxsplit=24)[:-1]  # cut off non-skill data
