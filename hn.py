@@ -12,13 +12,13 @@ def hackernews_loader(settings):
 @plugin.output_prefix("[HackerNews] ")
 def get_hn(bot, trigger):
     hnid = trigger.group("hnid")
-    url = "https://hacker-news.firebaseio.com/v0/item/{}.json".format(hnid)
+    url = f"https://hacker-news.firebaseio.com/v0/item/{hnid}.json"
     try:
         r = requests.get(url)
     except BaseException:
         try:
             title = sopel_url.find_title(trigger.group(0))
-            return bot.say("[TITLE ONLY FALLBACK] {}".format(title))
+            return bot.say(f"[TITLE ONLY FALLBACK] {title}")
         except BaseException:
             return
 
@@ -32,7 +32,7 @@ def get_hn(bot, trigger):
         elif "text" in r.json():
             post_url = None
             text = r.json()["text"]
-        return bot.say("{} | {}".format(title, post_url or text), truncation=" […]")
+        return bot.say(f"{title} | {post_url or text}", truncation=" […]")
 
     if r.json()["type"] == "comment":
         text = r.json()["text"]
