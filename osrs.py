@@ -32,25 +32,22 @@ def osrs_base(bot, trigger):
             return bot.reply("I don't play OSRS, because I have a life.")
         if target not in bot.channels[trigger.sender].users:
             return bot.reply("Please provide a valid user.")
-        msg = osrs(bot, trigger, target)
+        osrs(bot, trigger, target)
 
     elif cmd == "osrs set":
         osrs_set(bot, trigger)
-        return
 
     elif cmd == "osrs settype":
         osrs_settype(bot, trigger)
-        return
 
     elif cmd == "osrs stats":
         target = plain(trigger.group(2))
         if not target:
             return bot.reply("Please provide an OSRS character name.")
-        msg = osrs(bot, trigger, target, general_check=True)
+        osrs(bot, trigger, target, general_check=True)
 
     elif cmd == "osrs pcount":
         osrs_pcount(bot, trigger)
-        return
 
     elif cmd == "osrs wiki":
         # msg = osrs_wiki()
@@ -58,9 +55,6 @@ def osrs_base(bot, trigger):
 
     elif cmd == "osrs help":
         osrs_help(bot, trigger)
-        return
-
-    return bot.say(msg)
 
 
 def osrs_set(bot, trigger):
@@ -87,8 +81,7 @@ def osrs(bot, trigger, target, general_check=False):
         name = bot.db.get_nick_value(target, "osrs_name")
         type = bot.db.get_nick_value(target, "osrs_type")
         if not name:
-            msg = f"{target} has no OSRS name set. They must use `.osrs set <name>`"
-            return msg
+            return bot.say(f"{target} has no OSRS name set. They must use `.osrs set <name>`")
     elif general_check == True:
         name = target
         type = None
@@ -103,21 +96,18 @@ def osrs(bot, trigger, target, general_check=False):
     elif type == "uim":
         url = HISCORES_UIM
     else:
-        msg = f"Invalid type set for {bold(target)}."
-        return msg
+        return bot.say(f"Invalid type set for {bold(target)}.")
 
     param = {"player": name}
     try:
         data = requests.get(url, params=param)
     except requests.exceptions.ConnectionError:
-        msg = "Error reaching API."
-        return msg
+        return bot.say("Error reaching API.")
 
     if data.status_code != 200:
         msg = f"HTTP Error {data.status_code}"
         if data.status_code == 404:
-            msg = f"{bold(name)} not found."
-        return msg
+            return bot.say(f"{bold(name)} not found.")
 
     data = data.text.split(maxsplit=24)[:-1]  # cut off non-skill data
     skills = {}
@@ -129,8 +119,7 @@ def osrs(bot, trigger, target, general_check=False):
 
     # check for max
     if skills["Overall"] == "2277":
-        msg = f"{bold(name)} has their Max Cape! 🎊"
-        return msg
+        return bot.say(f"{bold(name)} has their Max Cape! 🎊")
 
     # get combat lvl, set total xp
     cmbt_lvl = osrs_cmbt_lvl(skills)
@@ -147,7 +136,7 @@ def osrs(bot, trigger, target, general_check=False):
     msg += " | Mine {Mining} | Smith {Smithing} | Fish {Fishing} | Cook {Cooking}"
     msg += " | FM {Firemaking} | WC {Woodcutting} | Farm {Farming}"
     msg = msg.format(**skills)
-    return msg
+    return bot.say(msg)
 
 
 def osrs_cmbt_lvl(skills):
@@ -203,4 +192,3 @@ def osrs_help(bot, trigger):
     msg += "`.osrs wiki <search terms>` is not yet implemented. Sorry!"
     for line in msg.splitlines():
         bot.notice(line, trigger.nick)
-    return
