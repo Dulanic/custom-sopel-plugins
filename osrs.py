@@ -20,33 +20,27 @@ VALID_TYPES = ["im", "hcim", "uim"]
 @plugin.commands("osrs settype", "osrs set", "osrs stats",
                 "osrs pcount", "osrs wiki", "osrs help", "osrs")
 @plugin.output_prefix("[OSRS] ")
-@plugin.require_chanmsg
 def osrs_base(bot, trigger):
     cmd = trigger.group(1).lower()
 
     if cmd == "osrs":
+        if trigger.is_privmsg:
+            return bot.reply("This command must be used in a channel.")
         target = plain(trigger.group(3) or trigger.nick)
         target = tools.Identifier(target)
         if target == bot.nick:
             return bot.reply("I don't play OSRS, because I have a life.")
-        # TODO: (below) is there a more "global" check...?
-        #       requiring @plugin.require_chanmsg kinda
-        #       sucks, so... 🙃
         if target not in bot.channels[trigger.sender].users:
             return bot.reply("Please provide a valid user.")
         msg = osrs(bot, trigger, target)
 
     elif cmd == "osrs set":
-        user = trigger.nick
-        osrs_name = plain(trigger.group(2) or '')
-        if not osrs_name:
-            return bot.reply("Please provide your OSRS character name.")
-        msg = osrs_set(bot, trigger, user, osrs_name)
+        osrs_set(bot, trigger)
+        return
 
     elif cmd == "osrs settype":
-        user = trigger.nick
-        type = plain(trigger.group(2).lower() or '')
-        msg = osrs_settype(bot, trigger, user, type)
+        osrs_settype(bot, trigger)
+        return
 
     elif cmd == "osrs stats":
         target = plain(trigger.group(2))
@@ -55,7 +49,8 @@ def osrs_base(bot, trigger):
         msg = osrs(bot, trigger, target, general_check=True)
 
     elif cmd == "osrs pcount":
-        msg = osrs_pcount()
+        osrs_pcount(bot, trigger)
+        return
 
     elif cmd == "osrs wiki":
         # msg = osrs_wiki()
@@ -68,19 +63,23 @@ def osrs_base(bot, trigger):
     return bot.say(msg)
 
 
-def osrs_set(bot, trigger, user, osrs_name):
+def osrs_set(bot, trigger):
+    user = trigger.nick
+    osrs_name = plain(trigger.group(2) or '')
+    if not osrs_name:
+        return bot.reply("Please provide your OSRS character name.")
     bot.db.set_nick_value(user, "osrs_name", osrs_name)
-    msg = f"Successfully set your OSRS name as {bold(osrs_name)}."
-    return msg
+    return bot.say(f"Successfully set your OSRS name as {bold(osrs_name)}.")
 
 
-def osrs_settype(bot, trigger, user, type):
+def osrs_settype(bot, trigger):
+    user = trigger.nick
+    type = plain(trigger.group(2).lower() or '')
     if type in VALID_TYPES:
         bot.db.set_nick_value(user, "osrs_type", type)
-        msg = f"You've configured your character to use the {type} hiscores, {user}."
+        return bot.reply(f"You've configured your character to use the {type} hiscores.")
     else:
-        msg = f"Please provide a valid type: {', '.join(VALID_TYPES)}"
-    return msg
+        return bot.reply(f"Please provide a valid type: {', '.join(VALID_TYPES)}")
 
 
 def osrs(bot, trigger, target, general_check=False):
@@ -178,18 +177,15 @@ def osrs_cmbt_lvl(skills):
     return cmbt_lvl
 
 
-def osrs_pcount():
+def osrs_pcount(bot, trigger):
     url = "https://oldschool.runescape.com"
     try:
         raw = requests.get(url)
     except requests.exceptions.ConnectionError:
-        msg = "Error reaching API."
-        return msg
-
+        return bot.say("Error reaching API.")
     html = BeautifulSoup(raw.text, "html.parser")
     msg = html.select_one(".player-count").string
-
-    return msg
+    return bot.say(msg)
 
 
 def osrs_help(bot, trigger):
