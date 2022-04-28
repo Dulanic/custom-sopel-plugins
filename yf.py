@@ -98,6 +98,7 @@ def get_quote(bot, symbol):
             "symbol": q["symbol"],
             "exchange": q["exchange"]
         }
+        return data
     elif quoteType == "ECNQUOTE":
         raise Exception(f"No data for {bold(symbol['symbols'])}.")
 
