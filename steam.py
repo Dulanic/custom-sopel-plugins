@@ -1,3 +1,7 @@
+"""
+Original author: xnaas
+License: The Unlicense (public domain)
+"""
 from bs4 import BeautifulSoup
 from sopel import plugin
 from sopel.formatting import bold, italic, plain

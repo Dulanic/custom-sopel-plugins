@@ -1,3 +1,7 @@
+"""
+Original author: xnaas
+License: The Unlicense (public domain)
+"""
 from html import unescape
 from sopel import plugin
 from sopel.modules import url as sopel_url

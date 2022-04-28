@@ -1,3 +1,7 @@
+"""
+Original author: xnaas
+License: The Unlicense (public domain)
+"""
 from secrets import choice as choose
 from sopel import plugin
 from sopel.formatting import bold, italic, monospace, plain

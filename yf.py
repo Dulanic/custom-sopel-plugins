@@ -1,3 +1,8 @@
+"""
+Original author: xnaas
+License: MIT License
+Note: originally based on https://github.com/sopel-irc/sopel-stocks
+"""
 from sopel import plugin
 from sopel.formatting import bold, color, colors
 import re

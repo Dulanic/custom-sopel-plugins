@@ -1,19 +1,17 @@
+"""
+Original author: xnaas
+License: The Unlicense (public domain)
+"""
+from secrets import choice as choose
 from sopel import plugin
-import secrets
 
 
 @plugin.commands('8', '8ball')
 @plugin.example('.8 Am I gay?')
 def eightball(bot, trigger):
-    """The magic 8ball knows all."""
-    question = trigger.group(2)
-
-    if not question:
-        try:
-            msg = "I need something to foretell!"
-        except KeyError:
-            msg = "How did you do that?!"
-        return bot.reply(msg)
+    """The magic 8ball is all-knowing and 100% accurate."""
+    if not trigger.group(2):
+        return bot.say(f"I need something to foretell, {trigger.nick}!")
 
     messages = [
         # Positive Replies (10)
@@ -40,4 +38,4 @@ def eightball(bot, trigger):
         "Outlook not so good.",
         "Very doubtful."
     ]
-    bot.reply(secrets.choice(messages))
+    bot.reply(choose(messages))

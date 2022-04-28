@@ -1,6 +1,11 @@
-from sopel import plugin, formatting
+"""
+Original author: xnaas
+License: The Unlicense (public domain)
+"""
+from sopel import plugin
+from sopel.formatting import bold
 
 
 @plugin.search("ya('|’)ll")
 def yall(bot, trigger):
-    bot.reply("It's {}, you fucking moron.".format(formatting.bold("y'all")))
+    bot.reply("It's {}, you fucking moron.".format(bold("y'all")))

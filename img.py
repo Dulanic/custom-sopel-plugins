@@ -1,3 +1,7 @@
+"""
+Original author: xnaas
+License: The Unlicense (public domain)
+"""
 from sopel import plugin, config
 from sopel.config.types import StaticSection, ValidatedAttribute
 import json

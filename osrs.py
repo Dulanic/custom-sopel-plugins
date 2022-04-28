@@ -1,3 +1,7 @@
+"""
+Original author: xnaas
+License: The Unlicense (public domain)
+"""
 from bs4 import BeautifulSoup
 from math import floor as round_down
 from sopel import plugin, tools

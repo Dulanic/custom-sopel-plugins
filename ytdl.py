@@ -1,3 +1,7 @@
+"""
+Original author: xnaas
+License: The Unlicense (public domain)
+"""
 from sopel import plugin
 from sopel.formatting import bold, italic
 from sopel.tools import SopelIdentifierMemory

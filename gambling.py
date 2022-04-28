@@ -1,3 +1,7 @@
+"""
+Original author: xnaas
+License: The Unlicense (public domain)
+"""
 from sopel import plugin, tools
 from sopel.formatting import bold, italic, plain
 from datetime import datetime, timedelta

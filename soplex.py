@@ -1,3 +1,7 @@
+"""
+Original author: xnaas
+License: The Unlicense (public domain)
+"""
 from plexapi.server import PlexServer
 from sopel import config, formatting, plugin
 from sopel.config.types import StaticSection, ValidatedAttribute

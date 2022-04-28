@@ -1,3 +1,7 @@
+"""
+Original authors: xnaas & half_duplex (aka: mal)
+License: The Unlicense (public domain)
+"""
 from sopel import plugin
 from sopel.formatting import color, colors
 import secrets
