@@ -96,8 +96,7 @@ def ytdl(bot, trigger):
             else:
                 bot.say(italic("Downloading..."))
                 ytdl.download([url])
-                bot.say(f"https://actionsack.com/tmp/{id}.{ext}")
-                return
+                return bot.say(f"https://actionsack.com/tmp/{id}.{ext}")
     except youtube_dl.utils.DownloadError:
         bot.reply("Download error or invalid link. Please try again.")
         return plugin.NOLIMIT
