@@ -1,26 +1,7 @@
 from sopel import plugin
 from sopel.formatting import bold, color, colors
-# from sopel import config, plugin
-# from sopel.config.types import StaticSection, ValidatedAttribute
 import re
 import requests
-
-
-# Unused config section at the moment.
-# Yahoo Finance has no API key, but...
-# there might be something we want to
-# configure in the future? ¯\_(ツ)_/¯
-# class YFSection(StaticSection):
-#     api_key = ValidatedAttribute("api_key", str)
-#
-#
-# def setup(bot):
-#     bot.config.define_section("yf", YFSection)
-#
-#
-# def configure(config):
-#     config.define_section("yf", YFSection)
-#     config.yf.configure_setting("api_key", "some YF config option")
 
 
 URL = "https://query1.finance.yahoo.com/v7/finance/quote"
