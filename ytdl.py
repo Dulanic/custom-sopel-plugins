@@ -79,7 +79,7 @@ def ytdl(bot, trigger):
         except KeyError:
             bot.reply(
                 "You've given me nothing to work with...what the Hell do you want?!")
-            return
+            return plugin.NOLIMIT
 
     try:
         with youtube_dl.YoutubeDL(ytdl_opts) as ytdl:
@@ -91,11 +91,11 @@ def ytdl(bot, trigger):
             if not dur:
                 bot.reply(
                     "This video has no duration (livestream?) and won't be downloaded.")
-                return
+                return plugin.NOLIMIT
             if dur > 480:
                 bot.reply(
                     "This video is longer than 8 minutes and won't be downloaded.")
-                return
+                return plugin.NOLIMIT
             else:
                 bot.say(italic("Downloading..."))
                 ytdl.download([url])
@@ -103,6 +103,7 @@ def ytdl(bot, trigger):
                 return
     except youtube_dl.utils.DownloadError:
         bot.reply("Please submit a valid link.")
+        return plugin.NOLIMIT
     except KeyError:
         if re.search(r"v\.redd\.it\/", url):
             bot.say(italic("Downloading..."))
@@ -127,7 +128,7 @@ def ytdl(bot, trigger):
         else:
             bot.reply(
                 "This video has no duration (livestream?) and won't be downloaded.")
-            return
+            return plugin.NOLIMIT
 
 
 # Download mp4/audio (m4a)
