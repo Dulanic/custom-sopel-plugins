@@ -77,8 +77,7 @@ def ytdl(bot, trigger):
         try:
             url = bot.memory["youtube_ids"][trigger.sender]
         except KeyError:
-            bot.reply(
-                "You've given me nothing to work with...what the Hell do you want?!")
+            bot.reply("You've given me nothing to work with...what the Hell do you want?!")
             return plugin.NOLIMIT
 
     try:
@@ -89,45 +88,29 @@ def ytdl(bot, trigger):
             ext = meta["ext"]
             dur = meta["duration"]
             if not dur:
-                bot.reply(
-                    "This video has no duration (livestream?) and won't be downloaded.")
+                bot.reply("This video has no duration (livestream?) and won't be downloaded.")
                 return plugin.NOLIMIT
             if dur > 480:
-                bot.reply(
-                    "This video is longer than 8 minutes and won't be downloaded.")
+                bot.reply("This video is longer than 8 minutes and won't be downloaded.")
                 return plugin.NOLIMIT
             else:
                 bot.say(italic("Downloading..."))
                 ytdl.download([url])
-                bot.say("https://actionsack.com/tmp/{}.{}".format(id, ext))
+                bot.say(f"https://actionsack.com/tmp/{id}.{ext}")
                 return
     except youtube_dl.utils.DownloadError:
         bot.reply("Download error or invalid link. Please try again.")
         return plugin.NOLIMIT
     except KeyError:
-        if re.search(r"v\.redd\.it\/", url):
+        if any((re.search(r"v\.redd\.it\/", url),
+                re.search(r"video\.twimg\.com\/", url),
+                re.search(r"cdn\.discordapp\.com\/", url),
+                re.search(r"vm\.tiktok\.com\/", url))):
             bot.say(italic("Downloading..."))
             ytdl.download([url])
-            bot.say("https://actionsack.com/tmp/{}.{}".format(id, ext))
-            return
-        if re.search(r"video\.twimg\.com\/", url):
-            bot.say(italic("Downloading..."))
-            ytdl.download([url])
-            bot.say("https://actionsack.com/tmp/{}.{}".format(id, ext))
-            return
-        if re.search(r"cdn\.discordapp\.com\/", url):
-            bot.say(italic("Downloading..."))
-            ytdl.download([url])
-            bot.say("https://actionsack.com/tmp/{}.{}".format(id, ext))
-            return
-        if re.search(r"vm\.tiktok\.com\/", url):
-            bot.say(italic("Downloading..."))
-            ytdl.download([url])
-            bot.say("https://actionsack.com/tmp/{}.{}".format(id, ext))
-            return
+            return bot.say(f"https://actionsack.com/tmp/{id}.{ext}")
         else:
-            bot.reply(
-                "This video has no duration (livestream?) and won't be downloaded.")
+            bot.reply("This video has no duration (livestream?) and won't be downloaded.")
             return plugin.NOLIMIT
 
 
@@ -160,9 +143,7 @@ def ytdla(bot, trigger):
             url = bot.memory["youtube_ids"][trigger.sender]
             from_id = True
         except KeyError:
-            bot.reply(
-                "You've given me nothing to work with...what the Hell do you want?!")
-            return
+            return bot.reply("You've given me nothing to work with...what the Hell do you want?!")
 
     # Check if "url" is a valid YouTube ID
     if re.search(r"^[^&=%\?]{11}$", url):
@@ -181,21 +162,14 @@ def ytdla(bot, trigger):
             ext = meta["audio_ext"]
             dur = meta["duration"]
             if not dur:
-                bot.reply(
-                    "This video has no duration (livestream?) and won't be downloaded.")
-                return
+                return bot.reply("This video has no duration (livestream?) and won't be downloaded.")
             if dur > 900:
-                bot.reply(
-                    "This video is longer than 15 minutes and won't be downloaded.")
-                return
+                return bot.reply("This video is longer than 15 minutes and won't be downloaded.")
             else:
                 bot.say(italic("Downloading..."))
                 ytdl.download([url])
-                bot.say("https://actionsack.com/tmp/{}.{}".format(id, ext))
-                return
+                return bot.say(f"https://actionsack.com/tmp/{id}.{ext}")
     except youtube_dl.utils.DownloadError:
         return bot.reply("Download error or invalid link. Please try again.")
     except KeyError:
-        bot.reply(
-            "This video has no duration (livestream?) and won't be downloaded.")
-        return
+        return bot.reply("This video has no duration (livestream?) and won't be downloaded.")
