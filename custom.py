@@ -1928,7 +1928,7 @@ def grapist(bot, trigger):
     bot.say("https://p.actionsack.com/misc/grapist.gif")
 
 
-@plugin.search("it was me(?!ant)")
+@plugin.search(r"\bit was me\b")
 def itwasme(bot, trigger):
     me_dio = [
         "https://p.actionsack.com/dio/dva.png",
