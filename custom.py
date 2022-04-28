@@ -153,7 +153,11 @@ def retardeyes(bot, trigger):
 
 @plugin.search(":wesmart:")
 def wesmart(bot, trigger):
-    bot.say("https://p.actionsack.com/emoji/wesmart.webp")
+    wesmarts = [
+        "https://p.actionsack.com/emoji/wesmart.webp",
+        "https://p.actionsack.com/pepe/wesmart.webp"
+    ]
+    bot.say(secrets.choice(wesmarts))
 
 
 @plugin.rule("^thx.*")
@@ -3019,7 +3023,8 @@ def pepe(bot, trigger):
         "https://p.actionsack.com/pepe/religion.jpg",
         "https://p.actionsack.com/pepe/steak.png",
         "https://p.actionsack.com/pepe/sub.png",
-        "https://p.actionsack.com/pepe/trump.png"
+        "https://p.actionsack.com/pepe/trump.png",
+        "https://p.actionsack.com/pepe/wesmart.webp"
     ]
     bot.say(secrets.choice(rare_pepes))
 
