@@ -1,3 +1,4 @@
+from html import unescape
 from sopel import plugin
 from sopel.modules import url as sopel_url
 import re
@@ -31,9 +32,9 @@ def get_hn(bot, trigger):
             post_url = r.json()["url"]
         elif "text" in r.json():
             post_url = None
-            text = r.json()["text"]
+            text = unescape(r.json()["text"])
         return bot.say(f"{title} | {post_url or text}", truncation=" […]")
 
     if r.json()["type"] == "comment":
-        text = r.json()["text"]
+        text = unescape(r.json()["text"])
         return bot.say(text, truncation=" […]")
