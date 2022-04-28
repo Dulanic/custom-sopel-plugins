@@ -102,7 +102,7 @@ def ytdl(bot, trigger):
                 bot.say("https://actionsack.com/tmp/{}.{}".format(id, ext))
                 return
     except youtube_dl.utils.DownloadError:
-        bot.reply("Please submit a valid link.")
+        bot.reply("Download error or invalid link. Please try again.")
         return plugin.NOLIMIT
     except KeyError:
         if re.search(r"v\.redd\.it\/", url):
@@ -194,7 +194,7 @@ def ytdla(bot, trigger):
                 bot.say("https://actionsack.com/tmp/{}.{}".format(id, ext))
                 return
     except youtube_dl.utils.DownloadError:
-        bot.reply("Please submit a valid link.")
+        return bot.reply("Download error or invalid link. Please try again.")
     except KeyError:
         bot.reply(
             "This video has no duration (livestream?) and won't be downloaded.")
