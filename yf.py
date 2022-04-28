@@ -99,7 +99,7 @@ def get_quote(bot, symbol):
             "exchange": q["exchange"]
         }
         return data
-    elif quoteType == "ECNQUOTE":
+    elif quoteType == "ECNQUOTE" or quoteType == "MUTUALFUND":
         raise Exception(f"No data for {bold(symbol['symbols'])}.")
 
     # marketState REGULAR and PREPRE appear to be the same thing
