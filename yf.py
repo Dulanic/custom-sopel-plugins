@@ -33,7 +33,8 @@ def get_quote(bot, symbol):
     marketState = q["marketState"]
     quoteType = q["quoteType"]
 
-    if (quoteType == "EQUITY" and marketState == "PRE") and (exchange == "NMS" or exchange == "NYQ"):
+    if all((quoteType == "EQUITY" and marketState == "PRE",
+            exchange in {"NMS", "NYQ"})):
         data = {
             "price": q["preMarketPrice"],
             "change": q["preMarketChange"],
@@ -49,7 +50,10 @@ def get_quote(bot, symbol):
             "exchange": q["exchange"]
         }
         return data
-    elif quoteType == "EQUITY" and ((marketState == "POST" or marketState == "POSTPOST") and "postMarketPrice" in q) and (exchange == "NMS" or exchange == "NYQ"):
+    elif all((quoteType == "EQUITY",
+            marketState == "POST" or marketState == "POSTPOST",
+            "postMarketPrice" in q,
+            exchange == "NMS" or exchange == "NYQ")):
         data = {
             "price": q["postMarketPrice"],
             "change": q["postMarketChange"],
@@ -67,7 +71,7 @@ def get_quote(bot, symbol):
             "exchange": q["exchange"]
         }
         return data
-    elif quoteType == "FUTURE" or quoteType == "INDEX" or quoteType == "CURRENCY" or quoteType == "ETF":
+    elif quoteType in {"FUTURE", "INDEX", "CURRENCY", "ETF"}:
         data = {
             "price": q["regularMarketPrice"],
             "change": q["regularMarketChange"],
@@ -99,7 +103,7 @@ def get_quote(bot, symbol):
             "exchange": q["exchange"]
         }
         return data
-    elif quoteType == "ECNQUOTE" or quoteType == "MUTUALFUND":
+    elif quoteType in {"ECNQUOTE", "MUTUALFUND"}:
         raise Exception(f"No data for {bold(symbol['symbols'])}.")
 
     # marketState REGULAR and PREPRE appear to be the same thing
