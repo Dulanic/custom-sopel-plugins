@@ -1,12 +1,12 @@
 """
-Original author: xnaas
+Original author: xnaas (2020-2022+)
 License: The Unlicense (public domain)
 """
-from sopel import plugin
 import random
 import requests
 import rule34
 import secrets
+from sopel import plugin
 
 
 def nsfw_check(trigger):

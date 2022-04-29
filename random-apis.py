@@ -1,12 +1,12 @@
 """
-Original author: xnaas
+Original author: xnaas (2021-2022)
 License: The Unlicense (public domain)
 """
-from sopel import plugin, formatting
 import random
 import requests
 import string
 import urllib.parse
+from sopel import plugin, formatting
 
 
 @plugin.rule(".*🤖.*")

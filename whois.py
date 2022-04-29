@@ -1,11 +1,11 @@
 """
-Original author: xnaas
+Original author: xnaas (2022)
 License: The Unlicense (public domain)
 """
-from sopel import config, plugin
-from sopel.config.types import StaticSection, ValidatedAttribute
 import re
 import requests
+from sopel import config, plugin
+from sopel.config.types import StaticSection, ValidatedAttribute
 
 
 class WhoisSection(StaticSection):

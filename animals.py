@@ -1,9 +1,9 @@
 """
-Original author: xnaas
+Original author: xnaas (2020)
 License: The Unlicense (public domain)
 """
-from sopel import plugin
 import requests
+from sopel import plugin
 
 
 @plugin.command("cat")

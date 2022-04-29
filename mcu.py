@@ -1,9 +1,9 @@
 """
-Original author: xnaas
+Original author: xnaas (2021)
 License: The Unlicense (public domain)
 """
-from sopel import plugin, formatting
 import requests
+from sopel import plugin, formatting
 
 
 @plugin.command("nextmcu")

@@ -1,5 +1,5 @@
 """
-Original author: xnaas
+Original author: xnaas (2020-2022+)
 License: The Unlicense (public domain)
 """
 from secrets import choice as choose

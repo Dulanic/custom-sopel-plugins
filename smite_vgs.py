@@ -1,10 +1,10 @@
 """
-Original authors: xnaas & half_duplex (aka: mal)
+Original authors: xnaas (2021) & half_duplex (aka: mal) (2022)
 License: The Unlicense (public domain)
 """
+import secrets
 from sopel import plugin
 from sopel.formatting import color, colors
-import secrets
 
 
 V_CMDS = {

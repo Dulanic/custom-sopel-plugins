@@ -1,12 +1,12 @@
 """
-Original author: xnaas
+Original author: xnaas (2021)
 License: The Unlicense (public domain)
 """
-from sopel import plugin, config
-from sopel.config.types import StaticSection, ValidatedAttribute
 import json
 import random
 import requests
+from sopel import plugin, config
+from sopel.config.types import StaticSection, ValidatedAttribute
 
 
 class GooglecseSection(StaticSection):

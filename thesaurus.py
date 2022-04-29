@@ -1,11 +1,11 @@
 """
-Original author: xnaas
+Original author: xnaas (2022)
 License: The Unlicense (public domain)
 """
-from sopel import plugin, formatting
-from sopel.config.types import StaticSection, ValidatedAttribute
 import random
 import requests
+from sopel import plugin, formatting
+from sopel.config.types import StaticSection, ValidatedAttribute
 
 
 class ThesaurusSection(StaticSection):

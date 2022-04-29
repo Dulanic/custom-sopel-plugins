@@ -1,10 +1,10 @@
 """
-Original author: xnaas
+Original author: xnaas (2021)
 License: The Unlicense (public domain)
 """
-from sopel import plugin, tools
-import requests
 import html
+import requests
+from sopel import plugin, tools
 
 
 @plugin.command("insult")
@@ -16,21 +16,18 @@ def insult(bot, trigger):
     target = trigger.group(3)
 
     if not target:
-        bot.reply("I need someone to insult, dipshit.")
-        return
+        return bot.reply("I need someone to insult, dipshit.")
     target = tools.Identifier(target)
 
     if target == bot.nick:
-        bot.reply("Nice try, retard.")
-        return
+        return bot.reply("Nice try, retard.")
 
     if target not in bot.channels[trigger.sender].users:
-        bot.reply("I need someone to insult, dipshit.")
-        return
+        return bot.reply("I need someone to insult, dipshit.")
 
     try:
         insult = requests.get(url, params=params).json()['insult']
         insult_escaped = html.unescape(insult)
-        bot.say("{}: {}".format(target, insult_escaped))
+        bot.say(f"{target}: {insult_escaped}")
     except:
         bot.reply("There was an error. Fuck you.")

@@ -1,12 +1,12 @@
 """
-Original author: xnaas
+Original author: xnaas (2022)
 License: The Unlicense (public domain)
 """
+import re
+import requests
 from html import unescape
 from sopel import plugin
 from sopel.modules import url as sopel_url
-import re
-import requests
 
 
 def hackernews_loader(settings):

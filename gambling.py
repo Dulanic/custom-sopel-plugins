@@ -1,16 +1,16 @@
 """
-Original author: xnaas
+Original author: xnaas (2021-2022+)
 License: The Unlicense (public domain)
 """
-from sopel import plugin, tools
-from sopel.formatting import bold, italic, plain
-from datetime import datetime, timedelta
 import random
 import re
 import secrets
 import sqlite3
 import time
 import unicodedata
+from datetime import datetime, timedelta
+from sopel import plugin, tools
+from sopel.formatting import bold, italic, plain
 
 
 GCHAN = "#casino"

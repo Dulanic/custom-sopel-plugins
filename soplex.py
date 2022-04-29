@@ -1,12 +1,12 @@
 """
-Original author: xnaas
+Original author: xnaas (2021)
 License: The Unlicense (public domain)
 """
+import plexapi.exceptions
+import requests.exceptions
 from plexapi.server import PlexServer
 from sopel import config, formatting, plugin
 from sopel.config.types import StaticSection, ValidatedAttribute
-import plexapi.exceptions
-import requests.exceptions
 
 
 # Define Config Options

@@ -1,12 +1,12 @@
 """
-Original author: xnaas
+Original author: xnaas (2022)
 License: The Unlicense (public domain)
 """
+import requests
 from bs4 import BeautifulSoup
 from math import floor as round_down
 from sopel import plugin, tools
 from sopel.formatting import bold, plain
-import requests
 
 
 HISCORES_ALL = "https://secure.runescape.com/m=hiscore_oldschool/index_lite.ws"

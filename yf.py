@@ -1,12 +1,12 @@
 """
-Original author: xnaas
+Author: xnaas (2022)
 License: MIT License
 Note: originally based on https://github.com/sopel-irc/sopel-stocks
 """
-from sopel import plugin
-from sopel.formatting import bold, color, colors
 import re
 import requests
+from sopel import plugin
+from sopel.formatting import bold, color, colors
 
 
 URL = "https://query1.finance.yahoo.com/v7/finance/quote"

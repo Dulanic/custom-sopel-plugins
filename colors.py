@@ -1,13 +1,14 @@
 """
+Authors: xnaas, dgw (2020-2021)
 Source: https://github.com/xnaas/sopel-color-text
 Forked and heavily modified from: https://github.com/sopel-irc/sopel-rainbow
 License: Eiffel Forum License, version 2
 """
-from sopel import plugin, formatting
-from sopel.config import types
 import itertools
 import random
 import unicodedata
+from sopel import plugin, formatting
+from sopel.config import types
 
 
 COLOR_SCHEMES = {

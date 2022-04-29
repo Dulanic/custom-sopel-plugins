@@ -1,5 +1,5 @@
 """
-Original author: xnaas
+Original author: xnaas (2022)
 License: The Unlicense (public domain)
 """
 import requests

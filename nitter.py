@@ -1,11 +1,11 @@
 """
-Original author: xnaas
+Author: xnaas (2022)
 License: Eiffel Forum License, version 2
 Note: some regex stolen from https://github.com/sopel-irc/sopel-twitter
 """
+import re
 from sopel import plugin
 from sopel_modules import twitter
-import re
 
 
 NITTER_DOMAINS = [

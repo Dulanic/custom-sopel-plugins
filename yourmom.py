@@ -1,10 +1,10 @@
 """
-Original author: xnaas
+Original author: xnaas (2021)
 License: The Unlicense (public domain)
 """
+import os
 from secrets import choice as choose
 from sopel import plugin
-import os
 
 
 @plugin.command("ym")

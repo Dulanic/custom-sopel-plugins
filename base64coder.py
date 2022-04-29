@@ -1,9 +1,9 @@
 """
-Original author: xnaas
+Original author: xnaas (2021)
 License: The Unlicense (public domain)
 """
-from sopel import plugin
 import base64
+from sopel import plugin
 
 
 @plugin.command("b64e")

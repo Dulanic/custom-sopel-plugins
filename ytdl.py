@@ -1,12 +1,12 @@
 """
-Original author: xnaas
+Original author: xnaas (2021-2022+)
 License: The Unlicense (public domain)
 """
+import re
+import yt_dlp as youtube_dl
 from sopel import plugin
 from sopel.formatting import bold, italic
 from sopel.tools import SopelIdentifierMemory
-import re
-import yt_dlp as youtube_dl
 
 
 # Should match all valid YouTube links.
