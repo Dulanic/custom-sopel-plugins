@@ -29,7 +29,10 @@ def get_quote(bot, symbol):
         raise Exception(f"No data for {bold(symbol['symbols'])}.")
 
     q = r["result"][0]
-    exchange = q["exchange"]
+    try:
+        exchange = q["exchange"]
+    except KeyError:
+        raise Exception(f"No data for {bold(symbol['symbols'])}.")
     marketState = q["marketState"]
     quoteType = q["quoteType"]
 
@@ -103,7 +106,7 @@ def get_quote(bot, symbol):
             "exchange": q["exchange"]
         }
         return data
-    elif quoteType in {"ECNQUOTE", "MUTUALFUND"}:
+    elif quoteType in {"ECNQUOTE", "MUTUALFUND", "NONE"}:
         raise Exception(f"No data for {bold(symbol['symbols'])}.")
 
     # marketState REGULAR and PREPRE appear to be the same thing
