@@ -38,7 +38,7 @@ def drg_salute(bot, trigger):
         "We rock!",
         "Yaaaah, Rock and Stone!"
     ]
-    bot.say(choose(drg_salutes).upper())
+    bot.say(choose(drg_salutes))
 
 
 @plugin.command("toast")
