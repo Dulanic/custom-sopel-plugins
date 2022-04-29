@@ -12,8 +12,7 @@ import base64
 def base64_encode(bot, trigger):
     """Encodes a message into base64."""
     if not trigger.group(2):
-        bot.reply("I need something to encode.")
-        return
+        return bot.reply("I need something to encode.")
 
     encodedBytes = base64.b64encode(trigger.group(2).encode("utf-8"))
     encodedStr = str(encodedBytes, "utf-8")
@@ -27,8 +26,7 @@ def base64_encode(bot, trigger):
 def base64_decode(bot, trigger):
     """Decodes a base64 string."""
     if not trigger.group(2):
-        bot.reply("I need something to decode.")
-        return
+        return bot.reply("I need something to decode.")
 
     try:
         decodedBytes = base64.b64decode(trigger.group(2).encode("utf-8"))
