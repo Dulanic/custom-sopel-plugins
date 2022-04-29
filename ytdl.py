@@ -10,7 +10,7 @@ import yt_dlp as youtube_dl
 
 
 # Should match all valid YouTube links.
-VALID_YT_LINK = r"(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(watch\?v=|embed/|v/|.+\?v=)?([^&=%\?]{11})"
+VALID_YT_LINK = r"(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/(shorts/)?(watch\?v=|embed/|v/|.+\?v=)?(?P<id>[^&=%\?]{11})"
 
 
 # YouTube Link Logger
@@ -34,7 +34,7 @@ def shutdown(bot):
 @plugin.search(VALID_YT_LINK)
 @plugin.unblockable
 def youtube_link_log(bot, trigger):
-    video_id = trigger.group(6)
+    video_id = trigger.group("id")
 
     if not video_id:
         bot.say("xnaas: YouTube link logging error...good luck!")
