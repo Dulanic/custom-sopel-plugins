@@ -304,10 +304,10 @@ def yf_stock(bot, trigger):
     # add info if pre- or post-market
     exchange = data["exchange"]
     marketState = data["marketState"]
-    if marketState == "PRE" and (exchange == "NMS" or exchange == "NYQ"):
+    if marketState == "PRE" and exchange in {"NMS", "NYQ"}:
         msg += color(" PREMARKET", colors.LIGHT_GREY)
         msg2 += " | CLOSE {currencySymbol}{close:,.2f} "
-    elif (marketState == "POST" or marketState == "POSTPOST") and (exchange == "NMS" or exchange == "NYQ"):
+    elif marketState in {"POST", "POSTPOST"} and exchange in {"NMS", "NYQ"}:
         msg += color(" POSTMARKET", colors.LIGHT_GREY)
         msg2 += " | CLOSE {currencySymbol}{close:,.2f} "
         if data["rmchange"] >= 0:
