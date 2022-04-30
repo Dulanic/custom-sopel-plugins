@@ -1,8 +1,8 @@
 """
-Original author: xnaas (2021)
+Original author: xnaas (2021-2022)
 License: The Unlicense (public domain)
 """
-from secrets import choice as choose
+from secrets import choice
 from sopel import plugin
 
 
@@ -38,7 +38,7 @@ def drg_salute(bot, trigger):
         "We rock!",
         "Yaaaah, Rock and Stone!"
     ]
-    bot.say(choose(drg_salutes))
+    bot.say(choice(drg_salutes))
 
 
 @plugin.command("toast")
@@ -75,7 +75,7 @@ def drg_toast(bot, trigger):
         "To the fallen!",
         "To those we lost!"
     ]
-    bot.say(choose(drg_toasts))
+    bot.say(choice(drg_toasts))
 
 
 @plugin.search("karl")
@@ -95,4 +95,4 @@ def karl(bot, trigger):
         "I'm gonna wear this in honor of Karl!",
         "People ask why we remember Karl. People ask what made him a legend. Rumor has it Skull Crusher Ale is at least partly to blame. Make of that what you will. Beware."
     ]
-    bot.say(choose(karls))
+    bot.say(choice(karls))
