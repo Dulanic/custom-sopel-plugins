@@ -1,8 +1,8 @@
 """
-Original author: xnaas (2020)
+Original author: xnaas (2020, 2022)
 License: The Unlicense (public domain)
 """
-from secrets import choice as choose
+from secrets import choice
 from sopel import plugin
 
 
@@ -38,4 +38,4 @@ def eightball(bot, trigger):
         "Outlook not so good.",
         "Very doubtful."
     ]
-    bot.reply(choose(messages))
+    bot.reply(choice(messages))
