@@ -44,7 +44,7 @@ def domain_reg_check(bot, trigger):
         }
         try:
             credits = requests.get(url, params=params).json()["data"][0]["credits"]
-            return bot.say("[WHOIS] {} credits remaining.".format(credits))
+            return bot.say(f"[WHOIS] {credits} credits remaining.")
         except requests.exceptions.RequestException:
             return bot.reply("Issue with API.")
 
@@ -77,7 +77,7 @@ def domain_reg_check(bot, trigger):
         return bot.reply("I need a valid domain to check.")
 
     # re-combine punycode SLD and TLD for API call
-    domain = "{}.{}".format(sld, tld)
+    domain = f"{sld}.{tld}"
 
     # punycode → normal text
     # catches remaining invalid domain stuff
@@ -98,16 +98,16 @@ def domain_reg_check(bot, trigger):
         result = requests.get(url, params=params).json()
 
         # re-combine normal text SLD and TLD for pretty output
-        domain = "{}.{}".format(sld, tld)
+        domain = f"{sld}.{tld}"
 
         # Print domain availability
         if "DomainInfo" in result:
             domain_avail = result["DomainInfo"]["domainAvailability"]
-            return bot.say("{} is {}.".format(domain, domain_avail))
+            return bot.say(f"{domain} is {domain_avail}.")
         # Error Handling from API
         elif "ErrorMessage" in result:
             error_message = result["ErrorMessage"]["msg"]
-            return bot.say("{}: {}".format(domain, error_message))
+            return bot.say(f"{domain}: {error_message}")
         else:
             return bot.reply("Issue with API.")
     except requests.exceptions.RequestException:
