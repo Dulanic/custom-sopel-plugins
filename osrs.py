@@ -85,7 +85,7 @@ def osrs(bot, trigger, target, general_check=False):
         name = bot.db.get_nick_value(target, "osrs_name")
         type = bot.db.get_nick_value(target, "osrs_type")
         if not name:
-            return bot.say(f"{target} has no OSRS name set. They must use `.osrs set <name>`")
+            return bot.say(f"{target} has no OSRS name set.")
     elif general_check == True:
         name = target
         type = None
