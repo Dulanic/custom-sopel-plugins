@@ -1,5 +1,5 @@
 """
-Original author: xnaas (2021)
+Original author: xnaas (2021-2022)
 License: The Unlicense (public domain)
 """
 import html
