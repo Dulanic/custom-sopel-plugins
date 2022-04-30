@@ -1,5 +1,5 @@
 """
-Original author: xnaas (2021)
+Original author: xnaas (2021-2022)
 License: The Unlicense (public domain)
 """
 import json
@@ -65,7 +65,7 @@ def img_search(bot, trigger):
                 headers=google_headers).json()["items"][0]["link"]
             bot.say(google_result)
         else:
-            bot.say("https://duckduckgo.com{}".format(ddg_result))
+            bot.say(f"https://duckduckgo.com{ddg_result}")
     except json.decoder.JSONDecodeError:
         bot.reply("Bad image search.")
     except KeyError:
