@@ -2,7 +2,6 @@
 Original author: xnaas (2022)
 License: The Unlicense (public domain)
 """
-import random
 import requests
 from sopel import plugin, formatting
 from sopel.config.types import StaticSection, ValidatedAttribute
@@ -26,8 +25,7 @@ def configure(config):
 def synonyms(bot, trigger):
     word = formatting.plain(trigger.group(3))
 
-    url = "https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{}".format(
-        word)
+    url = f"https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{word}"
     key = {"key": bot.config.thesaurus.api_key}
 
     try:
@@ -42,8 +40,7 @@ def synonyms(bot, trigger):
 def antonyms(bot, trigger):
     word = formatting.plain(trigger.group(3))
 
-    url = "https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{}".format(
-        word)
+    url = f"https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{word}"
     key = {"key": bot.config.thesaurus.api_key}
 
     try:
