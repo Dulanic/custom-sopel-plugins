@@ -1,5 +1,5 @@
 """
-Original author: xnaas (2021)
+Original author: xnaas (2021-2022)
 License: The Unlicense (public domain)
 """
 import plexapi.exceptions
@@ -62,7 +62,7 @@ def plex_recentmovies(bot, trigger):
     recent = movies.recentlyAdded(maxresults=3)
     recent_movies = []
     for movie in recent:
-        recent_movies.append("{} ({})".format(movie.title, movie.year))
+        recent_movies.append(f"{movie.title} ({movie.year})")
 
     bot.reply(", ".join(recent_movies))
 
@@ -73,12 +73,7 @@ def plex_search(bot, trigger):
     search = formatting.plain(trigger.group(2) or '')
 
     if not search:
-        try:
-            msg = "I need something to search..."
-        except KeyError:
-            msg = "How did you do that?!"
-        bot.reply(msg)
-        return
+        return bot.reply("I need something to search...")
 
     plex = plex_test(bot, trigger)
 
@@ -90,18 +85,12 @@ def plex_search(bot, trigger):
     # Search and add Movies to search_results
     for video in plex.search(search, mediatype="movie", limit=3):
         search_results.append(
-            "[{}] {} ({})".format(
-                video.TYPE.title(),
-                video.title,
-                video.year))
+            f"[{video.TYPE.title()}] {video.title} ({video.year})")
 
     # Search and add TV Shows to search_results
     for video in plex.search(search, mediatype="show", limit=3):
         search_results.append(
-            "[{}] {} ({})".format(
-                video.TYPE.title(),
-                video.title,
-                video.year))
+            f"[{video.TYPE.title()}] {video.title} ({video.year})")
 
     # verify there's results
     if not search_results:
