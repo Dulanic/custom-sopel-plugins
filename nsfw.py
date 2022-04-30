@@ -2,10 +2,10 @@
 Original author: xnaas (2020-2022+)
 License: The Unlicense (public domain)
 """
-import random
 import requests
 import rule34
-import secrets
+from secrets import choice as choose
+from secrets import randbelow
 from sopel import plugin
 
 
@@ -73,7 +73,7 @@ def reddit_boobs(bot, trigger):
         "type": "link",
         "limit": "100"}
     rboobs_img = requests.get(url, params=params, headers=reddit_headers).json()[
-        "data"]["children"][random.randrange(100)]["data"]["url"]
+        "data"]["children"][randbelow(101)]["data"]["url"]
     bot.say(rboobs_img)
 
 
@@ -94,7 +94,7 @@ def reddit_ass(bot, trigger):
         "type": "link",
         "limit": "100"}
     rass_img = requests.get(url, params=params, headers=reddit_headers).json()[
-        "data"]["children"][random.randrange(100)]["data"]["url"]
+        "data"]["children"][randbelow(101)]["data"]["url"]
     bot.say(rass_img)
 
 
@@ -104,8 +104,8 @@ r34 = rule34.Sync()
 @plugin.commands("rule34", "r34")
 @plugin.example(".rule34 rimuru_tempest")
 def rule34_cmd(bot, trigger):
-    """Search rule34.xxx by tags. You can type multiple words to chain together tags.
-    Full Tag List: rule34.xxx/index.php?page=tags&s=list"""
+    """Search rule34.xxx by tags. You can type multiple words to chain together
+    tags. Full Tag List: rule34.xxx/index.php?page=tags&s=list"""
     msg = nsfw_check(trigger)
     if msg:
         return bot.reply(msg)
@@ -119,7 +119,7 @@ def rule34_cmd(bot, trigger):
     try:
         posts = r34.getImages(tags=search_term, randomPID=True)
         images = [(post.file_url) for post in posts]
-        bot.say(random.choice(images))
+        bot.say(choose(images))
     except TypeError:
         bot.reply("No results. Try refining your tags.")
 
@@ -140,6 +140,7 @@ def reddit_cock(bot, trigger):
         "t": "month",
         "type": "link",
         "limit": "100"}
-    penises = requests.get(url, params=params, headers=reddit_headers).json()["data"]["children"]
-    penis_img = secrets.choice(penises)["data"]["url"]
+    penises = requests.get(url, params=params, headers=reddit_headers).json()[
+        "data"]["children"]
+    penis_img = choose(penises)["data"]["url"]
     bot.say(penis_img)
