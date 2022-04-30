@@ -21,7 +21,7 @@ def rbot(bot, trigger):
             string.digits +
             string.punctuation) for _ in range(random_length))
     string_urlsafe = urllib.parse.quote(random_string)
-    url = "https://robohash.org/{}.png".format(string_urlsafe)
+    url = f"https://robohash.org/{string_urlsafe}.png"
     try:
         image = requests.get(url)
         # API recently started to fail a lot... (2022-03-15)
@@ -31,15 +31,16 @@ def rbot(bot, trigger):
             random.SystemRandom().choice(
                 string.ascii_letters +
                 string.digits) for _ in range(5))
-        with open("/mnt/media/websites/actionsack.com/tmp/rh_{}.png".format(filename), "wb") as file:
+        with open(f"/mnt/media/websites/actionsack.com/tmp/rh_{filename}.png",
+            "wb") as file:
             file.write(image.content)
-        bot.say("https://actionsack.com/tmp/rh_{}.png".format(filename))
+        bot.say(f"https://actionsack.com/tmp/rh_{filename}.png")
     except BaseException:
         bot.reply("Error reaching API, probably.")
 
 
 @plugin.command("fakeperson")
-@plugin.rate(server=2)  # endpoint doesn't generate a new image more than once per second anyway
+@plugin.rate(server=2)  # endpoint: new image once per second
 def fakeperson(bot, trigger):
     """Posts a not real person. 😱
     Uses thispersondoesnotexist.com"""
@@ -50,10 +51,10 @@ def fakeperson(bot, trigger):
             random.SystemRandom().choice(
                 string.ascii_letters +
                 string.digits) for _ in range(5))
-        with open("/mnt/media/websites/actionsack.com/tmp/fp_{}.jpg".format(filename), "wb") as file:
+        with open(f"/mnt/media/websites/actionsack.com/tmp/fp_{filename}.jpg",
+            "wb") as file:
             file.write(image.content)
-        bot.say(
-            "https://actionsack.com/tmp/fp_{}.jpg".format(filename))
+        bot.say(f"https://actionsack.com/tmp/fp_{filename}.jpg")
     except BaseException:
         bot.reply("Error reaching API, probably.")
 
@@ -74,6 +75,6 @@ def ronswanson(bot, trigger):
     url = "https://ron-swanson-quotes.herokuapp.com/v2/quotes"
     try:
         quote = requests.get(url).json()[0]
-        bot.say("Ron Swanson says: {}".format(quote))
+        bot.say(f"Ron Swanson says: {quote}")
     except BaseException:
         bot.reply("Error reaching API, probably.")
