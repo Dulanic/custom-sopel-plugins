@@ -210,7 +210,7 @@ def accident(bot, trigger):
 
 @plugin.search("14nm")
 def fourteennm(bot, trigger):
-    bot.say(f"{DOMAIN}misc/14nm+++++.mp4")
+    bot.say(f"{DOMAIN}misc/14nm+++++.webp")
 
 
 @plugin.search("bait")
