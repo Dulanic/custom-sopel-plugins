@@ -67,45 +67,10 @@ def retarded(bot, trigger):
 
 @plugin.search("rekt")
 def rekt(bot, trigger):
-    rekt = [
-        f"{DOMAIN}rekt/baseball.gif",
-        f"{DOMAIN}rekt/beachdive.mp4",
-        f"{DOMAIN}rekt/beachskillz.gif",
-        f"{DOMAIN}rekt/bf1revenge.mp4",
-        f"{DOMAIN}rekt/bf1sniper.mp4",
-        f"{DOMAIN}rekt/blackman.gif",
-        f"{DOMAIN}rekt/botw-sled.gif",
-        f"{DOMAIN}rekt/calligraphy.mp4",
-        f"{DOMAIN}rekt/carcrash.gif",
-        f"{DOMAIN}rekt/dive.gif",
-        f"{DOMAIN}rekt/ForHonor.webm",
-        f"{DOMAIN}rekt/gta-bike.mp4",
-        f"{DOMAIN}rekt/gta-bounce.mp4",
-        f"{DOMAIN}rekt/gta-cop.mp4",
-        f"{DOMAIN}rekt/gta-flight.mp4",
-        f"{DOMAIN}rekt/gta-gas.mp4",
-        f"{DOMAIN}rekt/gta-phone.mp4",
-        f"{DOMAIN}rekt/gta-post.mp4",
-        f"{DOMAIN}rekt/gta-rekt.mp4",
-        f"{DOMAIN}rekt/gta-stomp.gif",
-        f"{DOMAIN}rekt/gta-walkitoff.mp4",
-        f"{DOMAIN}rekt/jeep.gif",
-        f"{DOMAIN}rekt/leap.gif",
-        f"{DOMAIN}rekt/LOLOLOLOL.gif",
-        f"{DOMAIN}rekt/poolgirl.gif",
-        f"{DOMAIN}rekt/pubg-redzone.mp4",
-        f"{DOMAIN}rekt/rekt.png",
-        f"{DOMAIN}rekt/running.gif",
-        f"{DOMAIN}rekt/shionXclayman.webp",
-        f"{DOMAIN}rekt/skateit.mp4",
-        f"{DOMAIN}rekt/slammin.gif",
-        f"{DOMAIN}rekt/smash.mp4",
-        f"{DOMAIN}rekt/sniped.mp4",
-        f"{DOMAIN}rekt/walkbot.gif",
-        f"{DOMAIN}rekt/watergun.gif",
-        "https://w.wiki/n9f"
-    ]
-    bot.say(choose(rekt))
+    rekts = ['https://w.wiki/n9f']
+    for pic in listdir(f'{PATH}rekt'):
+        rekts.append(f'{DOMAIN}rekt/{pic}')
+    bot.say(choose(rekts))
 
 
 @plugin.rule("^420.*")
@@ -142,22 +107,10 @@ def thanks(bot, trigger):
 def crying(bot, trigger):
     """Bot will reply with a crying GIF or emoticon.
     Can also be summoned by sending a message that is only the 😢 emoji."""
-    crying = [
-        f"{DOMAIN}QQ/QQ000.webp",
-        f"{DOMAIN}QQ/QQ001.webp",
-        f"{DOMAIN}QQ/QQ002.webp",
-        f"{DOMAIN}QQ/QQ003.webp",
-        f"{DOMAIN}QQ/QQ004.webp",
-        f"{DOMAIN}QQ/QQ005.webp",
-        f"{DOMAIN}QQ/QQ006.webp",
-        f"{DOMAIN}QQ/QQ007.webp",
-        "ಥ_ಥ",
-        "＞︿＜",
-        "＞﹏＜",
-        "X﹏X",
-        "T_T"
-    ]
-    bot.say(choose(crying))
+    cries = ['ಥ_ಥ', '＞︿＜', '＞﹏＜', 'X﹏X', 'T_T']
+    for pic in listdir(f'{PATH}QQ'):
+        cries.append(f'{DOMAIN}QQ/{pic}')
+    bot.say(choose(cries))
 
 
 @plugin.search("!pat(?!ch)")
@@ -252,42 +205,27 @@ def dotdotdot(bot, trigger):
 @plugin.command("dz")
 def deeznutz(bot, trigger):
     """Can also be triggered with "deez nutz" or "deez nuts" anywhere in a message."""
-    deez_nutz = [
-        bold("DEEZ NUTZ!"),
-        f"{DOMAIN}nutz/aldeez.webp",
-        f"{DOMAIN}nutz/dd.webp",
-        f"{DOMAIN}nutz/dragon.webp",
-        f"{DOMAIN}nutz/grandma.webp",
-        f"{DOMAIN}nutz/new_world.webp",
-        f"{DOMAIN}nutz/prez.webp",
-        f"{DOMAIN}nutz/wood.webp"
-    ]
-    bot.say(choose(deez_nutz))
+    deez = ['DEEZ NUTZ!']
+    for pic in listdir(f'{PATH}nutz'):
+        deez.append(f'{DOMAIN}nutz/{pic}')
+    bot.say(choose(deez))
 
 
-@plugin.command("lenny", "rlenny")
+@plugin.command("lenny")
+def lenny(bot, trigger):
+    bot.say("( ͡° ͜ʖ ͡°)")
+
+
+@plugin.command("rlenny")
 def rlenny(bot, trigger):
     """Sends a random ( ͡° ͜ʖ ͡°) variation...or a GIF/MP4!"""
     rlenny = [
-        f"{DOMAIN}lenny/anime.gif",
-        f"{DOMAIN}lenny/crazy.mp4",
-        f"{DOMAIN}lenny/spiral.gif",
-        "( ͡° ͜ʖ ͡°)",
-        "(☭ ͜ʖ ☭)",
-        "( ° ͜ʖ °)",
-        "(⟃ ͜ʖ ⟄) ",
-        "( ‾ ʖ̫ ‾)",
-        "( ͡° ʖ̯ ͡°)",
-        "ʕ ͡° ʖ̯ ͡°ʔ",
-        "( ͡° ل͜ ͡°)",
-        "( ͡o ͜ʖ ͡o)",
-        "( ͡◉ ͜ʖ ͡◉)",
-        "( ͡☉ ͜ʖ ͡☉)",
-        "ʕ ͡° ͜ʖ ͡°ʔ",
-        "( ͡ᵔ ͜ʖ ͡ᵔ )",
-        r"¯\_( ͡° ͜ʖ ͡°)_/¯",
-        "(͡ ͡° ͜ つ ͡͡°)"
+        '( ͡° ͜ʖ ͡°)', '(☭ ͜ʖ ☭)', '( ° ͜ʖ °)', '(⟃ ͜ʖ ⟄) ', '( ‾ ʖ̫ ‾)', '( ͡° ʖ̯ ͡°)',
+        'ʕ ͡° ʖ̯ ͡°ʔ', '( ͡° ل͜ ͡°)', '( ͡o ͜ʖ ͡o)', '( ͡◉ ͜ʖ ͡◉)', '( ͡☉ ͜ʖ ͡☉)', 'ʕ ͡° ͜ʖ ͡°ʔ',
+        '( ͡ᵔ ͜ʖ ͡ᵔ )', '¯\_( ͡° ͜ʖ ͡°)_/¯', '(͡ ͡° ͜ つ ͡͡°)'
     ]
+    for pic in listdir(f'{PATH}lenny'):
+        rlenny.append(f'{DOMAIN}lenny/{pic}')
     bot.say(choose(rlenny))
 
 
@@ -313,13 +251,13 @@ def que(bot, trigger):
 
 @plugin.rule(r"^\\o/$")
 def handsup(bot, trigger):
-    bot.say("\\o/")
+    bot.say("\o/")
 
 
 @plugin.command("shrug")
 @plugin.rule(r"^¯\\\_\(ツ\)_\/¯(\s$|$)")
 def shrug(bot, trigger):
-    bot.say("¯\\_(ツ)_/¯")
+    bot.say("¯\_(ツ)_/¯")
 
 
 @plugin.search("🦏")
@@ -811,15 +749,11 @@ def noice(bot, trigger):
 
 @plugin.search("sockbot")
 def sockbot(bot, trigger):
-    sockbot = [
-        f"{DOMAIN}sockbot/headsortails.png",
-        f"{DOMAIN}sockbot/knife.png",
-        f"{DOMAIN}sockbot/L337.png",
-        f"{DOMAIN}sockbot/phone.png",
-        "Sockbot: gone, but not forgotten.",
-        "Good riddance to Discord, but RIP Sockbot. 😢"
-    ]
-    bot.say(choose(sockbot))
+    sockbots = ['Sockbot: gone, but not forgotten.',
+                'Good riddance to Discord, but RIP Sockbot. 😢']
+    for pic in listdir(f'{PATH}sockbot'):
+        sockbots.append(f'{DOMAIN}sockbot/{pic}')
+    bot.say(choose(sockbots))
 
 
 @plugin.search("!brony")
@@ -1163,30 +1097,9 @@ def killme(bot, trigger):
 
 @plugin.rule(r".*((?<!\w)k(y|m)s(?!\w)|kill\syourself).*")
 def kys(bot, trigger):
-    kys = [
-        f"{DOMAIN}kys/deals.webp",
-        f"{DOMAIN}kys/elmo.webp",
-        f"{DOMAIN}kys/gift.webp",
-        f"{DOMAIN}kys/gta.webp",
-        f"{DOMAIN}kys/hang.webp",
-        f"{DOMAIN}kys/howto.webp",
-        f"{DOMAIN}kys/iGuess.webp",
-        f"{DOMAIN}kys/ike.webp",
-        f"{DOMAIN}kys/kys.webp",
-        f"{DOMAIN}kys/mike-pepe.webp",
-        f"{DOMAIN}kys/mike.webp",
-        f"{DOMAIN}kys/music.webp",
-        f"{DOMAIN}kys/ohhai.webp",
-        f"{DOMAIN}kys/pasta.webp",
-        f"{DOMAIN}kys/pepe.webp",
-        f"{DOMAIN}kys/peter-joe.webp",
-        f"{DOMAIN}kys/peter.webp",
-        f"{DOMAIN}kys/puft.webp",
-        f"{DOMAIN}kys/tried.webp",
-        f"{DOMAIN}kys/wendys.webp",
-        f"{DOMAIN}kys/window.webp",
-        "https://lostallhope.com/"
-    ]
+    kys = ['https://lostallhope.com']
+    for pic in listdir(f'{PATH}kys'):
+        kys.append(f'{DOMAIN}kys/{pic}')
     bot.say(choose(kys))
 
 
@@ -1507,24 +1420,9 @@ def jews(bot, trigger):
 
 @plugin.rule("^k$")
 def kay(bot, trigger):
-    kk = [
-        "k",
-        "👌",
-        "👌🏻",
-        "👌🏼",
-        "👌🏽",
-        "👌🏾",
-        "👌🏿",
-        "👌🏻👌🏼👌🏽👌🏾👌🏿",
-        "🆗",
-        f"{DOMAIN}k/kermit.mp4",
-        f"{DOMAIN}k/seuss.mp4",
-        f"{DOMAIN}k/shirt.mp4",
-        f"{DOMAIN}k/snow.mp4",
-        f"{DOMAIN}k/VHS.mp4",
-        f"{DOMAIN}k/vldlk.webp",
-        f"{DOMAIN}k/watch.webp"
-    ]
+    kk = ['k', '👌', '👌🏻', '👌🏼', '👌🏽', '👌🏾', '👌🏿', '👌🏻👌🏼👌🏽👌🏾👌🏿', '🆗']
+    for pic in listdir(f'{PATH}k'):
+        kk.append(f'{DOMAIN}k/{pic}')
     bot.say(choose(kk))
 
 
@@ -1538,12 +1436,10 @@ def words(bot, trigger):
 @plugin.command("kiki")
 def kiki(bot, trigger):
     """Can also be trigged with '!kiki' anywhere in a message."""
-    kiki = [
-        f"{DOMAIN}kiki/sauce.png",
-        f"{DOMAIN}kiki/snoop.png",
-        monospace("[4:44 PM] Kiki: U sound so far right now"),
-        "I S M A E L  C H I A  T O R R E S"
-    ]
+    kiki = [monospace('[4:44 PM] Kiki: U sound so far right now'),
+            'I S M A E L  C H I A  T O R R E S']
+    for pic in listdir(f'{PATH}kiki'):
+        kiki.append(f'{DOMAIN}kiki/{pic}')
     bot.say(choose(kiki))
 
 
@@ -1566,30 +1462,15 @@ def navyseal(bot, trigger):
 
 @plugin.search("racist")
 def racist(bot, trigger):
-    racists = [
-        f"{DOMAIN}racist/birds.gif",
-        f"{DOMAIN}racist/blackmexican.gif",
-        f"{DOMAIN}racist/fall.gif",
-        f"{DOMAIN}racist/nelson.gif",
-        f"{DOMAIN}racist/prettyracist.mp4",
-        f"{DOMAIN}racist/racist.mp4",
-        f"{DOMAIN}racist/shake.gif",
-        f"{DOMAIN}racist/wash.png"
-    ]
-    bot.say(choose(racists))
+    racists = listdir(f'{PATH}racist')
+    racists.remove('nig')
+    bot.say(f'{DOMAIN}racist/{choose(racists)}')
 
 
 @plugin.search("nigger")
 def niggers(bot, trigger):
-    niggers = [
-        f"{DOMAIN}racist/nig/cana.png",
-        f"{DOMAIN}racist/nig/kan.png",
-        f"{DOMAIN}racist/nig/kristen.png",
-        f"{DOMAIN}racist/nig/naggers.gif",
-        f"{DOMAIN}racist/nig/welfare.png"
-    ]
     if trigger.is_privmsg or trigger.sender == "#nsfw":
-        bot.say(choose(niggers))
+        bot.say(f"{DOMAIN}racist/nig/{choose(listdir(f'{PATH}racist/nig'))}")
 
 
 @plugin.search("pasta disasta")
@@ -1841,27 +1722,9 @@ def fecktk(bot, trigger):
 @plugin.rate(user=900)
 def feek(bot, trigger):
     """A user triggering this command can only do so once per 15 minutes."""
-    feeks = [
-        "Works for Me™",
-        f"{DOMAIN}feek/ben.webp",
-        f"{DOMAIN}feek/bitch.webp",
-        f"{DOMAIN}feek/die.webp",
-        f"{DOMAIN}feek/error.webp",
-        f"{DOMAIN}feek/feek01.webp",
-        f"{DOMAIN}feek/feek02.webp",
-        f"{DOMAIN}feek/feek03.webp",
-        f"{DOMAIN}feek/feek04.webp",
-        f"{DOMAIN}feek/feek05.webp",
-        f"{DOMAIN}feek/feek06.webp",
-        f"{DOMAIN}feek/feek07.webp",
-        f"{DOMAIN}feek/feek08.webp",
-        f"{DOMAIN}feek/free.webp",
-        f"{DOMAIN}feek/hated.webp",
-        f"{DOMAIN}feek/hidden.webp",
-        f"{DOMAIN}feek/lucky.webp",
-        f"{DOMAIN}feek/PokéKeith.webp",
-        f"{DOMAIN}feek/rape.webp"
-    ]
+    feeks = ['Works for Me™']
+    for pic in listdir(f'{PATH}feek'):
+        feeks.append(f'{DOMAIN}feek/{pic}')
     bot.say(choose(feeks))
 
 
@@ -1884,76 +1747,14 @@ def kristen(bot, trigger):
 @plugin.rate(user=900)
 def mike(bot, trigger):
     """A user triggering this command can only do so once per 15 minutes."""
-    mikes = [
-        f"{DOMAIN}mike/720v1080.png",
-        f"{DOMAIN}mike/8ball.png",
-        f"{DOMAIN}mike/amnesia.png",
-        f"{DOMAIN}mike/bath.png",
-        f"{DOMAIN}mike/bernie.png",
-        f"{DOMAIN}mike/blowie.png",
-        f"{DOMAIN}mike/brony.png",
-        f"{DOMAIN}mike/change.png",
-        f"{DOMAIN}mike/cocksucker.png",
-        f"{DOMAIN}mike/cuppstick.gif",
-        f"{DOMAIN}mike/cuppstick.png",
-        f"{DOMAIN}mike/dance.mp4",
-        f"{DOMAIN}mike/doll.png",
-        f"{DOMAIN}mike/down.gif",
-        f"{DOMAIN}mike/drink.gif",
-        f"{DOMAIN}mike/everydaymike.gif",
-        f"{DOMAIN}mike/fraud.png",
-        f"{DOMAIN}mike/graphene.png",
-        f"{DOMAIN}mike/haloistrash.png",
-        f"{DOMAIN}mike/high.png",
-        f"{DOMAIN}mike/MAGA.png",
-        f"{DOMAIN}mike/mashed-potatoes.png",
-        f"{DOMAIN}mike/mike001.png",
-        f"{DOMAIN}mike/mike002.png",
-        f"{DOMAIN}mike/mike004.png",
-        f"{DOMAIN}mike/mike005.png",
-        f"{DOMAIN}mike/mike006.png",
-        f"{DOMAIN}mike/mike008.png",
-        f"{DOMAIN}mike/mike009.png",
-        f"{DOMAIN}mike/mike010.png",
-        f"{DOMAIN}mike/mike011.png",
-        f"{DOMAIN}mike/mike012.png",
-        f"{DOMAIN}mike/mike013.png",
-        f"{DOMAIN}mike/mike014.png",
-        f"{DOMAIN}mike/mike015.png",
-        f"{DOMAIN}mike/mike016.png",
-        f"{DOMAIN}mike/mike017.png",
-        f"{DOMAIN}mike/mike018.png",
-        f"{DOMAIN}mike/mike019.png",
-        f"{DOMAIN}mike/mike020.png",
-        f"{DOMAIN}mike/mike021.png",
-        f"{DOMAIN}mike/mike022.png",
-        f"{DOMAIN}mike/mike023.png",
-        f"{DOMAIN}mike/mike024.png",
-        f"{DOMAIN}mike/mike025.png",
-        f"{DOMAIN}mike/mike026.png",
-        f"{DOMAIN}mike/mike027.png",
-        f"{DOMAIN}mike/mike028.png",
-        f"{DOMAIN}mike/mike029.png",
-        f"{DOMAIN}mike/mike030.png",
-        f"{DOMAIN}mike/mike031.png",
-        f"{DOMAIN}mike/mike032.png",
-        f"{DOMAIN}mike/miker.png",
-        f"{DOMAIN}mike/MLP.png",
-        f"{DOMAIN}mike/MMM.png",
-        f"{DOMAIN}mike/noctua.png",
-        f"{DOMAIN}mike/nosex.png",
-        f"{DOMAIN}mike/quora.png",
-        f"{DOMAIN}mike/simple-mike.png",
-        f"{DOMAIN}mike/smurf.png",
-        f"{DOMAIN}mike/syria.png",
-        f"{DOMAIN}mike/virgin.png",
-        f"{DOMAIN}mike/yoj.png",
-        f"{DOMAIN}mike/yummy-mike.png",
-        f"{DOMAIN}mike/📖/📖+.jpg",
-        f"{DOMAIN}mike/📖/📖.gif",
-        f"{DOMAIN}mike/📖/📖.jpg",
-        f"{DOMAIN}mike/📖/📖🐇.jpg"
-    ]
+    mikes = listdir(f'{PATH}mike')
+    mikes.remove('📖')
+    i = 0
+    for pic in mikes:
+        mikes[i] = f'{DOMAIN}mike/{pic}'
+        i += 1
+    for pic in listdir(f'{PATH}mike/📖'):
+        mikes.append(f'{DOMAIN}mike/📖/{pic}')
     bot.say(choose(mikes))
 
 
@@ -1977,13 +1778,9 @@ def viz(bot, trigger):
 @plugin.command("voodoo")
 def voodoo(bot, trigger):
     """A user triggering this command can only do so once per 15 minutes."""
-    voodoos = [
-        f"{DOMAIN}voodoo/eggslut.webp",
-        f"{DOMAIN}voodoo/eggslut-lq.webp",
-        f"{DOMAIN}voodoo/eggslut-smol.webp",
-        f"{DOMAIN}voodoo/pewpew.webp",
-        "I fantasize about fucking California's earthquake fault line. The dirt, the debris, the thought of the earth quivering under me as I slowly stick my dick into its gaping wide entrance. I keep looking at news stories and getting the firmest erections of my life seeing those beautiful cracks. She's so open and so wanting. Each earthquake is like another whimper just begging for me to take her. The amount of cum I've lost just thinking about thrusting my rod into our beloved planet. Talk about getting my rocks off. Fuck I'm hard."
-    ]
+    voodoos = ["I fantasize about fucking California's earthquake fault line. The dirt, the debris, the thought of the earth quivering under me as I slowly stick my dick into its gaping wide entrance. I keep looking at news stories and getting the firmest erections of my life seeing those beautiful cracks. She's so open and so wanting. Each earthquake is like another whimper just begging for me to take her. The amount of cum I've lost just thinking about thrusting my rod into our beloved planet. Talk about getting my rocks off. Fuck I'm hard."]
+    for pic in listdir(f'{PATH}voodoo'):
+        voodoos.append(f'{DOMAIN}voodoo/{pic}')
     bot.say(choose(voodoos), max_messages=2)
 
 
@@ -1992,39 +1789,10 @@ def voodoo(bot, trigger):
 @plugin.rate(user=900)
 def xnaas(bot, trigger):
     """A user triggering this command can only do so once per 15 minutes."""
-    xnass = [
-        f"{DOMAIN}xnaas/animals.webp",
-        f"{DOMAIN}xnaas/d3.webm",
-        f"{DOMAIN}xnaas/fd.mp4",
-        f"{DOMAIN}xnaas/gape.webp",
-        f"{DOMAIN}xnaas/iShit.webp",
-        f"{DOMAIN}xnaas/mac.webp",
-        f"{DOMAIN}xnaas/propain.webp",
-        f"{DOMAIN}xnaas/pussy.mp4",
-        f"{DOMAIN}xnaas/QotH.webp",
-        f"{DOMAIN}xnaas/reality.webp",
-        f"{DOMAIN}xnaas/shaved.webp",
-        f"{DOMAIN}xnaas/typing.webp",
-        f"{DOMAIN}xnaas/vamp.webp",
-        f"{DOMAIN}xnaas/victory.webp",
-        f"{DOMAIN}xnaas/wesmart.webp",
-        f"{DOMAIN}xnaas/xnaas001.webp",
-        f"{DOMAIN}xnaas/xnaas002.webp",
-        f"{DOMAIN}xnaas/xnaas003.webp",
-        f"{DOMAIN}xnaas/xnaas004.webp",
-        f"{DOMAIN}xnaas/xnaas005.webp",
-        f"{DOMAIN}xnaas/xnaas006.webp",
-        f"{DOMAIN}xnaas/xnaas008.webp",
-        f"{DOMAIN}xnaas/xnaas009.webp",
-        f"{DOMAIN}xnaas/xnaas010.webp",
-        f"{DOMAIN}xnaas/xnaas011.webp",
-        f"{DOMAIN}xnaas/xnaas012.webp",
-        f"{DOMAIN}xnaas/xnaas013.webp",
-        f"{DOMAIN}xnaas/xnaas014.webp",
-        f"{DOMAIN}xnaas/yeehaw.webp",
-        f"{DOMAIN}v/tesla.webm"
-    ]
-    bot.say(choose(xnass))
+    xs = [f'{DOMAIN}v/tesla.webm']
+    for pic in listdir(f'{PATH}xnaas'):
+        xs.append(f'{DOMAIN}xnaas/{pic}')
+    bot.say(choose(xs))
 
 
 @plugin.search("!JTL")
@@ -2125,24 +1893,9 @@ def blumpkin(bot, trigger):
 def chief(bot, trigger):
     """Posts a Master Chief/Halo-related image.
     Can also be triggered with '!chief' or '!halo' anywhere in chat."""
-    master_chef = [
-        f"{DOMAIN}son/chiefs.webp",
-        f"{DOMAIN}son/halo.webp",
-        f"{DOMAIN}halo/59bullets.png",
-        f"{DOMAIN}halo/anime.png",
-        f"{DOMAIN}halo/car.gif",
-        f"{DOMAIN}halo/face00.gif",
-        f"{DOMAIN}halo/face01.gif",
-        f"{DOMAIN}halo/Halo5.png",
-        f"{DOMAIN}halo/happening.gif",
-        f"{DOMAIN}halo/jaja.png",
-        f"{DOMAIN}halo/perfect_game.png",
-        f"{DOMAIN}halo/pony.png",
-        f"{DOMAIN}halo/skiing.png",
-        f"{DOMAIN}halo/what_do_you_think.png",
-        f"{DOMAIN}halo/❔.png",
-        f"{DOMAIN}halo/🗑.png"
-    ]
+    master_chef = [f'{DOMAIN}son/chiefs.webp', f'{DOMAIN}son/halo.webp']
+    for pic in listdir(f'{PATH}halo'):
+        master_chef.append(f'{DOMAIN}halo/{pic}')
     bot.say(choose(master_chef))
 
 
