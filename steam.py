@@ -10,6 +10,10 @@ from sopel.formatting import bold, italic, plain
 
 PCOUNT_URL = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1'
 SEARCH_URL = 'https://store.steampowered.com/search/suggest'
+OVERRIDES = {
+    'drg': 'Deep Rock Galactic',
+    'mcc': 'Halo: The Master Chief Collection'
+}
 
 
 @plugin.command('steam')
@@ -20,11 +24,9 @@ def steam(bot, trigger):
     if not search_terms:
         bot.reply('I need something to lookup, dummy!')
         return plugin.NOLIMIT
-    
-    # Manual Overrides
-    # TODO: do this in a not-shit way
-    if search_terms == 'drg':
-        search_terms = 'deep rock galactic'
+
+    if search_terms in OVERRIDES:
+        search_terms = OVERRIDES[search_terms]
 
     # ISSUE: only supports US English searches
     #   make configurable? ¯\_(ツ)_/¯
