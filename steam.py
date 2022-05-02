@@ -55,7 +55,7 @@ def steam(bot, trigger):
         return bot.reply(f'No results for {bold(search_terms)}')
 
     if not app_price:
-        app_price = italic('No Price Data')
+        app_price = '$?'
 
     # get player count
     pcount_param = {'appid': appid}
@@ -67,7 +67,7 @@ def steam(bot, trigger):
     except AttributeError:
         return bot.say(f'Steam: Invalid AppID ({bold(appid)}) somehow...gl xnaas!')
     except KeyError:
-        pcount = 'N/A'
+        pcount = '?'
 
     app_url = app_url.rsplit('/', maxsplit=1)[:1][0][8:]  # trim app URL
 
