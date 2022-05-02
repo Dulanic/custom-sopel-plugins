@@ -8,82 +8,66 @@ from sopel import plugin
 from sopel.formatting import bold, italic, plain
 
 
-PCOUNT_URL = "https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1"
-SEARCH_URL = "https://store.steampowered.com/search/suggest"
+PCOUNT_URL = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1'
+SEARCH_URL = 'https://store.steampowered.com/search/suggest'
 
 
-@plugin.commands("steam pcount", "steam players", "steam search", "steam store", "steam")
-@plugin.output_prefix("[Steam] ")
-def steam_base(bot, trigger):
-    cmd = trigger.group(1).lower()
+@plugin.command('steam')
+@plugin.rate(server=2)
+def steam(bot, trigger):
 
-    search_terms = plain(trigger.group(2) or '')
+    search_terms = plain(trigger.group(2) or '').lower()
     if not search_terms:
-        return bot.reply("I need something to lookup, dummy!")
-
-    msg, appid, app_name, app_price, app_url = steam_search(search_terms)
-    if msg:
-        return bot.say(msg)
-
-    if cmd == "steam pcount" or cmd == "steam players":
-        msg = steam_pcount(appid, app_name)
-    elif cmd == "steam search" or cmd == "steam store" or cmd == "steam":
-        msg = "{} ({})".format(app_url, app_price)
-
-    bot.say(msg)
-
-
-def steam_pcount(appid, app_name, msg=None):
-    param = {"appid": appid}
-    try:
-        pcount = requests.get(PCOUNT_URL, params=param).json()["response"]["player_count"]
-    except requests.exceptions.ConnectionError:
-        msg = "Error reaching Steam Web API."
-    except AttributeError:
-        msg = "Invalid AppID somehow...good luck fixing this one, xnaas!"
-    except KeyError:
-        msg = "No player count data for {}.".format(bold(app_name))
-
-    if msg:
-        return msg
-
-    # configure and send player count
-    pcount = "{:,}".format(pcount)
-    msg = "There are currently {} people playing {}.".format(bold(pcount), italic(app_name))
-    return msg
-
-
-def steam_search(search_terms):
-    # init everything as None
-    msg = appid = app_name = app_price = app_url = None
+        bot.reply('I need something to lookup, dummy!')
+        return plugin.NOLIMIT
+    
+    # Manual Overrides
+    # TODO: do this in a not-shit way
+    if search_terms == 'drg':
+        search_terms = 'deep rock galactic'
 
     # ISSUE: only supports US English searches
-    params = {
-        "term": search_terms,
-        "f": "games",
-        "cc": "US",
-        "realm": 1,
-        "l": "english",
-        "use_store_query": 1
+    #   make configurable? ¯\_(ツ)_/¯
+    search_params = {
+        'term': search_terms,
+        'f': 'games',
+        'cc': 'US',
+        'realm': 1,
+        'l': 'english',
+        'use_store_query': 1
     }
 
+    # get app id, name, price, and url
     try:
-        r = requests.get(SEARCH_URL, params=params)
+        r = requests.get(SEARCH_URL, params=search_params)
     except requests.exceptions.ConnectionError:
-        msg = "Error reaching Steam Web API."
-        return msg, appid, app_name, app_price, app_url
+        return bot.reply('Error reaching Steam Web API.')
 
-    html = BeautifulSoup(r.text, "html.parser")
+    html = BeautifulSoup(r.text, 'html.parser')
     try:
-        appid = html.select_one("a.match:nth-child(1)").attrs["data-ds-appid"]
-        app_name = html.select_one("a.match:nth-child(1) > div:nth-child(1)").string
-        app_price = html.select_one("a.match:nth-child(1) > div:nth-child(3)").string
-        app_url = html.select_one("a.match:nth-child(1)").attrs["href"].split("?")[0]
+        appid = html.select_one('a.match:nth-child(1)').attrs['data-ds-appid']
+        app_name = html.select_one('a.match:nth-child(1) > div:nth-child(1)').string
+        app_price = html.select_one('a.match:nth-child(1) > div:nth-child(3)').string
+        app_url = html.select_one('a.match:nth-child(1)').attrs['href'].split('?')[0]
     except AttributeError:
-        msg = "No results for {}".format(bold(search_terms))
-        return msg, appid, app_name, app_price, app_url
+        return bot.reply(f'No results for {bold(search_terms)}')
 
     if not app_price:
-        app_price = italic("No Price Data")
+        app_price = italic('No Price Data')
 
-    return msg, appid, app_name, app_price, app_url
+    # get player count
+    pcount_param = {'appid': appid}
+    try:
+        pcount = requests.get(PCOUNT_URL, params=pcount_param).json()['response']['player_count']
+        pcount = f'{pcount:,}'
+    except requests.exceptions.ConnectionError:
+        return bot.reply('Error reaching Steam Web API.')
+    except AttributeError:
+        return bot.say(f'Steam: Invalid AppID ({bold(appid)}) somehow...gl xnaas!')
+    except KeyError:
+        pcount = 'N/A'
+
+    app_url = app_url.rsplit('/', maxsplit=1)[:1][0][8:]  # trim app URL
+
+    # finally: send message
+    bot.say(f'{app_name}: {bold(app_price)} ({pcount} players) | {app_url}')
