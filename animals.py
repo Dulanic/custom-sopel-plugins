@@ -1,110 +1,84 @@
 """
-Original author: xnaas (2020)
+Original author: xnaas (2020, 2022)
 License: The Unlicense (public domain)
 """
 import requests
 from sopel import plugin
 
 
-@plugin.command("cat")
+@plugin.commands('catgif', 'cat')
 def cats(bot, trigger):
-    """Posts a random cat using the aws.random.cat/meow API."""
-    url = "https://aws.random.cat/meow"
+    cmd = trigger.group(1).lower()
+    url = 'https://api.thecatapi.com/v1/images/search'
+    if cmd == 'cat':
+        param = {'mime_types': 'jpg,png'}
+    elif cmd == 'catgif':
+        param = {'mime_types': 'gif'}
     try:
-        cat_image = requests.get(url).json()['file']
-        bot.say(cat_image)
-    except:
-        bot.reply("Error reaching API, probably.")
+        cat_img = requests.get(url, params=param).json()[0]['url']
+        bot.say(cat_img)
+    except BaseException:
+        bot.reply('Error reaching API, probably.')
 
 
-@plugin.command("catfact")
+@plugin.command('catfact')
 def catfact(bot, trigger):
-    """Posts a random cat fact."""
-    url = "https://cat-fact.herokuapp.com/facts/random"
+    url = 'https://cat-fact.herokuapp.com/facts/random'
     params = {
-        "animal_type": "cat",
-        "amount": "1"
+        'animal_type': 'cat',
+        'amount': '1'
     }
     try:
         cat_fact = requests.get(url, params=params).json()['text']
         bot.say(cat_fact)
-    except:
-        bot.reply("Error reaching API, probably.")
+    except BaseException:
+        bot.reply('Error reaching API, probably.')
 
 
-@plugin.command("catgif")
-def catgif(bot, trigger):
-    """Posts a random cat GIF using thecatapi.com API."""
-    url = "https://api.thecatapi.com/v1/images/search"
-    params = {"mime_types": "gif"}
-    try:
-        cat_gif = requests.get(url, params=params).json()[0]['url']
-        bot.say(cat_gif)
-    except:
-        bot.reply("Error reaching API, probably.")
-
-
-@plugin.command("dog")
+@plugin.command('dog')
 def dogs(bot, trigger):
-    """Posts a random dog using the dog.ceo/dog-api API."""
-    url = "https://dog.ceo/api/breeds/image/random"
+    url = 'https://dog.ceo/api/breeds/image/random'
     try:
         dog_image = requests.get(url).json()['message']
         bot.say(dog_image)
-    except:
-        bot.reply("Error reaching API, probably.")
+    except BaseException:
+        bot.reply('Error reaching API, probably.')
 
 
-@plugin.command("dogfact")
+@plugin.command('dogfact')
 def dogfact(bot, trigger):
-    """Posts a random dog fact."""
-    url = "https://dog-facts-api.herokuapp.com/api/v1/resources/dogs"
-    params = {"number": "1"}
+    url = 'https://dog-facts-api.herokuapp.com/api/v1/resources/dogs'
+    params = {'number': '1'}
     try:
         dog_fact = requests.get(url, params=params).json()[0]['fact']
         bot.say(dog_fact)
-    except:
-        bot.reply("Error reaching API, probably.")
+    except BaseException:
+        bot.reply('Error reaching API, probably.')
 
 
-@plugin.command("shibe")
-def shibe(bot, trigger):
-    """Posts a random Shiba Inu using the shibe.online API."""
-    url = "https://shibe.online/api/shibes"
-    params = {
-        "count": "1",
-        "urls": "true",
-        "httpsUrls": "true"
-    }
+@plugin.commands('shibe', 'bir(b|d)')
+def shibe_api(bot, trigger):
+    cmd = trigger.group(1).lower()
+    base_url = 'https://shibe.online/api/'
+    params = {'count': '1', 'urls': 'true', 'httpsUrls': 'true'}
+
+    if cmd == 'shibe':
+        url = f'{base_url}shibes'
+    elif cmd in {'birb', 'bird'}:
+        url = f'{base_url}birds'
+
     try:
-        shibe_image = requests.get(url, params=params).json()[0]
-        bot.say(shibe_image)
-    except:
-        bot.reply("Error reaching API, probably.")
+        img = requests.get(url, params=params).json()[0]
+        bot.say(img)
+    except BaseException:
+        bot.reply('Error reaching API, probably.')
 
 
-@plugin.commands("bird", "birb")
-def birbs(bot, trigger):
-    """Posts a random bird using the shibe.online bird API."""
-    url = "https://shibe.online/api/birds"
-    params = {
-        "count": "1",
-        "urls": "true",
-        "httpsUrls": "true"
-    }
-    try:
-        birb_image = requests.get(url, params=params).json()[0]
-        bot.say(birb_image)
-    except:
-        bot.reply("Error reaching API, probably.")
-
-
-@plugin.commands("fox", "foxy")
-def fox(bot, trigger):
-    """Posts a random fox using the randomfox.ca API."""
-    url = "https://randomfox.ca/floof/"
+@plugin.commands('fox(|y)')
+def foxes(bot, trigger):
+    url = 'https://randomfox.ca/floof/'
     try:
         fox_image = requests.get(url).json()['image']
         bot.say(fox_image)
     except:
-        bot.reply("Error reaching API, probably.")
+        bot.reply('Error reaching API, probably.')
