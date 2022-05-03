@@ -24,10 +24,7 @@ def cats(bot, trigger):
 @plugin.command('catfact')
 def catfact(bot, trigger):
     url = 'https://cat-fact.herokuapp.com/facts/random'
-    params = {
-        'animal_type': 'cat',
-        'amount': '1'
-    }
+    params = {'animal_type': 'cat', 'amount': '1'}
     try:
         cat_fact = requests.get(url, params=params).json()['text']
         bot.say(cat_fact)
