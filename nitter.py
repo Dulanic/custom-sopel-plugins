@@ -59,7 +59,6 @@ NITTER_DOMAINS = [
     "nitter.poast.org",
     "nitter.lunar.icu",
     "nitter.bird.froth.zone",
-    "nitter.drivet.xyz",
     "twitter.paranoid.cf"
 ]
 
