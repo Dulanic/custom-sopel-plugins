@@ -6,8 +6,7 @@ import random
 import re
 import secrets
 import time
-import unicodedata
-from datetime import datetime, timedelta
+from datetime import timedelta
 from sopel import plugin, tools
 from sopel.formatting import bold, italic, plain
 
