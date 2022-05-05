@@ -271,64 +271,64 @@ def yf_stock(bot, trigger):
         return
 
     # if multi-stock
-    if "price" not in data:
+    if 'price' not in data:
         items = []
         for symbol, attr in data.items():
             # set attrs
-            cs = attr["currencySymbol"]
-            pchange = attr["percentchange"]
-            price = attr["price"]
+            cs = attr['currencySymbol']
+            pchange = attr['percentchange']
+            price = attr['price']
             # determine good or bad
             if pchange >= 0:
-                pchange = color("{:+,.2f}%".format(pchange), colors.GREEN)
-                items.append("{}: {}{:,.2f} ({})".format(symbol, cs, price, pchange))
+                pchange = color(f'{pchange:+,.2f}%', colors.GREEN)
+                items.append(f'{symbol}: {cs}{price:,.2f} ({pchange})')
             else:
-                pchange = color("{:+,.2f}%".format(pchange), colors.RED)
-                items.append("{}: {}{:,.2f} ({})".format(symbol, cs, price, pchange))
+                pchange = color(f'{pchange:+,.2f}%', colors.RED)
+                items.append(f'{symbol}: {cs}{price:,.2f} ({pchange})')
         # create and post msg
-        return bot.say(" | ".join(items))
+        return bot.say(' | '.join(items))
 
     # cleanup name
     data['name'] = name_scrubber(data['name'])
 
     # set base msg
-    msg = "{name} ({symbol}) | {currencySymbol}" + bold("{price:,.2f} ")
-    msg2 = ""
+    msg = '{name} ({symbol}) | {currencySymbol}' + bold('{price:,.2f} ')
+    msg2 = ''
 
     # Change is None, usually on IPOs
-    if not data["change"]:
+    if not data['change']:
         msg = msg.format(**data)
     # Otherwise, check change vs previous day
     else:
-        if data["change"] >= 0:
-            msg += color("{change:+,.2f} {percentchange:+,.2f}%", colors.GREEN)
+        if data['change'] >= 0:
+            msg += color('{change:+,.2f} {percentchange:+,.2f}%', colors.GREEN)
         else:
-            msg += color("{change:+,.2f} {percentchange:+,.2f}%", colors.RED)
+            msg += color('{change:+,.2f} {percentchange:+,.2f}%', colors.RED)
 
         msg = msg.format(**data)
 
     # add info if pre- or post-market
-    exchange = data["exchange"]
-    marketState = data["marketState"]
-    if marketState == "PRE" and exchange in {"NMS", "NYQ"}:
-        msg += color(" PREMARKET", colors.LIGHT_GREY)
-        msg2 += " | CLOSE {currencySymbol}{close:,.2f} "
-    elif marketState in {"POST", "POSTPOST"} and exchange in {"NMS", "NYQ"}:
-        msg += color(" POSTMARKET", colors.LIGHT_GREY)
-        msg2 += " | CLOSE {currencySymbol}{close:,.2f} "
-        if data["rmchange"] >= 0:
-            msg2 += color("{rmchange:+,.2f} {rmpercentchange:+,.2f}%", colors.GREEN)
+    exchange = data['exchange']
+    marketState = data['marketState']
+    if marketState == 'PRE' and exchange in {'NMS', 'NYQ'}:
+        msg += color(' PREMARKET', colors.LIGHT_GREY)
+        msg2 += ' | CLOSE {currencySymbol}{close:,.2f} '
+    elif marketState in {'POST', 'POSTPOST'} and exchange in {'NMS', 'NYQ'}:
+        msg += color(' POSTMARKET', colors.LIGHT_GREY)
+        msg2 += ' | CLOSE {currencySymbol}{close:,.2f} '
+        if data['rmchange'] >= 0:
+            msg2 += color('{rmchange:+,.2f} {rmpercentchange:+,.2f}%', colors.GREEN)
         else:
-            msg2 += color("{rmchange:+,.2f} {rmpercentchange:+,.2f}%", colors.RED)
+            msg2 += color('{rmchange:+,.2f} {rmpercentchange:+,.2f}%', colors.RED)
 
     # add some more shit to the message
-    msg2 += " | "
-    msg2 += color("L {low:,.2f}", colors.RED) + " "
-    msg2 += color("H {high:,.2f}", colors.GREEN)
-    msg2 += " | Cap {currencySymbol}{cap}"
+    msg2 += ' | '
+    msg2 += color('L {low:,.2f}', colors.RED) + ' '
+    msg2 += color('H {high:,.2f}', colors.GREEN)
+    msg2 += ' | Cap {currencySymbol}{cap}'
 
     # set final message
-    msg = ("{msg}" + msg2).format(msg=msg, **data)
+    msg = ('{msg}' + msg2).format(msg=msg, **data)
 
     # finally, the bot says something!
     return bot.say(msg)
