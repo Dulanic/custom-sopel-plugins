@@ -5,7 +5,6 @@ License: The Unlicense (public domain)
 import random
 import re
 import secrets
-import sqlite3
 import time
 import unicodedata
 from datetime import datetime, timedelta
@@ -608,32 +607,13 @@ def gamble_wheel(bot, trigger):
     bot.reply(msg)
 
 
-@plugin.command("lb")
+@plugin.command('lb')
 @plugin.rate(user=5)
 @plugin.require_chanmsg
 def gamble_leadboard(bot, trigger):
     """Posts the top 5 richest gamblers."""
-    if trigger.sender == GCHAN:
-        pass
-    else:
-        return bot.reply("This command can only be used in {}".format(GCHAN))
-
-    """
-    try:
-        # Connect to DB
-        con = sqlite3.connect("/home/xnaas/sackbot2/sopel/default.db")
-        # Create whatever the fuck a cursor is
-        cur = con.cursor()
-        # SQL Query
-        cur.execute("SELECT canonical, key, value FROM nick_values a join nicknames b on a.nick_id = b.nick_id WHERE key='currency_amount' ORDER BY cast(value as int) DESC;")
-        # Store results
-        lb_base = cur.fetchall()
-        # Close db connection
-        con.close()
-    except sqlite3.OperationalError:
-        return bot.reply(
-            "Error querying database...most likely no one has gambled yet. Try `.iwantmoney` to get started.")
-    """
+    if trigger.sender != GCHAN:
+        return bot.reply(f'This command can only be used in {GCHAN}')
 
     # Do it through Sopel, not SQL
     # Need to add back error handling later
@@ -654,11 +634,8 @@ def gamble_leadboard(bot, trigger):
             pass
         else:
             # print results
-            bot.say(
-                "{}. {}: ${:,}.".format(
-                    rank, "\u200B".join(
-                        person[0]), int(
-                        person[2])))
+            bot.say('{}. {}: ${:,}.'.format(
+                    rank, '\u200B'.join(person[0]), int(person[2])))
 
         # We only want to print up to 5 people
         if rank == 5:
