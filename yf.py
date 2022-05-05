@@ -9,121 +9,124 @@ from sopel import plugin
 from sopel.formatting import bold, color, colors
 
 
-URL = "https://query1.finance.yahoo.com/v7/finance/quote"
+URL = 'https://query1.finance.yahoo.com/v7/finance/quote'
 # Yahoo ignores the default python requests ua
-YHEAD = {"User-Agent": "thx 4 the API <3"}
+YHEAD = {'User-Agent': 'thx 4 the API <3'}
 
 
 def get_quote(bot, symbol):
     try:
         r = requests.get(url=URL, params=symbol, headers=YHEAD)
     except requests.exceptions.ConnectionError:
-        raise Exception("Unable to reach Yahoo Finance.")
+        raise Exception('Unable to reach Yahoo Finance.')
 
     if r.status_code != 200:
-        raise Exception("HTTP Error {}".format(r.status_code))
+        raise Exception(f'HTTP Error {r.status_code}')
 
-    r = r.json()["quoteResponse"]
+    r = r.json()['quoteResponse']
 
-    if not r["result"]:
-        raise Exception(f"No data for {bold(symbol['symbols'])}.")
+    if not r['result']:
+        raise Exception(f'No data for {bold(symbol["symbols"])}.')
 
-    q = r["result"][0]
+    q = r['result'][0]
     try:
-        exchange = q["exchange"]
+        exchange = q['exchange']
     except KeyError:
-        raise Exception(f"No data for {bold(symbol['symbols'])}.")
-    marketState = q["marketState"]
-    quoteType = q["quoteType"]
+        raise Exception(f'No data for {bold(symbol["symbols"])}.')
+    marketState = q['marketState']
+    quoteType = q['quoteType']
 
-    if all((quoteType == "EQUITY" and marketState == "PRE",
-            exchange in {"NMS", "NYQ"})):
+    if all((quoteType == 'EQUITY' and marketState == 'PRE',
+            exchange in {'NMS', 'NYQ'})):
         data = {
-            "price": q["preMarketPrice"],
-            "change": q["preMarketChange"],
-            "percentchange": q["preMarketChangePercent"],
-            "low": q["regularMarketDayLow"],
-            "high": q["regularMarketDayHigh"],
-            "cap": int_to_human(q["marketCap"]),
-            "name": q["longName"],
-            "close": q["regularMarketPreviousClose"],
-            "currencySymbol": cur_to_symbol(q["currency"]),
-            "marketState": marketState,
-            "symbol": q["symbol"],
-            "exchange": q["exchange"]
+            'price': q['preMarketPrice'],
+            'change': q['preMarketChange'],
+            'percentchange': q['preMarketChangePercent'],
+            'low': q['regularMarketDayLow'],
+            'high': q['regularMarketDayHigh'],
+            'cap': int_to_human(q['marketCap']),
+            'name': q['longName'],
+            'close': q['regularMarketPreviousClose'],
+            'currencySymbol': cur_to_symbol(q['currency']),
+            'marketState': marketState,
+            'symbol': q['symbol'],
+            'exchange': q['exchange']
         }
         return data
-    elif all((quoteType == "EQUITY",
-            marketState == "POST" or marketState == "POSTPOST",
-            "postMarketPrice" in q,
-            exchange == "NMS" or exchange == "NYQ")):
+    elif all((quoteType == 'EQUITY',
+            marketState == 'POST' or marketState == 'POSTPOST',
+            'postMarketPrice' in q,
+            exchange == 'NMS' or exchange == 'NYQ')):
         data = {
-            "price": q["postMarketPrice"],
-            "change": q["postMarketChange"],
-            "percentchange": q["postMarketChangePercent"],
-            "low": q["regularMarketDayLow"],
-            "high": q["regularMarketDayHigh"],
-            "cap": int_to_human(q["marketCap"]),
-            "name": q["longName"],
-            "close": q["regularMarketPrice"],
-            "rmchange": q["regularMarketChange"],
-            "rmpercentchange": q["regularMarketChangePercent"],
-            "currencySymbol": cur_to_symbol(q["currency"]),
-            "marketState": marketState,
-            "symbol": q["symbol"],
-            "exchange": q["exchange"]
+            'price': q['postMarketPrice'],
+            'change': q['postMarketChange'],
+            'percentchange': q['postMarketChangePercent'],
+            'low': q['regularMarketDayLow'],
+            'high': q['regularMarketDayHigh'],
+            'cap': int_to_human(q['marketCap']),
+            'name': q['longName'],
+            'close': q['regularMarketPrice'],
+            'rmchange': q['regularMarketChange'],
+            'rmpercentchange': q['regularMarketChangePercent'],
+            'currencySymbol': cur_to_symbol(q['currency']),
+            'marketState': marketState,
+            'symbol': q['symbol'],
+            'exchange': q['exchange']
         }
         return data
-    elif quoteType in {"FUTURE", "INDEX", "CURRENCY", "ETF"}:
+    elif quoteType in {'FUTURE', 'INDEX', 'CURRENCY', 'ETF'}:
+        try:
+            data = {
+                'price': q['regularMarketPrice'],
+                'change': q['regularMarketChange'],
+                'percentchange': q['regularMarketChangePercent'],
+                'low': q['regularMarketDayLow'],
+                'high': q['regularMarketDayHigh'],
+                'cap': 'N/A',
+                'name': q['shortName'],
+                'close': q['regularMarketPreviousClose'],
+                'currencySymbol': cur_to_symbol(q['currency']),
+                'marketState': marketState,
+                'symbol': q['symbol'],
+                'exchange': q['exchange']
+            }
+        except KeyError:
+            raise Exception(f'No data for {bold(symbol["symbols"])}.')
+        return data
+    elif quoteType == 'CRYPTOCURRENCY':
         data = {
-            "price": q["regularMarketPrice"],
-            "change": q["regularMarketChange"],
-            "percentchange": q["regularMarketChangePercent"],
-            "low": q["regularMarketDayLow"],
-            "high": q["regularMarketDayHigh"],
-            "cap": "N/A",
-            "name": q["shortName"],
-            "close": q["regularMarketPreviousClose"],
-            "currencySymbol": cur_to_symbol(q["currency"]),
-            "marketState": marketState,
-            "symbol": q["symbol"],
-            "exchange": q["exchange"]
+            'price': q['regularMarketPrice'],
+            'change': q['regularMarketChange'],
+            'percentchange': q['regularMarketChangePercent'],
+            'low': q['regularMarketDayLow'],
+            'high': q['regularMarketDayHigh'],
+            'cap': int_to_human(q['marketCap']),
+            'name': q['shortName'],
+            'close': q['regularMarketPreviousClose'],
+            'currencySymbol': cur_to_symbol(q['currency']),
+            'marketState': marketState,
+            'symbol': q['symbol'],
+            'exchange': q['exchange']
         }
         return data
-    elif quoteType == "CRYPTOCURRENCY":
-        data = {
-            "price": q["regularMarketPrice"],
-            "change": q["regularMarketChange"],
-            "percentchange": q["regularMarketChangePercent"],
-            "low": q["regularMarketDayLow"],
-            "high": q["regularMarketDayHigh"],
-            "cap": int_to_human(q["marketCap"]),
-            "name": q["shortName"],
-            "close": q["regularMarketPreviousClose"],
-            "currencySymbol": cur_to_symbol(q["currency"]),
-            "marketState": marketState,
-            "symbol": q["symbol"],
-            "exchange": q["exchange"]
-        }
-        return data
-    elif quoteType in {"ECNQUOTE", "MUTUALFUND", "NONE"}:
+    elif quoteType in {'ECNQUOTE', 'MUTUALFUND', 'NONE'}:
         raise Exception(f"No data for {bold(symbol['symbols'])}.")
 
     # marketState REGULAR and PREPRE appear to be the same thing
     # set default/catch-all data
     data = {
-        "price": q["regularMarketPrice"],
-        "change": q["regularMarketChange"],
-        "percentchange": q["regularMarketChangePercent"],
-        "low": q["regularMarketDayLow"],
-        "high": q["regularMarketDayHigh"],
-        "cap": int_to_human(q["marketCap"]),
-        "name": q["longName"],
-        "close": q["regularMarketPreviousClose"],
-        "currencySymbol": cur_to_symbol(q["currency"]),
-        "marketState": marketState,
-        "symbol": q["symbol"],
-        "exchange": q["exchange"]
+        'price': q['regularMarketPrice'],
+        'change': q['regularMarketChange'],
+        'percentchange': q['regularMarketChangePercent'],
+        'low': q['regularMarketDayLow'],
+        'high': q['regularMarketDayHigh'],
+        'cap': int_to_human(q['marketCap']),
+        'name': q['longName'],
+        'close': q['regularMarketPreviousClose'],
+        'currencySymbol': cur_to_symbol(q['currency']),
+        'marketState': marketState,
+        'symbol': q['symbol'],
+        'exchange': q['exchange']
     }
     return data
 
@@ -132,17 +135,17 @@ def get_quote_multi(bot, symbols):
     try:
         r = requests.get(url=URL, params=symbols, headers=YHEAD)
     except requests.exceptions.ConnectionError:
-        raise Exception("Unable to reach Yahoo Finance.")
+        raise Exception('Unable to reach Yahoo Finance.')
 
     if r.status_code != 200:
-        raise Exception("HTTP Error {}".format(r.status_code))
+        raise Exception(f'HTTP Error {r.status_code}')
 
-    r = r.json()["quoteResponse"]
+    r = r.json()['quoteResponse']
 
     if not r["result"]:
-        raise Exception("No data found. Input data likely bad.")
+        raise Exception('No data found. Input data likely bad.')
 
-    r = r["result"]
+    r = r['result']
 
     # might not need this?
     data = {}
@@ -151,10 +154,10 @@ def get_quote_multi(bot, symbols):
     # TODO: import more data, better:
     # for Quote in Results
     for q in r:
-        data[q["symbol"]] = {
-            "price": q["regularMarketPrice"],
-            "percentchange": q["regularMarketChangePercent"],
-            "currencySymbol": cur_to_symbol(q["currency"])
+        data[q['symbol']] = {
+            'price': q['regularMarketPrice'],
+            'percentchange': q['regularMarketChangePercent'],
+            'currencySymbol': cur_to_symbol(q['currency'])
         }
     return data
 
@@ -162,19 +165,19 @@ def get_quote_multi(bot, symbols):
 def int_to_human(n):
     # If a stock hits a quadrillion dollar value...jesus.
     if n >= 1e15:
-        return "Holy shit!"
+        return 'Holy shit!'
     # Trillions
     elif n >= 1e12:
         n = str(round(n / 1e12, 2))
-        return n + "T"
+        return n + 'T'
     # Billions
     elif n >= 1e9:
         n = str(round(n / 1e9, 2))
-        return n + "B"
+        return n + 'B'
     # Millions
     elif n >= 1e6:
         n = str(round(n / 1e6, 2))
-        return n + "M"
+        return n + 'M'
     # Shouldn't be anything lower than millions, but...
     return str(n)
 
@@ -183,32 +186,32 @@ def cur_to_symbol(currencySymbol):
     # not exhaustive; covers the top 21 exchanges https://w.wiki/4w3j
     currencies = {
         # Dollars
-        "AUD": "AU$",
-        "BRL": "R$",
-        "CAD": "C$",
-        "HKD": "HK$",
-        "TWD": "NT$",
-        "USD": "$",
+        'AUD': 'AU$',
+        'BRL': 'R$',
+        'CAD': 'C$',
+        'HKD': 'HK$',
+        'TWD': 'NT$',
+        'USD': '$',
         # Yen/Yuan
-        "CNY": "CN¥",
-        "JPY": "JP¥",
+        'CNY': 'CN¥',
+        'JPY': 'JP¥',
         # Europe
-        "CHF": "CHF ",
-        "EUR": "€",
-        "GBP": "£",  # yes, YF really supplies both GBP and GBp...
-        "GBp": "£",  # yes, YF really supplies both GBP and GBp...
-        "RUB": "₽",
+        'CHF': 'CHF ',
+        'EUR': '€',
+        'GBP': '£',  # yes, YF really supplies both GBP and GBp...
+        'GBp': '£',  # yes, YF really supplies both GBP and GBp...
+        'RUB': '₽',
         # South/East Asia
-        "INR": "₹",
-        "IRR": "IRR ",  # Iranian rial, not messing with RTL text...
-        "KRW": "₩",
-        "SAR": "SAR ",  # Saudi riyal, not messing with RTL text...
+        'INR': '₹',
+        'IRR': 'IRR ',  # Iranian rial, not messing with RTL text...
+        'KRW': '₩',
+        'SAR': 'SAR ',  # Saudi riyal, not messing with RTL text...
         # Africa
-        "ZAR": "R "
+        'ZAR': 'R '
     }
     # identify currencies that need to be added
     if currencySymbol not in currencies:
-        cs = "?$"
+        cs = '?$'
     else:
         cs = currencies[currencySymbol]
     return cs
@@ -216,49 +219,49 @@ def cur_to_symbol(currencySymbol):
 
 # shout-out to MrTap for this one
 def name_scrubber(name):
-    p = re.compile(r",? (ltd|ltee|llc|corp(oration)?|inc(orporated)?|limited|plc)\.?$", re.I)
-    return p.sub("", name)
+    p = re.compile(r',? (ltd|ltee|llc|corp(oration)?|inc(orporated)?|limited|plc)\.?$', re.I)
+    return p.sub('', name)
 
 
-@plugin.command("oil")
-@plugin.output_prefix("[OIL] ")
+@plugin.command('oil')
+@plugin.output_prefix('[OIL] ')
 @plugin.rate(server=1)
 def yf_oil(bot, trigger):
     """Get the latest Brent Crude Oil price per barrel."""
     # hardcode "Brent Crude Oil Last Day Financ"
-    symbol = {"symbols": "BZ=F"}
+    symbol = {'symbols': 'BZ=F'}
 
     try:
         data = get_quote(bot, symbol)
     except Exception as e:
         return bot.say(str(e))
 
-    pchange = data["percentchange"]
+    pchange = data['percentchange']
     if pchange >= 0:
-        pchange = color("{:+,.2f}%".format(pchange), colors.GREEN)
+        pchange = color(f'{pchange:+,.2f}%', colors.GREEN)
     else:
-        pchange = color("{:+,.2f}%".format(pchange), colors.RED)
-    price = "{:.2f}".format(data["price"])
-    bot.say("PPB: ${} ({})".format(bold(price), pchange))
+        pchange = color(f'{pchange:+,.2f}%', colors.RED)
+    price = f'{data["price"]:.2f}'
+    bot.say(f'PPB: ${bold(price)} ({pchange})')
 
 
-@plugin.command("stock")
+@plugin.command('stock')
 @plugin.rate(server=1)
 def yf_stock(bot, trigger):
     """Get stock(s) info."""
     if not trigger.group(2):
-        return bot.reply("I need a (list of) stock ticker(s).")
+        return bot.reply('I need a (list of) stock ticker(s).')
 
     symbols = trigger.group(3).upper()
 
-    if re.search(",", symbols):
-        symbols = {"symbols": symbols}
+    if re.search(',', symbols):
+        symbols = {'symbols': symbols}
         try:
             data = get_quote_multi(bot, symbols)
         except Exception as e:
             return bot.say(str(e))
     else:
-        symbol = {"symbols": symbols}
+        symbol = {'symbols': symbols}
         try:
             data = get_quote(bot, symbol)
         except Exception as e:
@@ -286,7 +289,7 @@ def yf_stock(bot, trigger):
         return bot.say(" | ".join(items))
 
     # cleanup name
-    data["name"] = name_scrubber(data["name"])
+    data['name'] = name_scrubber(data['name'])
 
     # set base msg
     msg = "{name} ({symbol}) | {currencySymbol}" + bold("{price:,.2f} ")
