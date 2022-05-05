@@ -2238,3 +2238,15 @@ def lobster(bot, trigger):
 @plugin.search("friday night")
 def friday_nights(bot, trigger):
     bot.say(f"{DOMAIN}v/friday_nights.mp4")
+
+
+@plugin.command('att')
+@plugin.output_prefix("[AT&T] ")
+def att(bot, trigger):
+    att_bad = [
+        'More downtime than Level 3.',
+        'You know IPv6 still does not work...',
+        'Down? You know it!',
+        'What upload?'
+    ]
+    bot.say(choose(att_bad))
