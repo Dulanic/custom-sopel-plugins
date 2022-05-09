@@ -1,434 +1,489 @@
 """
-Original author: xnaas (2021-2022+)
+Authors: xnaas (2021-2022+), Nachtalb (2021)
 License: The Unlicense (public domain)
 """
-import random
 import re
-import secrets
 import time
 from datetime import timedelta
+from random import choices
+from secrets import choice as choose, randbelow
 from sopel import plugin, tools
-from sopel.formatting import bold, italic, plain
+from sopel.formatting import bold, plain
 
 
-GCHAN = "#casino"
+#############################################
+#   ____                    __   _          #
+#  / ___|   ___    _ __    / _| (_)   __ _  #
+# | |      / _ \  | '_ \  | |_  | |  / _` | #
+# | |___  | (_) | | | | | |  _| | | | (_| | #
+#  \____|  \___/  |_| |_| |_|   |_|  \__, | #
+#                                    |___/  #
+#############################################
+GCHAN = '#casino'
+DB_BANK = 'casino_bank'
+DB_TIMELY = 'casino_timely'
+DB_GRNDM = 'casino_ground_money'
 
 
-# Various Gambling Checks
-def gambling_checks(bot, trigger):
-    # Set keys to None for checks
-    data = {"bet": None, "msg": None, "target": None}
+###############################################################################
+#  _____   _                 ____   _                     _                   #
+# |_   _| | |__     ___     / ___| | |__     ___    ___  | | __   ___   _ __  #
+#   | |   | '_ \   / _ \   | |     | '_ \   / _ \  / __| | |/ /  / _ \ | '__| #
+#   | |   | | | | |  __/   | |___  | | | | |  __/ | (__  |   <  |  __/ | |    #
+#   |_|   |_| |_|  \___|    \____| |_| |_|  \___|  \___| |_|\_\  \___| |_|    #
+#                                                                             #
+# This *should* be usable for just about every command in the plugin. It has  #
+# logic to check just about every scenario.                                   #
+###############################################################################
+def casino_check(bot, trigger, targetGroup=None, getBank=None, getBet=None):
+    # init None
+    bank = bet = target = None
 
-    # Channel Checker – perhaps make this configurable in the future
-    if trigger.sender == GCHAN:
-        pass
+    # channel check first
+    if trigger.sender != GCHAN:
+        raise Exception(f'`.{trigger.group(1)}` only usable in {GCHAN}')
+
+    # get our target
+    if targetGroup == 3:
+        target = plain(trigger.group(3) or trigger.nick)
+    elif targetGroup == 4:
+        target = plain(trigger.group(4) or '')
+        if not target:
+            raise Exception('I need a target, fool!')
     else:
-        data["msg"] = "This command can only be used in {}".format(GCHAN)
-        return data
-
-    # Target Check
-    # NOTE: This is not near as "universal" as originally thought out...
-    #     Could definitely use some improvement in the future.
-    # PROBLEM: This code is basically useless for all of the
-    #     actual gambling commands. Unfortunately, just swapping
-    #     trigger.group(4) and trigger.nick comes with another set of
-    #     issues to deal with.
-    target = plain(trigger.group(4) or trigger.nick)
-    if not target:
-        data["msg"] = "If you're seeing this message...everything is horribly broken."
-        return data
+        target = trigger.nick
+    target = tools.Identifier(target)
+    if target not in bot.channels[trigger.sender].users:
+        raise Exception('Please provide a valid user.')
     if target == bot.nick:
-        data["msg"] = "I just run the place; I don't participate."
-        return data
-    data["target"] = tools.Identifier(target)
+        raise Exception(f'{bot.nick} is not a gambler.')
 
-    # "Bet" Parsing and Checking
-    # We're calling everything a "bet" for simplicity.
-    # Many commands below don't involve betting.
-    try:
-        bet = plain(trigger.group(3).replace(",", "").replace("$", ""))
-        if bet.isdigit():
-            data["bet"] = int(bet)
-    except AttributeError:
-        bet = None
-    if not bet:
-        data["msg"] = "I need an amount of money."
-        return data
-    else:
+    # the bet checking bit
+    if getBet:
+        # huge shout-out to Nachtalb for the meat of this section
         try:
-            # Checks for bets made with letters
-            # Large thanks to @Nachtalb
-            match = re.match("([\\d.]+)([ckmbt])", bet, re.IGNORECASE)
-            # TODO: should be some logic for "all" bet
-            calc = {
-                "C": 1e2, "c": 1e2,
-                "K": 1e3, "k": 1e3,
-                "M": 1e6, "m": 1e6,
-                "B": 1e9, "b": 1e9,
-                "T": 1e12, "t": 1e12
-            }
-            num, size = match.groups()
-            data["bet"] = int(float(num) * calc[size])
+            bet = plain(re.sub("[,'$€]", '', trigger.group(3).lower()))
         except (AttributeError, ValueError):
-            data["msg"] = "I need an amount of money."
-            return data
+            raise Exception('I need an amount of money.') 
+        if bet == 'all':
+            if not getBank:
+                raise Exception('You used "all" in an invalid context.')
+        elif bet.isdigit():
+            bet = int(bet)
+        else:
+            try:
+                match = re.match("([\\d.]+)([ckmbt])", bet, re.IGNORECASE)
+                calc = {"c": 1e2, "k": 1e3, "m": 1e6, "b": 1e9, "t": 1e12}
+                num, size = match.groups()
+                bet = int(float(num) * calc[size])
+            except (AttributeError, ValueError):
+                raise Exception('I need an amount of money.')
 
-    # return keys: 'msg', 'target', and 'bet'
-    return data
+    # check target bank, if needed
+    if getBank:
+        bank = bot.db.get_nick_value(target, DB_BANK, None)
+        if bank is None:
+            raise Exception(f'{target} is not a gambler yet.')
+        if getBet and bet == 'all':
+            bet = bank
+        if getBet and (bet > bank):
+            raise Exception(
+                f'{target} tried to do something they cannot afford lol!')
+
+    # poor broke homies
+    if (getBet and getBank) and not bet:
+        raise Exception(f'You cannot do $0 transactions, {target}...')
+
+    # return whatever values we got
+    variables = [bank, bet, target]
+    values = [value for value in variables if value is not None]
+    return values
 
 
+#############################################
+#     _          _               _          #
+#    / \      __| |  _ __ ___   (_)  _ __   #
+#   / _ \    / _` | | '_ ` _ \  | | | '_ \  #
+#  / ___ \  | (_| | | | | | | | | | | | | | #
+# /_/   \_\  \__,_| |_| |_| |_| |_| |_| |_| #
+#                                           #
+# The plugin used to have award and take    #
+#  commands, but it's much simpler to just  #
+#  set the desired value of someone's bank. #
+#  Could potentially re-add award/take      #
+#  commands fairly easily, though.          #
+# There is also a command to totally wipe   #
+#  someone's data, just to keep the database#
+#  somewhat clean-ish, if you're into that. #
+#############################################
+# This command is to set someone's balance to whatever is desired.
+# There used to be award/take commands, but this seems like the 
+#   simpler and better solution overall.
+@plugin.command('cset')
+@plugin.example('.cset 100 nick')
 @plugin.require_admin
-@plugin.require_chanmsg
-@plugin.command("award")
-def award_money(bot, trigger):
-    """Bot admin uses the power of Admin Abuse to spawn money from nothing."""
+def casino_set_bank(bot, trigger):
     try:
-        data = gambling_checks(bot, trigger)
-    except Exception as msg:
-        return bot.reply(msg)
+        amount, target = casino_check(bot, trigger, 4, False, True)
+    except Exception as e:
+        return bot.say(str(e))
 
-    amount = data["bet"]
-    msg = data["msg"]
-    target = data["target"]
-
-    if not amount:
-        return bot.reply(msg)
-
-    # Check for valid target to award money to.
-    if target not in bot.channels[trigger.sender].users:
-        return bot.reply("Please provide a valid user.")
-
-    new_balance = bot.db.get_nick_value(target, "currency_amount", 0) + amount
-    bot.db.set_nick_value(target, "currency_amount", new_balance)
-    balance = "${:,}".format(new_balance)
-    bot.say("{} now has {}".format(target, bold(balance)))
+    bot.db.set_nick_value(target, DB_BANK, amount)
+    balance = f'${amount:,}'
+    bot.say(f'{target} now has {bold(balance)}')
 
 
+# This command makes it like a user never existed in the casino.
+# Should be merged with 'timelyreset' if that TODO is never done.
+@plugin.command('nomoremoney')
 @plugin.require_admin
-@plugin.require_chanmsg
-@plugin.command("take")
-def take_money(bot, trigger):
-    """Bot admin takes (deletes) X amount of money from a user."""
-    try:
-        data = gambling_checks(bot, trigger)
-    except Exception as msg:
-        return bot.reply(msg)
-
-    amount = data["bet"]
-    msg = data["msg"]
-    target = data["target"]
-
-    if not amount:
-        return bot.reply(msg)
-
-    # Check for valid target to take money from.
-    if target not in bot.channels[trigger.sender].users:
-        return bot.reply("Please provide a valid user.")
-
-    new_balance = bot.db.get_nick_value(target, "currency_amount", 0) - amount
-    bot.db.set_nick_value(target, "currency_amount", new_balance)
-    balance = "${:,}".format(new_balance)
-    bot.say("{} now has {}".format(target, bold(balance)))
-
-
-@plugin.require_chanmsg
-@plugin.command("give")
-def give_money(bot, trigger):
-    """Give X amount of your money to another user."""
-    try:
-        data = gambling_checks(bot, trigger)
-    except Exception as msg:
-        return bot.reply(msg)
-
-    amount = data["bet"]
-    msg = data["msg"]
-    target = data["target"]
-    giver = trigger.nick
-
-    if not amount:
-        return bot.reply(msg)
-
-    if giver == target:
-        return bot.reply("You gifted yourself the same amount, I guess?")
-
-    # Check if the transaction can even occur
-    give_check = bot.db.get_nick_value(giver, "currency_amount")
-    receive_check = bot.db.get_nick_value(target, "currency_amount")
-
-    if give_check is None:
-        return bot.reply(
-            "You can't do that yet. Please run `.iwantmoney` first.")
-
-    if receive_check is None:
-        return bot.reply(
-            "{0} hasn't participated yet. {0} needs to run `.iwantmoney` first.".format(target))
-
-    if amount > give_check:
-        return bot.reply(
-            "You don't have enough money to complete this transcation, you filthy poor.")
-
-    # Check for valid target to give money to.
-    if target not in bot.channels[trigger.sender].users:
-        return bot.reply("Please provide a valid user.")
-
-    giver_new_balance = bot.db.get_nick_value(
-        giver, "currency_amount", 0) - amount
-    target_new_balance = bot.db.get_nick_value(
-        target, "currency_amount", 0) + amount
-    # Take away the money from the giver.
-    bot.db.set_nick_value(giver, "currency_amount", giver_new_balance)
-    # Give the money to the target/reciever.
-    bot.db.set_nick_value(target, "currency_amount", target_new_balance)
-    giver_balance = "${:,}".format(giver_new_balance)
-    target_balance = "${:,}".format(target_new_balance)
-    gifted_amount = "${:,}".format(amount)
-    bot.say(
-        "{} gifted {} to {}. {} now has {} and {} has {}.".format(
-            giver,
-            bold(gifted_amount),
-            target,
-            giver,
-            bold(giver_balance),
-            target,
-            bold(target_balance)))
-
-
-@plugin.require_admin
-@plugin.command("nomoremoney")
-def delete_money(bot, trigger):
-    """Bot admin can make it so a user never had any money."""
-    # We want to be able to delete money regardless of any checks.
-    # Could be the user is gone from the server/channel.
-    target = trigger.group(3)
-
+def casino_wipe_user(bot, trigger):
+    target = plain(trigger.group(3))
     if not target:
-        return bot.reply("I need someone's wealth to eliminate.")
-
+        return bot.reply('I need a user.')
     target = tools.Identifier(target)
+    bot.db.delete_nick_value(target, DB_BANK)
+    bot.db.delete_nick_value(target, DB_TIMELY)
+    bot.say(f'Casino data wiped from existence for: {bold(target)}')
 
-    bot.db.delete_nick_value(target, "currency_amount")
-    bot.db.delete_nick_value(target, "currency_timely")
-    bot.say("{}'s wealth has been deleted from existence.".format(target))
 
-
-@plugin.command(r"\$")
-@plugin.require_chanmsg
-def check_money(bot, trigger):
-    """Check how much money you or another user has."""
-    # We're not using gambling_checks() because it's
-    # tuned for most other commands in this plugin.
-    # Channel Check
-    if trigger.sender == GCHAN:
-        pass
-    else:
-        return bot.reply("This command can only be used in {}".format(GCHAN))
-
-    # Target Check
-    target = plain(trigger.group(3) or trigger.nick)
+# This command is to reset someone's timely timer so they can timely again.
+# TODO: this is a full reset that makes it like they never timely'd. but it
+#   should really just set the timer far enough back so that they can timely
+#   for the normal amount again.
+# PRIORITY: low
+@plugin.command('timelyreset')
+@plugin.require_admin
+@plugin.require_chanmsg(f'{GCHAN} only', True)
+def casino_timely_reset(bot, trigger):
+    target = plain(trigger.group(3))
     if not target:
-        return bot.reply(
-            "If you're seeing this message...everything is horribly broken.")
-
+        return bot.reply('I need a user.')
     target = tools.Identifier(target)
-
-    if target == bot.nick:
-        return bot.reply("I just run the place; I don't participate.")
     if target not in bot.channels[trigger.sender].users:
-        return bot.reply("Please provide a valid user.")
+        return bot.reply('I need a valid user.')
+    bot.db.delete_nick_value(target, DB_TIMELY)
+    bot.say(f'timely reset for: {bold(target)}')
 
-    # Actual Currency Check
-    currency_amount = bot.db.get_nick_value(target, "currency_amount")
-    if currency_amount is not None:
-        balance = "${:,}".format(currency_amount)
-        bot.say("{} has {}".format(target, bold(balance)))
+
+###################################################################
+#  _   _                          ____                   _        #
+# | | | |  ___    ___   _ __     / ___|  _ __ ___     __| |  ___  #
+# | | | | / __|  / _ \ | '__|   | |     | '_ ` _ \   / _` | / __| #
+# | |_| | \__ \ |  __/ | |      | |___  | | | | | | | (_| | \__ \ #
+#  \___/  |___/  \___| |_|       \____| |_| |_| |_|  \__,_| |___/ #
+###################################################################
+# This is a simple bank balance checker.
+@plugin.command(r'\$')
+@plugin.example('.$ nick')
+def casino_get_bank(bot, trigger):
+    try:
+        bank, target = casino_check(bot, trigger, 3, True, False)
+    except Exception as e:
+        return bot.say(str(e))
+
+    balance = f'${bank:,}'
+    return bot.say(f'{target} has {bold(balance)}')
+
+
+# This command inits a user into gambling. Required for anything other than
+# `.cset` – no casino_check() because we assume the user is not init'd
+@plugin.command('iwantmoney')
+def casino_init_user(bot, trigger):
+    if trigger.sender != GCHAN:
+        return bot.reply(f'`.{trigger.group(1)}` only usable in {GCHAN}')
+    verifyPoor = bot.db.get_nick_value(trigger.nick, DB_BANK, None)
+    if verifyPoor is None:
+        claim = 100
+        bot.db.set_nick_value(trigger.nick, DB_BANK, claim)
+        return bot.reply(f'Here is ${claim} to get you started.')
     else:
-        bot.say("{} needs to run `.iwantmoney` first.".format(target))
+        return bot.reply('Sorry, you are already a gambling addict.')
 
 
-@plugin.require_chanmsg
-@plugin.command("iwantmoney")
-def init_money(bot, trigger):
-    """Use this command to get money for the first time ever and participate in gambling and other fun activities!"""
-    # We're not using gambling_checks() because it's
-    # tuned for most other commands in this plugin.
-    # Channel Check
-    if trigger.sender == GCHAN:
-        pass
-    else:
-        return bot.reply("This command can only be used in {}".format(GCHAN))
+# This allows a user to give some (or all!) of their money to another user.
+@plugin.command('give')
+@plugin.example('.give 100 nick')
+def casino_give_money(bot, trigger):
+    # get data for giver of money
+    try:
+        user_bank, amount, user = casino_check(bot, trigger, None, True, True)
+    except Exception as e:
+        return bot.say(str(e))
 
-    target = trigger.nick
+    # get data for receiver of money
+    try:
+        target_bank, target = casino_check(bot, trigger, 4, True, False)
+    except Exception as e:
+        return bot.say(str(e))
 
-    check_for_money = bot.db.get_nick_value(target, "currency_amount")
-    if check_for_money is None:
-        bot.db.set_nick_value(target, "currency_amount", 100)
-        bot.say(
-            "Congratulations! Here's {} to get you started, {}.".format(
-                bold("$100"), target))
+    # transact the money
+    user_bank = user_bank - amount
+    target_bank = target_bank + amount
+    bot.db.set_nick_value(user, DB_BANK, user_bank)
+    bot.db.set_nick_value(target, DB_BANK, target_bank)
+
+    # formatting and output
+    user_bal = f'${user_bank:,}'
+    target_bal = f'${target_bank:,}'
+    gifted_amount = f'${amount:,}'
+    msg = f'{user} gifted {gifted_amount} to {target}. '
+    msg += f'{user}\'s balance: {bold(user_bal)}. '
+    msg += f'{target}\'s balance: {bold(target_bal)}.'
+    bot.say(msg)
 
 
-@plugin.require_chanmsg  # Forcing public claiming serves as a reminder to all.
-@plugin.command("timely")
-def claim_money(bot, trigger):
-    """Claim $25 every 4 hours. ($100 for first claim!)"""
-    # We're not using gambling_checks() because it's
-    # tuned for most other commands in this plugin.
-    # Channel Check
-    if trigger.sender == GCHAN:
-        pass
-    else:
-        return bot.reply("This command can only be used in {}".format(GCHAN))
+# 'timely' is one way users can earn money for free
+@plugin.command('timely')
+def casino_timely(bot, trigger):
+    try:
+        bank, user = casino_check(bot, trigger, None, True, False)
+    except Exception as e:
+        return bot.say(str(e))
 
-    target = trigger.nick
-
-    check_for_money = bot.db.get_nick_value(target, "currency_amount")
-    if check_for_money is None:
-        return bot.reply(
-            "You can't do this yet! Please run the `.iwantmoney` command.")
-
+    # get unix timestamp (float) for right now
     now = time.time()
 
-    check_for_timely = bot.db.get_nick_value(target, "currency_timely")
-    if check_for_timely is None:
-        bot.db.set_nick_value(target, "currency_timely", now)
-        claim = check_for_money + 100
-        bot.db.set_nick_value(target, "currency_amount", claim)
-        balance = "${:,}".format(claim)
-        return bot.reply(
-            "Here's $100. New balance: {}. Don't forget to claim again in 4 hours! ($25/4h going forward.)".format(bold(balance)))
+    timely_check = bot.db.get_nick_value(user, DB_TIMELY, None)
+    if not timely_check:
+        bot.db.set_nick_value(user, DB_TIMELY, now)
+        claim = 100
+    elif timely_check:
+        timely_check_4h = now - timely_check
+        if timely_check_4h >= 14400:
+            bot.db.set_nick_value(user, DB_TIMELY, now)
+            claim = 25
+        else:
+            to_timely = 14400 - timely_check_4h
+            to_timely = str(timedelta(seconds=round(to_timely)))
+            return bot.reply(f'{to_timely} until you can claim again, greedy!')
 
-    check_4_hour = now - check_for_timely
-    if check_4_hour >= 14400:
-        bot.db.set_nick_value(target, "currency_timely", now)
-        claim = check_for_money + 25
-        bot.db.set_nick_value(target, "currency_amount", claim)
-        balance = "${:,}".format(claim)
-        return bot.reply(
-            "Here's $25. New balance: {}. Don't forget to claim again in 4 hours!".format(
-                bold(balance)))
+    newBalance = bank + claim
+    bot.db.set_nick_value(user, DB_BANK, newBalance)
+    newBalance = f'${newBalance:,}'
+    return bot.say(f'{user} claimed ${claim}. New balance: {bold(newBalance)}')
+
+
+# get casino leaderboard
+@plugin.command('lb')
+@plugin.rate(user=5)
+def casino_leaderboard(bot, trigger):
+    if trigger.sender != GCHAN:
+        bot.reply(f'`.{trigger.group(1)}` only usable in {GCHAN}')
+        return plugin.NOLIMIT
+
+    query =   "SELECT canonical, key, value FROM nick_values a join nicknames "
+    query += f"b on a.nick_id = b.nick_id WHERE key='{DB_BANK}' "
+    query +=  "ORDER BY cast(value as int) DESC;"
+    lb = bot.db.execute(query).fetchall()
+    if not lb:
+        return bot.say('No gambling addicts yet!')
+
+    for index, person in enumerate(lb):
+        rank = index + 1
+        # if rank 1 has $0, then no one has anything
+        if rank == 1 and int(person[2]) == 0:
+            return bot.say("Ain't nobody got shit!")
+        # if a user has $0, they don't belong on the leaderboard
+        if int(person[2]) == 0:
+            pass
+        else:
+            name = '\u200B'.join(person[0])
+            bot.say(f'{rank}. {name}: ${int(person[2]):,}.')
+        # We only want to print up to 5 people
+        if rank == 5:
+            break
+
+
+@plugin.command('pick')
+def casino_pick(bot, trigger):
+    """Pick up money from the ground."""
+    try:
+        bank, user = casino_check(bot, trigger, None, True, False)
+    except Exception as e:
+        return bot.say(str(e))
+
+    amount = bot.db.get_channel_value(GCHAN, DB_GRNDM, 0)
+    if not amount:
+        insults = [
+            'There is no money to pick up, greedy fucker.',
+            'Sorry you are poor, but there is no money for you.'
+        ]
+        return bot.reply(choose(insults))
     else:
-        to_4_hour = 14400 - check_4_hour
-        time_remaining = str(timedelta(seconds=round(to_4_hour)))
-        bot.reply("{} until you can claim again, greedy!".format(time_remaining))
+        bot.db.set_channel_value(GCHAN, DB_GRNDM, 0)
+        newBalance = bank + amount
+        bot.db.set_nick_value(user, DB_BANK, newBalance)
+        newBalance = bold(f'${newBalance:,}')
+        return bot.reply(
+            f'Congrats! You picked up ${amount}. New balance: {newBalance}')
 
 
-@plugin.command("timelyreset")
-@plugin.require_chanmsg
-@plugin.require_admin
-def timely_reset(bot, trigger):
-    """Reset a user's timely timer for whatever reason."""
-    target = trigger.group(3)
+@plugin.command('drop')
+def casino_plant(bot, trigger):
+    """Drop some money on the ground."""
+    try:
+        bank, bet, user = casino_check(bot, trigger, None, True, True)
+    except Exception as e:
+        return bot.say(str(e))
 
-    if not target:
-        return bot.reply("I need someone's timely timer to reset.")
+    # check if there's already any money on the ground
+    ground_amt = bot.db.get_channel_value(GCHAN, DB_GRNDM, 0)
+    if ground_amt:
+        return bot.say('There is already money on the ground.')
 
-    target = tools.Identifier(target)
-    if target not in bot.channels[trigger.sender].users:
-        return bot.reply("Please provide a valid user.")
+    # take from user first
+    newBalance = bank - bet
+    bot.db.set_nick_value(user, DB_BANK, newBalance)
+    
+    # drop the money on the ground
+    bot.db.set_channel_value(GCHAN, DB_GRNDM, bet)
+    return bot.say(f'Someone dropped ${bet:,} on the ground!')
 
-    bot.db.delete_nick_value(target, "currency_timely")
-    bot.say("{}'s timely timer has been reset.".format(target))
 
-
-@plugin.command("betflip", "bf")
-@plugin.example(".bf 10 h")
-def gamble_betflip(bot, trigger):
+####################################################################
+#   ____      _      __  __   ____    _       ___   _   _    ____  #
+#  / ___|    / \    |  \/  | | __ )  | |     |_ _| | \ | |  / ___| #
+# | |  _    / _ \   | |\/| | |  _ \  | |      | |  |  \| | | |  _  #
+# | |_| |  / ___ \  | |  | | | |_) | | |___   | |  | |\  | | |_| | #
+#  \____| /_/   \_\ |_|  |_| |____/  |_____| |___| |_| \_|  \____| #
+####################################################################
+# TODO: merge casino_betflip() and casino_betoddeven() in some way
+#  PRI: low
+# TODO: merge a lot of the gambling command code; there's a lot of re-use
+#  PRI: verylow
+@plugin.command('bf')
+@plugin.example('.bf 10 h')
+@plugin.rate(user=2)
+def casino_betflip(bot, trigger):
     """Wager X amount of money on (h)eads or (t)ails. Winning will net you double your bet."""
     try:
-        data = gambling_checks(bot, trigger)
-    except Exception as msg:
-        return bot.reply(msg)
+        bank, bet, user = casino_check(bot, trigger, None, True, True)
+    except Exception as e:
+        return bot.say(str(e))
 
-    bet = data["bet"]
-    msg = data["msg"]
-    gambler = trigger.nick
-
-    if not bet:
-        return bot.reply(msg)
-
-    # Check if user has enough money to make the gamble...
-    bet_check = bot.db.get_nick_value(gambler, "currency_amount")
-    if bet_check is None:
-        return bot.reply(
-            "You can't gamble yet! Please run the `.iwantmoney` command.")
-    if bet > bet_check:
-        return bot.reply(
-            "You don't have enough money to make this bet. Try a smaller bet.")
-
-    # Check if user has actually bet (H)eads or (T)ails.
-    user_choice = plain(trigger.group(4) or '')
+    # verify user choice
+    user_choice = plain(trigger.group(4) or '').lower()
     if not user_choice:
-        return bot.reply("You need to bet on (h)eads or (t)ails.")
-    if user_choice in ["h", "t", "heads", "tails"]:
+        bot.reply('You need to bet on (h)eads or (t)ails.')
+        return plugin.NOLIMIT
+    elif user_choice in {'h', 'heads', 't', 'tails'}:
         pass
     else:
-        return bot.reply("You need to bet on (h)eads or (t)ails.")
+        bot.reply('You need to bet on (h)eads or (t)ails.')
+        return plugin.NOLIMIT
 
-    # Take the user's money before continuing
-    spend_on_bet = bet_check - bet
-    bot.db.set_nick_value(gambler, "currency_amount", spend_on_bet)
+    # take the user's money first
+    spend = bank - bet
+    bot.db.set_nick_value(user, DB_BANK, spend)
 
-    # Set heads or tails
-    if user_choice == "h":
-        user_choice = "heads"
-    if user_choice == "t":
-        user_choice = "tails"
+    # set heads or tails
+    if user_choice == 'h':
+        user_choice = 'heads'
+    if user_choice == 't':
+        user_choice = 'tails'
 
-    # Flip coin and complete transaction
-    heads_or_tails = ["heads", "tails"]
-    flip_result = secrets.choice(heads_or_tails)
+    # flip the coin
+    heads_or_tails = ['heads', 'tails']
+    flip = choose(heads_or_tails)
 
-    if flip_result == user_choice:
+    # impact of coin flip
+    if flip == user_choice:
         winnings = bet * 2
-        new_balance = spend_on_bet + winnings
-        bot.db.set_nick_value(gambler, "currency_amount", new_balance)
-        balance = "${:,}".format(new_balance)
-        msg = "Congrats; the coin landed on {}. You won ${:,}! Your new balance is {}.".format(
-            flip_result, winnings, bold(balance))
+        newBalance = spend + winnings
+        bot.db.set_nick_value(user, DB_BANK, newBalance)
+        newBalance = bold(f'${newBalance:,}')
+        msg = f'Congrats! The coin landed {flip}. You won ${winnings:,}. '
+        msg += f'Your new balance is {newBalance}'
     else:
-        balance = "${:,}".format(spend_on_bet)
-        msg = "Sorry, the coin landed on {}. You lost ${:,}. Your new balance is {}.".format(
-            flip_result, bet, bold(balance))
+        newBalance = bold(f'${spend:,}')
+        msg = f'Sorry, the coin landed {flip}. You lost ${bet:,}. '
+        msg += f'Your new balance is {newBalance}.'
 
-    # Stress user with delay
-    bot.action("flips a coin...")
+    # stress user with delay
+    bot.action('flips a coin...')
     time.sleep(1.5)
     bot.reply(msg)
 
 
-@plugin.command("br", "betroll")
-@plugin.example(".br 200")
-def gamble_betroll(bot, trigger):
+@plugin.command('oe', 'eo')
+@plugin.example('.oe 100 e')
+@plugin.rate(user=2)
+def casino_betoddeven(bot, trigger):
+    """Wager X amount of money on (o)dds or (e)vens. Winning will net you double your bet."""
+    try:
+        bank, bet, user = casino_check(bot, trigger, None, True, True)
+    except Exception as e:
+        return bot.say(str(e))
+
+    # verify user choice
+    user_choice = plain(trigger.group(4) or '').lower()
+    if not user_choice:
+        bot.reply('You need to bet on (o)dds or (e)vens.')
+        return plugin.NOLIMIT
+    elif user_choice in {'o', 'odd', 'odds', 'e', 'even', 'evens'}:
+        pass
+    else:
+        bot.reply('You need to bet on (o)dds or (e)vens.')
+        return plugin.NOLIMIT
+
+    # take the user's money first
+    spend = bank - bet
+    bot.db.set_nick_value(user, DB_BANK, spend)
+
+    # set odds or evens
+    if user_choice in {'odd', 'even'}:
+        pass
+    elif user_choice in {'o', 'odds'}:
+        user_choice = 'odd'
+    elif user_choice in {'e', 'evens'}:
+        user_choice = 'even'
+
+    # roll a number
+    roll_num = randbelow(101)
+    # determine odd/even
+    if (roll_num % 2) == 0:
+        roll = 'even'
+    else:
+        roll = 'odd'
+
+    # impact of roll
+    if roll == user_choice:
+        winnings = bet * 2
+        newBalance = spend + winnings
+        bot.db.set_nick_value(user, DB_BANK, newBalance)
+        newBalance = bold(f'${newBalance:,}')
+        msg = f'I rolled {roll_num} ({roll}). You bet on {user_choice}. '
+        msg += f'You won ${winnings:,}! New balance: {newBalance}'
+    else:
+        newBalance = bold(f'${spend:,}')
+        msg = f'I rolled {roll_num} ({roll}). You bet on {user_choice}. '
+        msg += f'You lost ${bet:,}. New balance: {newBalance}'
+
+    # stress user with delay
+    bot.action('rolls some dice or something...')
+    time.sleep(1.5)
+    bot.reply(msg)
+
+
+@plugin.command('br')
+@plugin.example('.br 100')
+@plugin.rate(user=2)
+def casino_betroll(bot, trigger):
     """Bet your money on a random roll from 0-100. Roll payouts:
     0-66: 0x // 67-90: 2x // 91-99: 4x // 100: 10x"""
     try:
-        data = gambling_checks(bot, trigger)
-    except Exception as msg:
-        return bot.reply(msg)
+        bank, bet, user = casino_check(bot, trigger, None, True, True)
+    except Exception as e:
+        return bot.say(str(e))
 
-    bet = data["bet"]
-    msg = data["msg"]
-    gambler = trigger.nick
+    # take the user's money first
+    spend = bank - bet
+    bot.db.set_nick_value(user, DB_BANK, spend)
 
-    if not bet:
-        return bot.reply(msg)
-
-    # Check if user has enough money to make the gamble...
-    bet_check = bot.db.get_nick_value(gambler, "currency_amount")
-    if bet_check is None:
-        return bot.reply(
-            "You can't gamble yet! Please run the `.iwantmoney` command.")
-    if bet > bet_check:
-        return bot.reply(
-            "You don't have enough money to make this bet. Try a smaller bet.")
-
-    # Take the user's money before continuing
-    spend_on_bet = bet_check - bet
-    bot.db.set_nick_value(gambler, "currency_amount", spend_on_bet)
-
-    # Roll a number 0-100
-    roll = secrets.randbelow(101)
-    # Determine multiplier
+    # roll a number 0-100
+    roll = randbelow(101)
+    # determine multiplier
     if 0 <= roll <= 66:
         multiplier = 0
     elif 67 <= roll <= 90:
@@ -438,277 +493,113 @@ def gamble_betroll(bot, trigger):
     elif roll == 100:
         multiplier = 10
 
-    # Process winnings
+    # process winnings
     winnings = bet * multiplier
-    new_balance = spend_on_bet + winnings
-    bot.db.set_nick_value(gambler, "currency_amount", new_balance)
-    balance = "${:,}".format(new_balance)
+    newBalance = spend + winnings
+    bot.db.set_nick_value(user, DB_BANK, newBalance)
+    newBalance = bold(f'${newBalance:,}')
 
-    # Conditionals
+    # conditionals
     if multiplier == 0:
-        msg = "You rolled {}. You lost. {}x multiplier. New balance: {}.".format(
-            roll, multiplier, bold(balance))
-    elif multiplier in (2, 4):
-        msg = "You rolled {}. You win! {}x multiplier. New balance: {}.".format(
-            roll, multiplier, bold(balance))
+        msg = f'You rolled {roll}. You lost. New balance: {newBalance}'
+    elif multiplier in {2, 4}:
+        msg = f'You rolled {roll}. You win! {multiplier}x multiplier. '
+        msg += f'New balance: {newBalance}'
     elif multiplier == 10:
-        msg = "🎊 Holy shit! You rolled a {} which means {}x multiplier! New balance: {}. 🎊".format(
-            roll, multiplier, bold(balance))
+        msg = f'🎊 Holy shit! You rolled a {roll} which means '
+        msg += f'{multiplier}x multiplier! New balance: {newBalance} 🎊'
 
     # Stress user with delay
-    bot.say(italic("Rolling a number..."))
+    bot.action('rolls some dice or something...')
     time.sleep(1.5)
     bot.reply(msg)
 
 
-@plugin.command("oe", "eo")
-@plugin.example(".oe 10 e")
-def gamble_oddsevens(bot, trigger):
-    """Wager X amount of money on (o)dds or (e)vens. Winning will net you double your bet."""
+@plugin.command('wheel')
+@plugin.example('.wheel 100')
+@plugin.rate(user=6)
+def casino_wheel(bot, trigger):
+    """Spin the wheel of fortune! You must go all-in."""
     try:
-        data = gambling_checks(bot, trigger)
-    except Exception as msg:
-        return bot.reply(msg)
+        bank, bet, user = casino_check(bot, trigger, None, True, True)
+    except Exception as e:
+        return bot.say(str(e))
 
-    bet = data["bet"]
-    msg = data["msg"]
-    gambler = trigger.nick
+    # user must go all-in
+    if bank != bet:
+        return bot.reply('You must go all-in for the wheel of fortune.')
 
-    if not bet:
-        return bot.reply(msg)
+    # take the user's money first
+    spend = bank - bet
+    bot.db.set_nick_value(user, DB_BANK, spend)
 
-    # Check if user has enough money to make the gamble...
-    bet_check = bot.db.get_nick_value(gambler, "currency_amount")
-    if bet_check is None:
-        return bot.reply(
-            "You can't gamble yet! Please run the `.iwantmoney` command.")
-    if bet > bet_check:
-        return bot.reply(
-            "You don't have enough money to make this bet. Try a smaller bet.")
-
-    # Check if user has actually bet (o)dds or (e)vens.
-    user_choice = plain(trigger.group(4) or '')
-    if not user_choice:
-        return bot.reply("You need to bet on (o)dds or (e)vens.")
-    if user_choice in ["o", "e", "odd", "even", "odds", "evens"]:
-        pass
-    else:
-        return bot.reply("You need to bet on (o)dds or (e)vens.")
-
-    # Take the user's money before continuing
-    spend_on_bet = bet_check - bet
-    bot.db.set_nick_value(gambler, "currency_amount", spend_on_bet)
-
-    # Set odds or evens
-    if user_choice in ("odd", "even"):
-        pass
-    elif user_choice in ("o", "odds"):
-        user_choice = "odd"
-    elif user_choice in ("e", "evens"):
-        user_choice = "even"
-
-    # Roll and complete transaction
-    roll_num = secrets.randbelow(101)
-    if (roll_num % 2) == 0:
-        roll = "even"
-    else:
-        roll = "odd"
-
-    if roll == user_choice:
-        winnings = bet * 2
-        new_balance = spend_on_bet + winnings
-        bot.db.set_nick_value(gambler, "currency_amount", new_balance)
-        balance = "${:,}".format(new_balance)
-        msg = "I rolled {}. That's {}. You bet on {}. You won ${:,}! Your new balance is {}.".format(
-            roll_num, roll, user_choice, winnings, bold(balance))
-    else:
-        balance = "${:,}".format(spend_on_bet)
-        msg = "I rolled {}. That's {}. You bet on {}. You lost ${:,}. Your new balance is {}.".format(
-            roll_num, roll, user_choice, bet, bold(balance))
-
-    # Stress user with delay
-    bot.action("rolls a bunch of dice or something...")
-    time.sleep(1.5)
-    bot.reply(msg)
-
-
-@plugin.command("wheeloffortune", "wheel")
-@plugin.example(".wheel 100")
-def gamble_wheel(bot, trigger):
-    """Spin the Wheel of Fortune!"""
-    try:
-        data = gambling_checks(bot, trigger)
-    except Exception as msg:
-        return bot.reply(msg)
-
-    bet = data["bet"]
-    msg = data["msg"]
-    gambler = trigger.nick
-
-    if not bet:
-        return bot.reply(msg)
-
-    # Check if user has enough money to make the gamble...
-    bet_check = bot.db.get_nick_value(gambler, "currency_amount")
-    if bet_check is None:
-        return bot.reply(
-            "You can't gamble yet! Please run the `.iwantmoney` command.")
-    if bet > bet_check:
-        return bot.reply(
-            "You don't have enough money to make this bet. Try a smaller bet.")
-
-    # Take the user's money before continuing
-    spend_on_bet = bet_check - bet
-    bot.db.set_nick_value(gambler, "currency_amount", spend_on_bet)
-
-    # Configure Wheel Spin Directions
-    wheel_direction = ["֎", "֍"]
-    pointer_direction = {
-        "↗": 7,
-        "→": 6,
-        "↘": 5,
-        "↓": 4,
-        "↙": 3,
-        "←": 2,
-        "↖": 1,
+    # configure wheel spin directions
+    pointer = {
+        "↗": 10,
+        "→": 7,
+        "↘": 6,
+        "↓": 5,
+        "↙": 4,
+        "←": 3,
+        "↖": 2,
         "↑": 0
     }
 
-    # Get the result first
-    wheel_result = random.choices(list(pointer_direction.keys()), weights=[
-                                  0.1, 0.4, 0.5, 1, 3, 25, 30, 40], k=1)[0]
-    multiplier = pointer_direction[wheel_result]
+    # get result/multiplier
+    result = choices(list(pointer.keys()), weights=[
+        2, 8, 8, 8, 8, 8, 8, 50], k=1)[0]
+    multiplier = pointer[result]
 
-    # Calculate winnings and award the user
+    # process winnings
     winnings = bet * multiplier
-    new_balance = spend_on_bet + winnings
-    bot.db.set_nick_value(gambler, "currency_amount", new_balance)
-    balance = "${:,}".format(new_balance)
+    newBalance = spend + winnings
+    bot.db.set_nick_value(user, DB_BANK, newBalance)
+    newBalance = bold(f'${newBalance:,}')
 
-    # Conditionals
+    # conditionals
     if multiplier == 0:
-        msg = "The arrow is facing [{}]. {}x multiplier. You lost. New balance: {}.".format(
-            wheel_result, multiplier, bold(balance))
-    elif multiplier == 1:
-        msg = "The arrow is facing [{}]. {}x multiplier. Same balance: {}.".format(
-            wheel_result, multiplier, bold(balance))
-    else:
-        msg = "The arrow is facing [{}]. You won: {}x your money! (${:,}). Your new balance is: {}.".format(
-            wheel_result, multiplier, winnings, bold(balance))
+        msg = f'The arrow is facing [{result}]. {multiplier}x multiplier. '
+        msg += f'You lost. New balance: {newBalance}'
+    elif 2 <= multiplier <= 7:
+        msg = f'The arrow is facing [{result}]. {multiplier}x multiplier! '
+        msg += f'You won! New balance: {newBalance}'
+    elif multiplier == 10:
+        msg = f'🎊 Holy shit! The arrow is facing [{result}]. '
+        msg += f'{multiplier}x multiplier! New balance: {newBalance} 🎊'
 
     # Stress user with delay
-    bot.action(
-        "spins the wheel...{0}{0}{0}".format(
-            secrets.choice(wheel_direction)))
-    time.sleep(4)
-    bot.say(italic("The wheel slows to a stop..."))
-    time.sleep(2)
+    bot.action('spins the wheel...')
+    time.sleep(5)
+    bot.action('stops the wheel.')
     bot.reply(msg)
 
 
-@plugin.command('lb')
-@plugin.rate(user=5)
-@plugin.require_chanmsg
-def gamble_leadboard(bot, trigger):
-    """Posts the top 5 richest gamblers."""
-    if trigger.sender != GCHAN:
-        return bot.reply(f'This command can only be used in {GCHAN}')
-
-    # Do it through Sopel, not SQL
-    # Need to add back error handling later
-    lb_base = bot.db.execute(
-        "SELECT canonical, key, value FROM nick_values a join nicknames b on a.nick_id = b.nick_id WHERE key='currency_amount' ORDER BY cast(value as int) DESC;")
-
-    # go through db for results
-    for index, person in enumerate(lb_base):
-        # Rank/Index required to actually go through data
-        rank = index + 1
-
-        # If rank 1 has $0, then no one has anything
-        if rank == 1 and int(person[2]) == 0:
-            return bot.say("Ain't nobody got shit!")
-
-        # If a user has $0, they don't belong on the leaderboard
-        if int(person[2]) == 0:
-            pass
-        else:
-            # print results
-            bot.say('{}. {}: ${:,}.'.format(
-                    rank, '\u200B'.join(person[0]), int(person[2])))
-
-        # We only want to print up to 5 people
-        if rank == 5:
-            break
-
-
+##############################################
+#  _____                          _          #
+# | ____| __   __   ___   _ __   | |_   ___  #
+# |  _|   \ \ / /  / _ \ | '_ \  | __| / __| #
+# | |___   \ V /  |  __/ | | | | | |_  \__ \ #
+# |_____|   \_/    \___| |_| |_|  \__| |___/ #
+##############################################
 # Random Money Spawner
-# Every 90 minutes:
-#   • check if random money is spawned already
+# Every 60 minutes:
+#   • check if money is already on the ground
 #   • randomly spawn money if there isn't any
-@plugin.interval(5400)
-def casino_random_money(bot):
-    # Check if there's random money spawned
-    amount = bot.db.get_channel_value(GCHAN, "random_money", 0)
+@plugin.interval(3600)
+def casino_rndm(bot):
+    # check if there's already any money
+    amount = bot.db.get_channel_value(GCHAN, DB_GRNDM, 0)
 
-    # If there's no random_money...
+    # if there's no money...
     if not amount:
-        # ...generate a number 0-10
-        roll = secrets.randbelow(11)
-        # chose 6 just because
-        if roll == 6:
-            # set how much money a user can claim ($10-$100)
-            amount = random.randint(10, 100)
-            # set random_money in the db
-            bot.db.set_channel_value(GCHAN, "random_money", amount)
-            # See something, say something!
+        roll = randbelow(11)
+        if roll == 6:  # choose 6 just because
+            amount = randbelow(91) + 10
+            bot.db.set_channel_value(GCHAN, DB_GRNDM, amount)
             # TODO: add some randomness to the message to
             #       prevent notifications and botting.
-            return bot.say("${} appeared on the ground.".format(amount), GCHAN)
+            return bot.say(f'${amount} appeared on the ground.', GCHAN)
         else:
             return
-    # If the money has been picked...
-    elif 10 <= amount <= 100:
-        return  # nothing to do
     else:
-        return bot.say(
-            "xnaas: Error in casino_random_money(). Good luck!",
-            GCHAN)
-
-
-@plugin.command("pick")
-@plugin.require_chanmsg
-def pick_random_money(bot, trigger):
-    """Pick up some money the bot has randomly dropped on the ground."""
-    # We're not using gambling_checks() because it's
-    # tuned for most other commands in this plugin.
-    if trigger.sender == GCHAN:
-        pass
-    else:
-        return bot.reply("This command can only be used in {}".format(GCHAN))
-
-    target = trigger.nick
-
-    check_for_money = bot.db.get_nick_value(target, "currency_amount")
-    if check_for_money is None:
-        return bot.reply(
-            "You can't do this yet! Please run the `.iwantmoney` command.")
-
-    amount = bot.db.get_channel_value(GCHAN, "random_money", 0)
-
-    if not amount:
-        insults = [
-            "There's no money to pick up, greedy fuck.",
-            "Sorry you're poor, but there's no money for you."
-        ]
-        return bot.reply(secrets.choice(insults))
-    elif 10 <= amount <= 100:
-        bot.db.set_channel_value(GCHAN, "random_money", 0)
-        new_balance = check_for_money + amount
-        bot.db.set_nick_value(target, "currency_amount", new_balance)
-        balance = "${:,}".format(new_balance)
-        bot.reply(
-            "Congrats! You picked up ${}. Now you have {}.".format(
-                amount, bold(balance)))
-    else:
-        return bot.say(
-            "xnaas: Error in pick_random_money() or casino_random_money(). Good luck!")
+        return
