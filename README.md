@@ -14,6 +14,10 @@ Posts random animal pics from several different APIs.
 Encode or decode base64 data.
 
 
+## [casino.py](https://github.com/xnaas/custom-sopel-plugins/blob/main/casino.py)
+Allows users to make and gamble away virtual currency.
+
+
 ## [colors.py](https://github.com/xnaas/custom-sopel-plugins/blob/main/colors.py)
 Moved from [sopel-color-text](https://github.com/xnaas/sopel-color-text) — don't want to actually deal with publishing to pypi in the future.
 
@@ -32,10 +36,6 @@ Some custom stuff for [Deep Rock Galactic](https://www.deeprockgalactic.com/).
 
 ## [ercot.py](https://github.com/xnaas/custom-sopel-plugins/blob/main/ercot.py)
 Pulls basic grid status from [ERCOT](https://www.ercot.com/).
-
-
-## [gambling.py](https://github.com/xnaas/custom-sopel-plugins/blob/main/gambling.py)
-Allows users to make and gamble away virtual currency.
 
 
 ## [hn.py](https://github.com/xnaas/custom-sopel-plugins/blob/main/hn.py)
