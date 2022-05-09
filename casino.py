@@ -316,7 +316,7 @@ def casino_pick(bot, trigger):
         bot.db.set_nick_value(user, DB_BANK, newBalance)
         newBalance = bold(f'${newBalance:,}')
         return bot.reply(
-            f'Congrats! You picked up ${amount}. New balance: {newBalance}')
+            f'Congrats! You picked up ${amount:,}. New balance: {newBalance}')
 
 
 @plugin.command('drop')
