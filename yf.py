@@ -110,7 +110,8 @@ def get_quote(bot, symbol):
         }
         return data
     elif quoteType in {'ECNQUOTE', 'MUTUALFUND', 'NONE'}:
-        raise Exception(f"No data for {bold(symbol['symbols'])}.")
+        raise Exception(
+            f'No data or unsupported: {bold(symbol["symbols"])} | Type: {quoteType}.')
 
     # marketState REGULAR and PREPRE appear to be the same thing
     # set default/catch-all data
