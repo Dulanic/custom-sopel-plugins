@@ -5,7 +5,7 @@ License: The Unlicense (public domain)
 import requests
 from bs4 import BeautifulSoup
 from sopel import plugin
-from sopel.formatting import bold, italic, plain
+from sopel.formatting import bold, plain
 
 
 PCOUNT_URL = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1'
