@@ -12,7 +12,9 @@ PCOUNT_URL = 'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPla
 SEARCH_URL = 'https://store.steampowered.com/search/suggest'
 OVERRIDES = {
     'drg': 'Deep Rock Galactic',
-    'mcc': 'Halo: The Master Chief Collection'
+    'mcc': 'Halo: The Master Chief Collection',
+    'space engine': 'SpaceEngine',
+    'spaceengine': 'SpaceEngine'
 }
 
 
