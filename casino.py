@@ -72,8 +72,8 @@ def casino_check(bot, trigger, targetGroup=None, getBank=None, getBet=None):
             bet = int(bet)
         else:
             try:
-                match = re.match("([\\d.]+)([ckmbt])", bet, re.IGNORECASE)
-                calc = {"c": 1e2, "k": 1e3, "m": 1e6, "b": 1e9, "t": 1e12}
+                match = re.match('([\\d.]+)([ckmbt])', bet, re.IGNORECASE)
+                calc = {'c': 1e2, 'k': 1e3, 'm': 1e6, 'b': 1e9, 't': 1e12}
                 num, size = match.groups()
                 bet = int(float(num) * calc[size])
             except (AttributeError, ValueError):
