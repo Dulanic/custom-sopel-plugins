@@ -192,8 +192,8 @@ def dotdotdot(bot, trigger):
     bot.say('...')
 
 
-@plugin.command('d(n|z)')
-@plugin.search('deez nut(s|z)')
+@plugin.command('d[nz]')
+@plugin.search('deez nut[sz]')
 def deeznutz(bot, trigger):
     """Can also be triggered with 'deez nutz' or 'deez nuts' anywhere."""
     deez = [f'{DOMAIN}nutz/{pic}' for pic in listdir(f'{PATH}nutz')]
@@ -265,7 +265,7 @@ def upsidedown(bot, trigger):
     bot.say('🙃')
 
 
-@plugin.search('🖕|[🏻🏼🏽🏾🏿]')
+@plugin.search('🖕')
 def fuckyouback(bot, trigger):
     bot.say(f'Fuck you, {trigger.nick}!')
 
@@ -635,7 +635,7 @@ def breadchan(bot, trigger):
     bot.say(f'{DOMAIN}misc/🍞.png')
 
 
-@plugin.search('🎅|[🏻🏼🏽🏾🏿]')
+@plugin.search('🎅')
 def santa(bot, trigger):
     bot.say(f'{DOMAIN}misc/🎅.png')
 
