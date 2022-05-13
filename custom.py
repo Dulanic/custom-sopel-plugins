@@ -4,406 +4,332 @@ License: The Unlicense (public domain)
 """
 from os import listdir
 from secrets import choice as choose
-from sopel import plugin
+from sopel import plugin, tools
 from sopel.formatting import bold, italic, monospace, plain
 
 
-DOMAIN = "https://p.actionsack.com/"
-PATH = "/mnt/media/websites/p.actionsack.com/"
+DOMAIN = 'https://p.actionsack.com/'
+PATH = '/mnt/media/websites/p.actionsack.com/'
 
 
-@plugin.search("!nod")
-@plugin.command("nod")
+@plugin.command('nod')
+@plugin.search('!nod')
 def nod(bot, trigger):
-    """Nod.
-    Can also be triggered with '!nod' anywhere in a message."""
-    bot.say(f"{DOMAIN}trek/nod.webp")
+    """Nod. Can also be triggered with '!nod' anywhere."""
+    bot.say(f'{DOMAIN}trek/nod.webp')
 
 
-@plugin.search("!spok")
-@plugin.command("spok")
+@plugin.command('spok')
+@plugin.search('!spok')
 def spok(bot, trigger):
     """Summon SPOK into chat.
-    Can also be triggered with '!spok' anywhere in a message."""
-    bot.say(f"{DOMAIN}trek/spok.webp")
+    Can also be triggered with '!spok' anywhere."""
+    bot.say(f'{DOMAIN}trek/spok.webp')
 
 
-@plugin.search("!cube")
-@plugin.command("cube")
+@plugin.command('cube')
+@plugin.search('!cube')
 def trek_cube(bot, trigger):
-    """Can also be triggered with '!cube' anywhere in a message."""
-    bot.say(f"{DOMAIN}trek/cube.webp")
+    """Can also be triggered with '!cube' anywhere."""
+    bot.say(f'{DOMAIN}trek/cube.webp')
 
 
-@plugin.rule(r"^Hello(\?|!)$")
-def hi(bot, trigger):
-    bot.say(f"Hello, {trigger.nick}!")
+
+@plugin.rule(r'^(Nice|This is The Way|It is known)\.(| )$')
+def echo_lite(bot, trigger):
+    bot.say(f'{trigger.group(1)}.')
 
 
-@plugin.rule(r"^(Nice\.)(\s$|$)")
-def nice(bot, trigger):
-    bot.say(trigger.group(1))
-
-
-@plugin.rule(r"^(This\sis\sThe\sWay\.)($|\s$)")
-def theway(bot, trigger):
-    bot.say(trigger.group(1))
-
-
-@plugin.rule(r"^(It\sis\sknown\.)(\s$|$)")
-def itisknown(bot, trigger):
-    bot.say(trigger.group(1))
-
-
-@plugin.rule("^yeah!$")
+@plugin.rule('^yeah!$')
 def yeah(bot, trigger):
-    bot.say(f"{DOMAIN}misc/yeah!.webp")
+    bot.say(f'{DOMAIN}misc/yeah!.webp')
 
 
-@plugin.rule("^retard.*")
+@plugin.rule('^retard.*')
 def retarded(bot, trigger):
-    bot.say(f"{DOMAIN}retard/{choose(listdir(f'{PATH}retard'))}")
+    bot.say(choose([f'{DOMAIN}retard/{pic}' for pic in listdir(f'{PATH}retard')]))
 
 
-@plugin.search("rekt")
+@plugin.search('rekt')
 def rekt(bot, trigger):
-    rekts = ['https://w.wiki/n9f']
-    for pic in listdir(f'{PATH}rekt'):
-        rekts.append(f'{DOMAIN}rekt/{pic}')
+    rekts = [f'{DOMAIN}rekt/{pic}' for pic in listdir(f'{PATH}rekt')]
+    rekts.append('https://w.wiki/n9f')
     bot.say(choose(rekts))
 
 
-@plugin.rule("^420.*")
+@plugin.rule('^420.*')
 def fourtwenty(bot, trigger):
-    bot.say(f"{DOMAIN}420/{choose(listdir(f'{PATH}420'))}")
+    bot.say(choose([f'{DOMAIN}420/{pic}' for pic in listdir(f'{PATH}420')]))
 
 
-@plugin.search(":retardeyes:")
+@plugin.search(':retardeyes:')
 def retardeyes(bot, trigger):
-    bot.say(f"{DOMAIN}emoji/retardeyes.webp")
+    bot.say(f'{DOMAIN}emoji/retardeyes.webp')
 
 
-@plugin.search(":wesmart:")
+@plugin.search(':wesmart:')
 def wesmart(bot, trigger):
-    wesmarts = [
-        f"{DOMAIN}emoji/wesmart.webp",
-        f"{DOMAIN}pepe/wesmart.webp"
-    ]
+    wesmarts = [f'{DOMAIN}emoji/wesmart.webp', f'{DOMAIN}pepe/wesmart.webp']
     bot.say(choose(wesmarts))
 
 
-@plugin.rule("^thx.*")
+@plugin.rule('^thx.*')
 def thx(bot, trigger):
-    bot.say(f"{DOMAIN}thx/thx.png")
+    bot.say(f'{DOMAIN}thx/thx.png')
 
 
-@plugin.rule(r"^(thanks|thank\syou).*")
+@plugin.rule('^thank(s| you).*')
 def thanks(bot, trigger):
-    bot.say(f"{DOMAIN}thx/{choose(listdir(f'{PATH}thx'))}")
+    bot.say(choose([f'{DOMAIN}thx/{pic}' for pic in listdir(f'{PATH}thx')]))
 
 
-@plugin.rule("^😢$")
-@plugin.command("cry")
+@plugin.action_command('cries')
+@plugin.command('cry')
+@plugin.rule('^😢$')
 def crying(bot, trigger):
     """Bot will reply with a crying GIF or emoticon.
     Can also be summoned by sending a message that is only the 😢 emoji."""
-    cries = ['ಥ_ಥ', '＞︿＜', '＞﹏＜', 'X﹏X', 'T_T']
-    for pic in listdir(f'{PATH}QQ'):
-        cries.append(f'{DOMAIN}QQ/{pic}')
+    cries = [f'{DOMAIN}QQ/{pic}' for pic in listdir(f'{PATH}QQ')]
+    cries.extend(['ಥ_ಥ', '＞︿＜', '＞﹏＜', 'X﹏X', 'T_T'])
     bot.say(choose(cries))
 
 
-@plugin.search("!pat(?!ch)")
-@plugin.command("pat")
+@plugin.action_command('pats')
+@plugin.command('pat')
+@plugin.require_chanmsg
 def pat(bot, trigger):
-    bot.say(f"{DOMAIN}pat/{choose(listdir(f'{PATH}pat'))}")
+    target = plain(trigger.group(3) or '')
+    if not target:
+        return bot.reply('Who needs pats?!')
+    target = tools.Identifier(target)
+    if target not in bot.channels[trigger.sender].users:
+        return bot.action(
+            f"wants to pat {target}, but doesn't see them around :(")
+    if trigger.group(3) == bot.nick:
+        return bot.action('blushes')
+    bot.action(f"pats {target} – {DOMAIN}pat/{choose(listdir(f'{PATH}pat'))}")
 
 
-@plugin.search("cry me a river")
+@plugin.search('cry me a river')
 def cryriver(bot, trigger):
-    bot.say(f"{DOMAIN}QQ/QQ007.webp")
+    bot.say(f'{DOMAIN}QQ/QQ007.webp')
 
 
-@plugin.search("!bge")
-@plugin.commands("bge")
+@plugin.command('bge')
+@plugin.search('!bge')
 def bge(bot, trigger):
-    """Can also be triggered with '!bge' anywhere in a message."""
-    bot.say("https://ott.actionsack.com/room/ASAK")
+    """Can also be triggered with '!bge' anywhere."""
+    bot.say('https://ott.actionsack.com/room/ASAK')
 
 
-@plugin.search("📖")
+@plugin.search('📖')
 def book(bot, trigger):
-    bot.say(f"{DOMAIN}mike/📖/{choose(listdir(f'{PATH}mike/📖'))}")
+    bot.say(choose([f'{DOMAIN}mike/📖/{pic}' for pic in listdir(f'{PATH}mike/📖')]))
 
 
-@plugin.rule("^8D$")
+@plugin.rule('^8D$')
 def greg(bot, trigger):
-    bot.say("Greg was never in IRC...")
+    bot.say('Greg was never in IRC...')
 
 
-@plugin.rule(r"\bgrimm\b")
-def grim(bot, trigger):
-    bot.say("Probably still showering with his sister to this day...")
+@plugin.rule(r'\bgrimm\b')
+def grimm(bot, trigger):
+    bot.say('Probably still showering with his sister to this day...')
 
 
-@plugin.rule("^FOAD.*")
+@plugin.rule('^FOAD.*')
 def foad(bot, trigger):
-    bot.say(f"{DOMAIN}misc/foad.png")
+    bot.say(f'{DOMAIN}misc/foad.png')
 
 
-@plugin.search("adapters")
+@plugin.search('adapters')
 def adapters(bot, trigger):
-    bot.say(f"{DOMAIN}adapters/{choose(listdir(f'{PATH}adapters'))}")
+    bot.say(choose([f'{DOMAIN}adapters/{pic}' for pic in listdir(f'{PATH}adapters')]))
 
 
-@plugin.search(r"accident\b")
+@plugin.search(r'\baccident\b')
 def accident(bot, trigger):
-    bot.say(f"{DOMAIN}misc/accident.webp")
+    bot.say(f'{DOMAIN}misc/accident.webp')
 
 
-@plugin.search("14nm")
+@plugin.search('14nm')
 def fourteennm(bot, trigger):
-    bot.say(f"{DOMAIN}misc/14nm+++++.webp")
+    bot.say(f'{DOMAIN}misc/14nm+++++.webp')
 
 
-@plugin.search("bait")
+@plugin.search('bait')
 def bait(bot, trigger):
-    bot.say(f"{DOMAIN}bait/{choose(listdir(f'{PATH}bait'))}")
+    bot.say(choose([f'{DOMAIN}bait/{pic}' for pic in listdir(f'{PATH}bait')]))
 
 
-@plugin.search("backhand")
+@plugin.search('backhand')
 def backhand(bot, trigger):
-    bot.say(f"{DOMAIN}misc/backhand.mp4")
+    bot.say(f'{DOMAIN}misc/backhand.mp4')
 
 
-@plugin.rule("^😠$")
+@plugin.rule('^😠$')
 def angryeyes(bot, trigger):
-    bot.say(f"{DOMAIN}misc/angryeyes.webp")
+    bot.say(f'{DOMAIN}misc/angryeyes.webp')
 
 
-@plugin.search(r"\balot\b")
+@plugin.search(r'\balot\b')
 def alot(bot, trigger):
-    bot.say(f"{DOMAIN}alot/")
+    bot.say(f'{DOMAIN}alot/')
 
 
-@plugin.search("♿")
+@plugin.search('♿')
 def handicap(bot, trigger):
-    bot.say(f"{DOMAIN}♿/♿.mp4")
+    bot.say(f'{DOMAIN}♿/♿.mp4')
 
 
-@plugin.search("⤵️")
+@plugin.search('⤵️')
 def down(bot, trigger):
-    bot.say(f"{DOMAIN}mike/down.gif")
+    bot.say(f'{DOMAIN}mike/down.gif')
 
 
-@plugin.rule(r"^\.\.\.$")
+@plugin.rule(r'^\.\.\.$')
 def dotdotdot(bot, trigger):
-    bot.say("...")
+    bot.say('...')
 
 
-@plugin.search("deez nut(s|z)")
-@plugin.command("dz")
+@plugin.command('d(n|z)')
+@plugin.search('deez nut(s|z)')
 def deeznutz(bot, trigger):
-    """Can also be triggered with "deez nutz" or "deez nuts" anywhere in a message."""
-    deez = ['DEEZ NUTZ!']
-    for pic in listdir(f'{PATH}nutz'):
-        deez.append(f'{DOMAIN}nutz/{pic}')
+    """Can also be triggered with 'deez nutz' or 'deez nuts' anywhere."""
+    deez = [f'{DOMAIN}nutz/{pic}' for pic in listdir(f'{PATH}nutz')]
+    deez.append('DEEZ NUTZ!')
     bot.say(choose(deez))
 
 
-@plugin.command("lenny")
+@plugin.command('lenny')
 def lenny(bot, trigger):
-    bot.say("( ͡° ͜ʖ ͡°)")
+    bot.say('( ͡° ͜ʖ ͡°)')
 
 
 @plugin.command("rlenny")
 def rlenny(bot, trigger):
     """Sends a random ( ͡° ͜ʖ ͡°) variation...or a GIF/MP4!"""
-    rlenny = [
+    lennys = [f'{DOMAIN}lenny/{pic}' for pic in listdir(f'{PATH}lenny')]
+    lennys.extend([
         '( ͡° ͜ʖ ͡°)', '(☭ ͜ʖ ☭)', '( ° ͜ʖ °)', '(⟃ ͜ʖ ⟄) ', '( ‾ ʖ̫ ‾)', '( ͡° ʖ̯ ͡°)',
-        'ʕ ͡° ʖ̯ ͡°ʔ', '( ͡° ل͜ ͡°)', '( ͡o ͜ʖ ͡o)', '( ͡◉ ͜ʖ ͡◉)', '( ͡☉ ͜ʖ ͡☉)', 'ʕ ͡° ͜ʖ ͡°ʔ',
-        '( ͡ᵔ ͜ʖ ͡ᵔ )', '¯\_( ͡° ͜ʖ ͡°)_/¯', '(͡ ͡° ͜ つ ͡͡°)'
-    ]
-    for pic in listdir(f'{PATH}lenny'):
-        rlenny.append(f'{DOMAIN}lenny/{pic}')
-    bot.say(choose(rlenny))
+        'ʕ ͡° ʖ̯ ͡°ʔ', '( ͡° ل͜ ͡°)', '( ͡o ͜ʖ ͡o)', '( ͡◉ ͜ʖ ͡◉)', '( ͡☉ ͜ʖ ͡☉)',
+        'ʕ ͡° ͜ʖ ͡°ʔ', '( ͡ᵔ ͜ʖ ͡ᵔ )', '¯\_( ͡° ͜ʖ ͡°)_/¯', '(͡ ͡° ͜ つ ͡͡°)'])
+    bot.say(choose(lennys))
 
 
-@plugin.command("tableflip", "tflip")
+@plugin.command('tableflip', 'tflip')
 def tableflip(bot, trigger):
-    bot.say("(╯°□°）╯︵ ┻━┻")
+    bot.say('(╯°□°）╯︵ ┻━┻')
 
 
-@plugin.search(r"\(╯°□°）╯︵ ┻━┻")
+@plugin.search(r'\(╯°□°）╯︵ ┻━┻')
 def unflip(bot, trigger):
-    bot.say(f"┬─┬﻿ ノ( ゜-゜ノ) — Please respect tables, {trigger.nick}.")
+    bot.say(f'┬─┬﻿ ノ( ゜-゜ノ) — Please respect tables, {trigger.nick}.')
 
 
-@plugin.rule("^pranked!$")
+@plugin.command('prank')
+@plugin.search('pranked!')
 def prank(bot, trigger):
-    bot.say(f"{DOMAIN}prank/{choose(listdir(f'{PATH}prank'))}")
+    """Can also be triggered by yelling 'pranked!'"""
+    bot.say(choose([f'{DOMAIN}prank/{pic}' for pic in listdir(f'{PATH}prank')]))
 
 
-@plugin.rule(r"^\?{3,}$")
+@plugin.rule(r'^\?{3,}$')
 def que(bot, trigger):
     bot.say(f"{DOMAIN}misc/¿¿¿.webp")
 
 
-@plugin.rule(r"^\\o/$")
+@plugin.search(r'\\o/')
 def handsup(bot, trigger):
-    bot.say("\o/")
+    bot.say('\o/')
 
 
-@plugin.command("shrug")
-@plugin.rule(r"^¯\\\_\(ツ\)_\/¯(\s$|$)")
+@plugin.command('shrug')
+@plugin.search(r'¯\\\_\(ツ\)_\/¯')
 def shrug(bot, trigger):
-    bot.say("¯\_(ツ)_/¯")
+    bot.say('¯\_(ツ)_/¯')
 
 
-@plugin.search("🦏")
-def rhino(bot, trigger):
-    bot.say(f"{DOMAIN}🦏/🦏.webp")
+@plugin.search('([🦏🦄])')
+def single_emoji_cmds(bot, trigger):
+    bot.say(f'{DOMAIN}{trigger.group(1)}/{trigger.group(1)}.webp')
 
 
-@plugin.search("🧀")
+@plugin.search('🧀')
 def cheese(bot, trigger):
-    bot.say(f"{DOMAIN}🧀/🧀.mp4")
+    bot.say(f'{DOMAIN}🧀/🧀.mp4')
 
 
-@plugin.search("🦄")
-def unicorn(bot, trigger):
-    bot.say(f"{DOMAIN}🦄/🦄.webp")
-
-
-@plugin.rule("^🙃$")
+@plugin.rule('^🙃$')
 def upsidedown(bot, trigger):
-    bot.say("🙃")
+    bot.say('🙃')
 
 
-@plugin.rule("^🖕(|🏻|🏼|🏽|🏾|🏿)$")
+@plugin.search('🖕|[🏻🏼🏽🏾🏿]')
 def fuckyouback(bot, trigger):
-    bot.say(f"Fuck you, {trigger.nick}!")
+    bot.say(f'Fuck you, {trigger.nick}!')
 
 
-@plugin.rule("^👏$")
-def clap(bot, trigger):
-    bot.say("👏🏻👏🏼👏🏽👏🏾👏🏿")
+@plugin.rule('^([👏👍👎👌👋🖖💪🤞])$')
+def multicolor_hands(bot, trigger):
+    tones = ['🏻','🏼','🏽','🏾','🏿']
+    bot.say(f'{trigger.group(1)}{trigger.group(1).join(tones)}')
 
 
-@plugin.rule("^👍$")
-def thumbsup(bot, trigger):
-    bot.say("👍🏻👍🏼👍🏽👍🏾👍🏿")
-
-
-@plugin.rule("^👎$")
-def thumbsdown(bot, trigger):
-    bot.say("👎🏻👎🏼👎🏽👎🏾👎🏿")
-
-
-@plugin.rule("^👌$")
-def okhand(bot, trigger):
-    bot.say("👌🏻👌🏼👌🏽👌🏾👌🏿")
-
-
-@plugin.rule("^👋$")
-def wave(bot, trigger):
-    bot.say("👋🏻👋🏼👋🏽👋🏾👋🏿")
-
-
-@plugin.rule("^🖖$")
-def vulcansalute(bot, trigger):
-    bot.say("🖖🏻🖖🏼🖖🏽🖖🏾🖖🏿")
-
-
-@plugin.rule("^💪$")
-def muscle(bot, trigger):
-    bot.say("💪🏻💪🏼💪🏽💪🏾💪🏿")
-
-
-@plugin.rule("^🤞$")
-def crossed(bot, trigger):
-    bot.say("🤞🏻🤞🏼🤞🏽🤞🏾🤞🏿")
-
-
-@plugin.search("(🌎|🌍|🌏)")
+@plugin.search('[🌎🌍🌏]')
 def earthchan(bot, trigger):
-    bot.say(f"{DOMAIN}🌎/water.png")
+    bot.say(f'{DOMAIN}🌎/water.png')
 
 
-@plugin.rule("^🐉$")
-def dragon(bot, trigger):
-    bot.say("https://p.xnaas.info/dragon.gif")
-
-
-@plugin.rule("^🏈$")
+@plugin.rule('^🏈$')
 def football(bot, trigger):
-    football = [
-        "D'Marcus Williums",
-        "T.J. Juckson",
-        "T'varisuness King",
-        "Jackmerius Tacktheritrix",
-        "D'Squarius Green, Jr.",
-        "Dan Smith",
-        "The Player Formerly Known as Mousecop",
-        "Ibrahim Moizoos",
-        "D'Isiah T. Billings-Clyde",
-        "D'Jasper Probincrux III",
-        "Leoz Maxwell Jilliumz",
-        "Javaris Jamar Javarison-Lamar",
-        "Davoin Shower-Handel",
-        "Hingle McCringleberry",
-        "L'Carpetron Dookmarriot",
-        "J'Dinkalage Morgoone",
-        "Xmus Jaxon Flaxon-Waxon",
-        "Saggitariutt Jefferspin",
-        "D'Glester Hardunkichud",
-        "Swirvithan L'Goodling-Splatt",
-        "Quatro Quatro",
-        "Ozamataz Buckshank",
-        "Beezer Twelve Washingbeard",
-        "Shakiraquan T.G.I.F. Carter",
-        "X-Wing @Aliciousness",
-        "Sequester Grundelplith M.D.",
-        "Scoish Velociraptor Maloish",
-        "T.J. A.J. R.J. Backslashinfourth V",
-        "Eeeee Eeeeeeeee",
-        "Donkey Teeth",
-        "Torque [Construction Noise] Lewith",
-        "Tyroil Smoochie-Wallace"
-    ]
-    bot.say(choose(football))
+    players = ["D'Marcus Williums", "T.J. Juckson", "T'varisuness King",
+        "Jackmerius Tacktheritrix", "D'Squarius Green, Jr.", "Dan Smith",
+        "The Player Formerly Known as Mousecop", "Ibrahim Moizoos",
+        "D'Isiah T. Billings-Clyde", "D'Jasper Probincrux III",
+        "Leoz Maxwell Jilliumz", "Javaris Jamar Javarison-Lamar",
+        "Davoin Shower-Handel", "Hingle McCringleberry",
+        "L'Carpetron Dookmarriot", "J'Dinkalage Morgoone",
+        "Xmus Jaxon Flaxon-Waxon", "Saggitariutt Jefferspin",
+        "D'Glester Hardunkichud", "Swirvithan L'Goodling-Splatt",
+        "Quatro Quatro", "Ozamataz Buckshank", "Beezer Twelve Washingbeard",
+        "Shakiraquan T.G.I.F. Carter", "X-Wing @Aliciousness",
+        "Sequester Grundelplith M.D.", "Scoish Velociraptor Maloish",
+        "T.J. A.J. R.J. Backslashinfourth V", "Eeeee Eeeeeeeee", "Donkey Teeth",
+        "Torque [Construction Noise] Lewith", "Tyroil Smoochie-Wallace"]
+    bot.say(choose(players))
 
 
-@plugin.search(r"🍍(|\s)🍕")
+@plugin.search('🍍(| )🍕')
 def sin(bot, trigger):
-    bot.say("This is a sin.")
+    bot.say('This is a sin.')
 
 
-@plugin.search("xfiles")
 @plugin.rate(server=5400)
+@plugin.search('xfiles')
 def xfiles(bot, trigger):
-    bot.say("Did you know that the X-Files is going to have 6 new episodes this summer on FOX, Aegisfate?")
+    bot.say('Did you know that the X-Files is going to have 6 new episodes this summer on FOX, Aegisfate?')
 
 
-@plugin.search("triggered")
+@plugin.search('triggered')
 def triggered(bot, trigger):
-    bot.say(f"{DOMAIN}triggered/{choose(listdir(f'{PATH}triggered'))}")
+    bot.say(choose([f'{DOMAIN}triggered/{pic}' for pic in listdir(f'{PATH}triggered')]))
 
 
-@plugin.search("to be fair(?!ly)")
+@plugin.search('to be fair(?!ly)')
 def tobefair(bot, trigger):
-    bot.say(f"{DOMAIN}v/tobefair.webm")
+    bot.say(f'{DOMAIN}v/tobefair.webm')
 
 
-@plugin.search("stop being poor")
+@plugin.search('stop being poor')
 def stopbeingpoor(bot, trigger):
-    bot.say(f"{DOMAIN}misc/stopbeingpoor.jpg")
+    bot.say(f'{DOMAIN}misc/stopbeingpoor.jpg')
 
 
-@plugin.search("!tb")
-@plugin.command("tb")
+@plugin.command('tb')
+@plugin.search('!tb')
 def tb(bot, trigger):
-    """Spout technobabble. — Can also be triggered with '!tb' anywhere in a message."""
+    """Spout technobabble. — Can also be triggered with '!tb' anywhere."""
     tb = [
         "When you account for the nm offset variable, the difference between 32-bit and 64-bit CPUs really only matters when calculating differential sub-routine pipeline algorithms.",
         "high 32-bit TOS encrypted voIP",
@@ -444,527 +370,407 @@ def tb(bot, trigger):
         "Don’t forget to move your mouse counter clockwise to reverse the logging process.",
         "But since their cryptographic protocols use poly-phasic entagled waveforms, cracking a code set would take half a century.",
         "If I can just overclock the UNIX django, I can BASIC the DDOS root. Damn. No Dice. But wait...if I disencrypt their kilobytes with a backdoor handshake then...jackpot!",
-        f"{DOMAIN}v/Rockwell_Retro_Encabulator.mp4"
+        f'{DOMAIN}v/Rockwell_Retro_Encabulator.mp4'
     ]
     bot.say(choose(tb), max_messages=2)
 
 
-@plugin.command("jolly")
+@plugin.command('jolly')
 @plugin.rate(server=21600)
 def jolly(bot, trigger):
-    """Nothing tops The Jolly Rancher story.
-    Server-wide rate-limit of once every 6 hours."""
-    bot.say("Nothing tops the Jolly Rancher story.")
-    bot.say("Steve and his girlfriend Samantha went off to college in August. She went to Florida State, he went to Penn. So, she decides to fly to PA to visit him. He was really happy to see her so he decided to give her some oral action.")
-    bot.say("He had done this numerous times before and he always enjoyed doing it...but for some reason, this time, she smelled really horrible, and she tasted even worse. He didn't want to offend her though because he hadn't seen her in months...so he put a Jolly Rancher in his mouth to cover it up, even though it didn't do much to help.")
-    bot.say("In the course of eating her out, he accidentally pushed the candy inside of her... and stuck a finger in to grab it out. He took it out, and put it back into his mouth and bit it. Only...it wasn't the Jolly Rancher.")
-    bot.say("It was a nodule of gonorrhea.")
-    bot.say("As in, the blister-like structure that gonorrhea makes filled with diseased pus was the size of a fucking Jolly Rancher and the poor guy BIT it. I guess it was really dark in the room. He freaked out and started vomiting all over the place when it exploded in his mouth...")
-    bot.say("He demanded to know what was going on, turns out she had cheated on him at a club like, the first week of college, and fucked some random guy and the stupid bitch had no clue what was wrong with her. She noticed a strange smell though.")
-    bot.say("So now, Steve is freaking out that he now has gonorrhea of the mouth and God knows what else.")
+    """Nothing tops The Jolly Rancher story. Server-wide rate-limit of once every 6 hours."""
+    msg = 'Nothing tops the Jolly Rancher story.\n'
+    msg += 'Steve and his girlfriend Samantha went off to college in August. '
+    msg += 'She went to Florida State, he went to Penn. So, she decides to fly '
+    msg += 'to PA to visit him. He was really happy to see her so he decided '
+    msg += 'to give her some oral action.\nHe had done this numerous times '
+    msg += 'before and he always enjoyed doing it...but for some reason, this '
+    msg += 'time, she smelled really horrible, and she tasted even worse. He '
+    msg += 'didn\'t want to offend her though because he hadn\'t seen her in '
+    msg += 'months...so he put a Jolly Rancher in his mouth to cover it up, '
+    msg += 'even though it didn\'t do much to help.\nIn the course of eating '
+    msg += 'her out, he accidentally pushed the candy inside of her...and '
+    msg += 'stuck a finger in to grab it out. He took it out, and put it back '
+    msg += 'into his mouth and bit it. Only...it wasn\'t the Jolly Rancher.\n'
+    msg += 'It was a nodule of gonorrhea.\nAs in, the blister-like structure '
+    msg += 'that gonorrhea makes filled with diseased pus was the size of a '
+    msg += 'fucking Jolly Rancher and the poor guy BIT it. I guess it was '
+    msg += 'really dark in the room. He freaked out and started vomiting all '
+    msg += 'over the place when it exploded in his mouth...\nHe demanded to '
+    msg += 'know what was going on, turns out she had cheated on him at a club '
+    msg += 'like, the first week of college, and fucked some random guy and '
+    msg += 'the stupid bitch had no clue what was wrong with her. She noticed '
+    msg += 'a strange smell though.\nSo now, Steve is freaking out that he now '
+    msg += 'has gonorrhea of the mouth and God knows what else.'
+    for line in msg.splitlines():
+        bot.say(line)
 
 
-@plugin.command("hg")
+@plugin.command('hg')
 def hg(bot, trigger):
     """I've got the highground now!"""
-    bot.say(f"{DOMAIN}misc/highground.jpg")
+    bot.say(f'{DOMAIN}misc/highground.jpg')
 
 
-@plugin.search("!fgr")
-@plugin.command("fgr")
+@plugin.command('fgr')
+@plugin.search('(?<!!)!fgr')
 def fgr(bot, trigger):
     """Family Guy reference!!!!!
-    Can also be triggered with '!fgr' anywhere in a message."""
-    fgr = [
-        f"{DOMAIN}fgr/gay.jpg",
-        f"{DOMAIN}fgr/gears.jpg",
-        f"{DOMAIN}fgr/hang.gif",
-        f"{DOMAIN}fgr/stewie-gun.jpg"
-    ]
+    Can also be triggered with '!fgr' anywhere."""
+    fgr = [f'{DOMAIN}fgr/gay.jpg', f'{DOMAIN}fgr/gears.jpg',
+        f'{DOMAIN}fgr/hang.gif', f'{DOMAIN}fgr/stewie-gun.jpg']
     bot.say(choose(fgr))
 
 
-@plugin.search("!adr")
-@plugin.command("adr")
+@plugin.command('adr')
+@plugin.search('!adr')
 def adr(bot, trigger):
     """American Dad reference!
-    Can also be triggered with '!adr' anywhere in a message."""
-    bot.say(f"{DOMAIN}fgr/ADR.jpg")
+    Can also be triggered with '!adr' anywhere."""
+    bot.say(f'{DOMAIN}fgr/ADR.jpg')
 
 
-@plugin.search("!csr")
-@plugin.command("csr")
+@plugin.command('csr')
+@plugin.search('!csr')
 def csr(bot, trigger):
     """Cleveland Show reference!
-    Can also be triggered with '!csr' anywhere in a message."""
-    bot.say(f"{DOMAIN}fgr/CSR.jpg")
+    Can also be triggered with '!csr' anywhere."""
+    bot.say(f'{DOMAIN}fgr/CSR.jpg')
 
 
 # === NSFW Commands ===
-@plugin.search("!!banebread")
-def banebread(bot, trigger):
-    bot.say(f"{DOMAIN}nsfw/banebread.png")
+@plugin.search('!!(banebread|bread|cockhunter|datascii|dickaroo|fgr|ghostbabies|gimp|jordan|nazi|twerk)')
+def nsfw_cmds(bot, trigger):
+    if trigger.sender != '#nsfw':
+        return bot.reply('You can only trigger this in #nsfw')
+    cmd = trigger.group(1).lower()
+    if cmd in {'jordan', 'twerk'}:
+        return bot.say(choose([f'{DOMAIN}{cmd}/{pic}' for pic in listdir(f'{PATH}{cmd}')]))
+    if cmd == 'bread':
+        cmd = '🍞'
+    if cmd == 'ponies':
+        return bot.say(f'{DOMAIN}nsfw/ponies.mp4')
+    bot.say(f'{DOMAIN}nsfw/{cmd}.webp')
 
 
-@plugin.search("!!bread")
-def bread(bot, trigger):
-    bot.say(f"{DOMAIN}nsfw/🍞.png")
-
-
-@plugin.search("!!datascii")
-def datascii(bot, trigger):
-    bot.say(f"{DOMAIN}nsfw/datascii.gif")
-
-
-@plugin.search("!!dickaroo")
-def dickaroo(bot, trigger):
-    bot.say(f"{DOMAIN}nsfw/dickaroo.gif")
-
-
-@plugin.search("!!fgr")
-def fgrnsfw(bot, trigger):
-    bot.say(f"{DOMAIN}nsfw/chris-in-brian.png")
-
-
-@plugin.search("!!ghostbabies")
-def ghostbabies(bot, trigger):
-    bot.say(f"{DOMAIN}nsfw/ghostbabies.gif")
-
-
-@plugin.search("!!gimp")
-def gimp(bot, trigger):
-    bot.say(f"{DOMAIN}nsfw/gimp.gif")
-
-
-@plugin.search("!!nazi")
-def nazi(bot, trigger):
-    bot.say(f"{DOMAIN}nsfw/nazi.gif")
-
-
-@plugin.search("!!ponies")
-def ponies(bot, trigger):
-    bot.say(f"{DOMAIN}nsfw/ponies.mp4")
-
-
-@plugin.search("!!jordan")
-def jordan(bot, trigger):
-    bot.say(f"{DOMAIN}jordan/{choose(listdir(f'{PATH}jordan'))}")
-
-
-@plugin.search("!!cockhunter")
-def cock_hunter(bot, trigger):
-    bot.say(f"{DOMAIN}nsfw/cock_hunter.webp")
-
-
-@plugin.search("!!twerk")
-def twerk(bot, trigger):
-    bot.say(f"{DOMAIN}twerk/{choose(listdir(f'{PATH}twerk'))}")
+@plugin.rule('^🐉$')
+def dragon(bot, trigger):
+    if trigger.sender == '#nsfw':
+        bot.say(f'{DOMAIN}nsfw/dragon.webp')
 # === NSFW Commands ===
 
 
-@plugin.rule("^!b8$")
+@plugin.rule('^!b8$')
 def beight(bot, trigger):
-    bot.say("steam://install/567090")
+    bot.say('steam://install/567090')
 
 
-@plugin.rule(r"^Tasian\sloves\spickles\.($|\s)")
+@plugin.rule('Tasian loves pickles')
 def tasianpickles(bot, trigger):
-    bot.say(f"{DOMAIN}tasian/pickles.webp")
+    bot.say(f'{DOMAIN}tasian/pickles.webp')
 
 
-@plugin.search("!asg")
-@plugin.command("asg")
-def allsystemsgo(bot, trigger):
-    """Can also be triggered with "!asg" anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/asg.webp")
-
-
-@plugin.search("murica")
-@plugin.command("america")
+@plugin.command('america')
+@plugin.search('murica')
 def murica(bot, trigger):
-    """Summons Freedom™ into chat.
-    Can also be triggered with 'murica' anywhere in a message."""
-    bot.say(f"{DOMAIN}murica/{choose(listdir(f'{PATH}murica'))}")
+    """Summons Freedom™ into chat. Can also be triggered with 'murica' anywhere."""
+    bot.say(choose([f'{DOMAIN}murica/{pic}' for pic in listdir(f'{PATH}murica')]))
 
 
-@plugin.search("!knock")
-@plugin.command("knock")
+@plugin.command('knock')
+@plugin.search('!knock')
 def knock(bot, trigger):
-    """RP: America knocks on your door...
-    Can also be triggered with '!knock' anywhere in a message."""
-    bot.say(f"{DOMAIN}murica/knockknock.webp")
+    """RP: America knocks on your door...Can also be triggered with '!knock' anywhere."""
+    bot.say(f'{DOMAIN}murica/knockknock.webp')
 
 
-@plugin.command("pledge")
+@plugin.command('pledge')
 @plugin.rate(channel=5400)
 def pledge(bot, trigger):
     """Say the United States Pledge of Allegiance.
     Channel-wide rate-limit of 90 minutes."""
-    bot.say("I pledge allegiance to the flag of the United States of America. Thank you very very much for letting us little kids live here. It really really was nice of you. You didn't have to do it. And it's really not creepy to have little little kids mindlessly recite this anthem every day and pledge their life to a government before theyre old enough to really think about what they're saying.")
-    bot.say("This is not a form of brainwashing. This is not a form of brainwashing. This is not a form of brainwashing.")
-    bot.say("This is really the greatest country in the whole world. All the other countries suck. And if this country ever goes to go to war, as its often wont to do, I promise to help go and kill all the other country's kids.")
-    bot.say("God bless Johnson & Johnson. God bless GE. God bless Citigroup.")
+    bot.say('I pledge allegiance to the flag of the United States of America. Thank you very very much for letting us little kids live here. It really really was nice of you. You didn\'t have to do it. And it\'s really not creepy to have little little kids mindlessly recite this anthem every day and pledge their life to a government before theyre old enough to really think about what they\'re saying.')
+    bot.say('This is not a form of brainwashing. This is not a form of brainwashing. This is not a form of brainwashing.')
+    bot.say('This is really the greatest country in the whole world. All the other countries suck. And if this country ever goes to go to war, as its often wont to do, I promise to help go and kill all the other country\'s kids.')
+    bot.say('God bless Johnson & Johnson. God bless GE. God bless Citigroup.')
 
 
-@plugin.search("mushkin")
+@plugin.search('mushkin')
 @plugin.rate(server=5400)
 def mushkin(bot, trigger):
-    bot.say("Hey xnaas and feek, did you know that Mushkin announced a 4TB SSD for $500 at CES 2016 and never fuckin' delivered? How neat is that?")
+    bot.say('Hey xnaas and feek, did you know that Mushkin announced a 4TB SSD for $500 at CES 2016 and never fuckin\' delivered? How neat is that?')
 
 
-@plugin.command("mirai")
+@plugin.command('mirai')
 def mirai(bot, trigger):
     """Gone but not forgotten, noble soviet bear."""
-    bot.say(f"{DOMAIN}putin/🐻.mp4")
+    bot.say(f'{DOMAIN}putin/🐻.mp4')
 
 
-#@plugin.search("!putin")
-#@plugin.command("putin")
-#def putin(bot, trigger):
-#    """Posts a Putin meme of some sort.
-#    Can also be triggered with '!putin' anywhere in a message."""
-#    putin = [
-#        f"{DOMAIN}putin/dance.mp4",
-#        f"{DOMAIN}putin/pigeon.mp4",
-#        f"{DOMAIN}putin/ritz.gif",
-#        f"{DOMAIN}putin/🐻.mp4"
-#    ]
-#    bot.say(choose(putin))
-@plugin.search(r"\bputin\b")
+# @plugin.command("putin")
+# @plugin.search("!putin")
+# def putin(bot, trigger):
+#     """Posts a Putin meme of some sort.
+#     Can also be triggered with '!putin' anywhere."""
+#     bot.say(choose([f'{DOMAIN}putin/{pic}' for pic in listdir(f'{PATH}putin')]))
+@plugin.search(r'\bputin\b')
 def putin(bot, trigger):
     fuck_putin = [
-        "Fuck Putin. All my homies hate Putin.",
-        "Putin is a little bitch boy.",
-        f"{DOMAIN}putin/pootin.webp"
+        'Fuck Putin. All my homies hate Putin.',
+        'Putin is a little bitch boy.',
+        f'{DOMAIN}putin/pootin.webp'
     ]
     bot.say(choose(fuck_putin))
 
 
-@plugin.command("aidsclub")
-def aidsclub(bot, trigger):
-    """Welcome to the club, loser."""
-    bot.say(f"{DOMAIN}misc/aidsclub.webp")
+@plugin.search('!(aidsclub|asg|barometer|boycott|mindjack)')
+def misc_imgs(bot, trigger):
+    cmd = trigger.group(1).lower()
+    bot.say(f'{DOMAIN}misc/{cmd}.webp')
 
 
-@plugin.search("!barometer")
-@plugin.command("barometer")
-def barometer(bot, trigger):
-    """Can also be triggered with '!barometer' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/barometer.webp")
+@plugin.search('!(battletoad|beaker|bomb|broden|🥓|🍜)')
+def misc_mp4s(bot, trigger):
+    cmd = trigger.group(1).lower()
+    bot.say(f'{DOMAIN}misc/{cmd}.mp4')
 
 
-@plugin.rule(r"^Oh,\syou!$")
+@plugin.rule('^Oh, you!$')
 def ohyou(bot, trigger):
-    bot.say(f"{DOMAIN}misc/Oh,you!.jpg")
+    bot.say(f'{DOMAIN}misc/Oh,you!.jpg')
 
 
-@plugin.rule("!battletoad")
-@plugin.command("battletoad")
-def battletoad(bot, trigger):
-    """Can also be triggered with '!battletoad' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/battletoad.mp4")
-
-
-@plugin.search("!beaker")
-@plugin.command("beaker")
-def beaker(bot, trigger):
-    """Can also be triggered with '!beaker' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/beaker.mp4")
-
-
-@plugin.search("!bomb")
-@plugin.command("bomb")
-def bomb(bot, trigger):
-    """Bombs Japan again... :/
-    Can also be triggered with '!bomb' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/bomb.mp4")
-
-
-@plugin.search("!broden")
-@plugin.command("broden")
-def broden(bot, trigger):
-    """Can also be triggered with '!broden' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/broden.mp4")
-
-
-@plugin.search("mikey bikey")
+@plugin.search('mikey bikey')
 def mikeybikey(bot, trigger):
-    bot.say(f"{DOMAIN}as/mikeybikey.png")
+    bot.say(f'{DOMAIN}as/mikeybikey.png')
 
 
-@plugin.search("meal with it")
+@plugin.search('meal with it')
 def mealwithit(bot, trigger):
-    bot.say(f"{DOMAIN}deal/mealwithit.webp")
+    bot.say(f'{DOMAIN}deal/mealwithit.webp')
 
 
-@plugin.search("deal with it")
+@plugin.search('deal with it')
 def dealwithit(bot, trigger):
-    bot.say(f"{DOMAIN}deal/{choose(listdir(f'{PATH}deal'))}")
+    bot.say(choose([f'{DOMAIN}deal/{pic}' for pic in listdir(f'{PATH}deal')])) 
 
 
-@plugin.search("!mindjack")
-@plugin.command("mindjack")
-def mindjack(bot, trigger):
-    """Can also be triggered with '!mindjack' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/mindjack.png")
+@plugin.search('!(batdoge|doge(mine|)|skeledoge)')
+def doge_memes(bot, trigger):
+    cmd = trigger.group(1).lower()
+    if cmd != 'doge':
+        return bot.say(f'{DOMAIN}doge/{cmd}.webp')
+    bot.say(choose([f'{DOMAIN}doge/{pic}' for pic in listdir(f'{PATH}doge')]))
 
 
-@plugin.command("doge")
-@plugin.search("!doge")
-def doge(bot, trigger):
-    """Doge memes! (There's not very many...)"""
-    bot.say(f"{DOMAIN}doge/{choose(listdir(f'{PATH}doge'))}")
-
-
-@plugin.search("!dogemine")
-def dogemine(bot, trigger):
-    bot.say(f"{DOMAIN}doge/dogemine.webp")
-
-
-@plugin.search("!skeledoge")
-def skeledoge(bot, trigger):
-    bot.say(f"{DOMAIN}doge/skeledoge.webp")
-
-
-@plugin.search("!batdoge")
-def batdoge(bot, trigger):
-    bot.say(f"{DOMAIN}doge/batdoge.webp")
-
-
-@plugin.search("slow down")
+@plugin.search('slow down')
 def slowdown(bot, trigger):
-    bot.say(f"{DOMAIN}a/slowdown.flac")
+    bot.say(f'{DOMAIN}a/slowdown.flac')
 
 
+@plugin.command('smmcb', 'smd')
 @plugin.require_admin
-@plugin.command("smmcb", "smd")
 def smmcb(bot, trigger):
-    bot.say(f"{DOMAIN}misc/smmcb.gif")
+    bot.say(f'{DOMAIN}misc/smmcb.gif')
 
 
-@plugin.rule("^(noice)$")
+@plugin.rule('^(noice)$')
 def noice(bot, trigger):
     bot.say(trigger.group(1))
 
 
-@plugin.search("sockbot")
+@plugin.search('sockbot')
 def sockbot(bot, trigger):
-    sockbots = ['Sockbot: gone, but not forgotten.',
-                'Good riddance to Discord, but RIP Sockbot. 😢']
-    for pic in listdir(f'{PATH}sockbot'):
-        sockbots.append(f'{DOMAIN}sockbot/{pic}')
+    sockbots = [f'{DOMAIN}sockbot/{pic}' for pic in listdir(f'{PATH}sockbot')]
+    sockbots.extend(['Sockbot: gone, but not forgotten.',
+                    'Good riddance to Discord, but RIP Sockbot. 😢'])
     bot.say(choose(sockbots))
 
 
-@plugin.search("!brony")
-@plugin.command("brony")
+@plugin.command('brony')
+@plugin.search('!brony')
 def brony(bot, trigger):
-    bot.say(f"{DOMAIN}mike/brony.png")
+    bot.say(f'{DOMAIN}mike/brony.png')
 
 
-@plugin.search(r"\bbanned\b")
+@plugin.search(r'\bbanned\b')
 def banned(bot, trigger):
-    bot.say(f"{DOMAIN}banned/{choose(listdir(f'{PATH}banned'))}")
+    bot.say(choose([f'{DOMAIN}banned/{pic}' for pic in listdir(f'{PATH}banned')]))
 
 
-@plugin.search("boycott")
-def boycott(bot, trigger):
-    bot.say(f"{DOMAIN}misc/boycott.webp")
-
-
-@plugin.search("censor")
+@plugin.search('censor')
 def censor(bot, trigger):
-    bot.say(f"{DOMAIN}censored/{choose(listdir(f'{PATH}censored'))}")
+    bot.say(choose([f'{DOMAIN}censored/{pic}' for pic in listdir(f'{PATH}censored')]))
 
 
-@plugin.rule("^(P|B|Ch|D|S|W)ing!$")
+@plugin.rule('^(P|B|Ch|D|S|W)ing!$')
 def pingpong(bot, trigger):
-    bot.say(f"{trigger.group(1)}ong!")
+    bot.say(f'{trigger.group(1)}ong!')
 
 
-@plugin.rule("^Marco!$")
+@plugin.rule('^Marco!$')
 def marcopolo(bot, trigger):
-    bot.say("Polo!")
+    bot.say('Polo!')
 
 
-@plugin.rule("^(W)ee!$")
+@plugin.rule('^(W)ee!$')
 def weewoo(bot, trigger):
-    bot.say(f"{trigger.group(1)}oo!")
+    bot.say(f'{trigger.group(1)}oo!')
 
 
-@plugin.search("!work")
-@plugin.command("work")
+@plugin.command('work')
+@plugin.search('!work')
 def worktoday(bot, trigger):
     """I don't really wanna do the work today..."""
-    bot.say(f"{DOMAIN}v/work.webm")
+    bot.say(f'{DOMAIN}v/work.webm')
 
 
-@plugin.search("stbyn")
+@plugin.search('stbyn')
 def stbyn(bot, trigger):
-    bot.say(f"Sucks to be you, {italic('nerd')}!")
+    bot.say(f'Sucks to be you, {italic("nerd")}!')
 
 
-@plugin.search("🥓")
-def bacon(bot, trigger):
-    bot.say(f"{DOMAIN}misc/🥓.mp4")
-
-
-@plugin.search("🍜")
-def soupbowl(bot, trigger):
-    bot.say(f"{DOMAIN}misc/🍜.mp4")
-
-
-@plugin.search("🍞")
+@plugin.search('🍞')
 def breadchan(bot, trigger):
-    bot.say(f"{DOMAIN}misc/🍞.png")
+    bot.say(f'{DOMAIN}misc/🍞.png')
 
 
-@plugin.search("🎅(|🏻|🏼|🏽|🏾|🏿)")
+@plugin.search('🎅|[🏻🏼🏽🏾🏿]')
 def santa(bot, trigger):
-    bot.say(f"{DOMAIN}misc/🎅.png")
+    bot.say(f'{DOMAIN}misc/🎅.png')
 
 
-@plugin.search("🎧")
+@plugin.search('🎧')
 def headphones(bot, trigger):
-    bot.say(f"{DOMAIN}misc/🎧.png")
+    bot.say(f'{DOMAIN}misc/🎧.png')
 
 
-@plugin.search("fuck you(?!r)")
+@plugin.search('fuck you(?!r)')
 def fuckyou(bot, trigger):
     bot.say(f"{DOMAIN}fuck/you/{choose(listdir(f'{PATH}fuck/you'))}")
 
 
-@plugin.search("(gfy(?!c)|go fuck yourself)")
+@plugin.search('(gfy(?!c)|go fuck yourself)')
 def gfy(bot, trigger):
     bot.say(f"{DOMAIN}fuck/urself/{choose(listdir(f'{PATH}fuck/urself'))}")
 
 
-@plugin.rule(r"^What\sthe\sfuck\?$")
-def wtfquestion(bot, trigger):
-    bot.say(f"{DOMAIN}wtf/wtf¿.gif")
+@plugin.rule(r'^What the fuck(\?|!)$')
+def whatthefuck(bot, trigger):
+    qoe = trigger.group(1)
+    if qoe == '!':
+        bot.say(f'{DOMAIN}wtf/wtfh3h3.mp4')
+    elif qoe == '?':
+        bot.say(f'{DOMAIN}wtf/wtf¿.gif')
 
 
-@plugin.rule(r"^What\sthe\sfuck!$")
-def wtfexclamation(bot, trigger):
-    bot.say(f"{DOMAIN}wtf/wtfh3h3.mp4")
-
-
-@plugin.rule("^Fuck!$")
+@plugin.rule('^Fuck!$')
 def fuckexclamation(bot, trigger):
-    bot.say(f"{DOMAIN}fuck/fuck!.webp")
+    bot.say(f'{DOMAIN}fuck/fuck!.webp')
 
 
-@plugin.rule(r"^Fuck\syeah!$")
+@plugin.rule(r'^Fuck\syeah!$')
 def fuckyeah(bot, trigger):
-    bot.say(f"{DOMAIN}fuck/fuckyeah!.webp")
+    bot.say(f'{DOMAIN}fuck/fuckyeah!.webp')
 
 
-@plugin.search(r"\bfuck everything\b")
+@plugin.search(r'\bfuck everything\b')
 def fuckeverything(bot, trigger):
-    bot.say(f"{DOMAIN}fuck/fuckeverything.webp")
+    bot.say(f'{DOMAIN}fuck/fuckeverything.webp')
 
 
-@plugin.search("ftge")
+@plugin.search('ftge')
 def ftge(bot, trigger):
-    ftge = [
-        f"{DOMAIN}fuck/ftge-a.webp",
-        f"{DOMAIN}fuck/ftge.webp"
-    ]
+    ftge = [f'{DOMAIN}fuck/ftge-a.webp', f'{DOMAIN}fuck/ftge.webp']
     bot.say(choose(ftge))
 
 
-@plugin.search("fooled you")
+@plugin.search('fooled you')
 def fooledyou(bot, trigger):
-    bot.say(f"{DOMAIN}misc/fooled.png")
+    bot.say(f'{DOMAIN}misc/fooled.png')
 
 
-@plugin.search("fite me")
+@plugin.search('fite me')
 def fiteme(bot, trigger):
-    bot.say(f"{DOMAIN}fite/{choose(listdir(f'{PATH}fite'))}")
+    bot.say(choose([f'{DOMAIN}fite/{pic}' for pic in listdir(f'{PATH}fite')]))
 
 
-@plugin.rule(r"^Found out I'm gay(|\.|\s)$")
 @plugin.rate(channel=21600)
-def fagexclamation(bot, trigger):
+@plugin.rule(r"^Found out I\'m gay(|(\.|\. )| )$")
+def foundoutimgay(bot, trigger):
     bot.say("You're gay. Hey poofta. You're a homo. You're a homo you faggot. Go suck a dick. Go suck a real big dick. Get those dick so far in your mouth that the dick's right there, you got 'em all the way, smashing the back of your throat, balls right there, bangin' on your chin. That's how much I want you to suck dick. Oi. This is me. Pretending to be you. Fist-fuckin' another man in the asshole. Just fist-fuckin' the god-givin' shit out of him. I bet you like that so much you'd like to get fist-fucked while you're doing it. Just getting fist-fucked while you're fist-fuckin' someone else. While you're at it chuck in another one. Just fist-fuckin' two strange men, getting your asshole fist-fucked with someone you just met on Grindr. I bet you wish these were dicks. I bet you wish these were big floppy dicks. You're in a big forest of dicks. Getting dicks all over ya. Covering yourself in cum. Loving cum. Can I suck your dick? Can I suck your dick and then kiss you? Kiss you square on the mouth and then fuck you? Scratch that. Can we make love? Can we make love in my bedroom and then maybe if we connect on more than just a physical level, I'll take you out, I'll introduce you to my mum and my dad and my little sister Jennifer, she's really cool. She's into Goosebumps at the moment. And then maybe we can all go out for dinner together. And they'll really like you because of your cool taste in music and your wonderful dress sense. And then maybe, after confronting their initial misguided preconceptions, my family will come to respect our love for its tangibility. And they'll reject it because of bias or religious and political agendas of hate that have been weaved through the social fabric of hundreds and hundreds of years. FAGGOT!!!", max_messages=6)
 
 
-@plugin.search("fags")
+@plugin.search('fags')
 def fags(bot, trigger):
-    bot.say(f"{DOMAIN}faggot/fags.png")
+    if trigger.sender == '#nsfw':
+        bot.say(f'{DOMAIN}faggot/fags.png')
 
 
-@plugin.search("fag(?!s)")
+@plugin.search('fag(?!s)')
 def faggot(bot, trigger):
-    faggot = [
-        f"{DOMAIN}faggot/faggot.gif",
-        f"{DOMAIN}faggot/oh.gif",
-        f"{DOMAIN}faggot/urafaget.png",
-        "Faggot!",
-        "(/¯◡ ‿ ◡)/¯ ~~~~ Abracadabra, you're a faggot!"
-    ]
-    bot.say(choose(faggot))
+    if trigger.sender != '#nsfw':
+        return
+    faggots = [f'{DOMAIN}faggot/faggot.gif', f'{DOMAIN}faggot/oh.gif',
+        f'{DOMAIN}faggot/urafaget.png', 'Faggot!',
+        '(/¯◡ ‿ ◡)/¯ ~~~~ Abracadabra, you\'re a faggot!']
+    bot.say(choose(faggots))
 
 
-@plugin.rule("^Gay!$")
+@plugin.rule('^Gay!$')
 def gayexclamation(bot, trigger):
-    gayexclamation = [
-        f"{DOMAIN}gay/!.webp",
-        f"{DOMAIN}gay/sayshere.webp",
-        f"{DOMAIN}gay/shit.webp"
-    ]
-    bot.say(choose(gayexclamation))
+    bot.say(choose([f'{DOMAIN}gay/{pic}' for pic in listdir(f'{PATH}gay')]))
 
 
 @plugin.search("everything's fucked")
 def everythingsfucked(bot, trigger):
-    bot.say(f"{DOMAIN}misc/everythingsfucked.gif")
+    bot.say(f'{DOMAIN}misc/everythingsfucked.gif')
 
 
-@plugin.rule(r"^o\sshit.*")
+@plugin.rule('^o shit.*')
 def datboi(bot, trigger):
-    bot.say(f"{DOMAIN}oshit/{choose(listdir(f'{PATH}oshit'))}")
+    bot.say(choose([f'{DOMAIN}oshit/{pic}' for pic in listdir(f'{PATH}oshit')]))
 
 
-@plugin.search("!xmas")
-@plugin.command("xmas")
+@plugin.command('xmas')
+@plugin.search('!xmas')
 def xmassong(bot, trigger):
     """The only good Christmas song.
-    Can also be triggered with '!xmas' anywhere in a message."""
-    bot.say(f"{DOMAIN}v/xmas.mp4")
+    Can also be triggered with '!xmas' anywhere."""
+    bot.say(f'{DOMAIN}v/xmas.mp4')
 
 
-@plugin.search("!swat")
-@plugin.command("swat")
+@plugin.command('swat')
+@plugin.search('!swat')
 def swat(bot, trigger):
     """Summon SWAT into chat.
-    Can also be triggered with '!swat' anywhere in a message."""
-    bot.say(f"{DOMAIN}v/SWAT.mp4")
+    Can also be triggered with '!swat' anywhere."""
+    bot.say(f'{DOMAIN}v/SWAT.mp4')
 
 
-@plugin.search("(▫|◽|◻|⬜|▪|◾|◼|⬛|🟥|🟧|🟨|🟩|🟦|🟪|🟫)")
 @plugin.rate(channel=5400)
+@plugin.search('[▫◽◻⬜▪◾◼⬛🟥🟧🟨🟩🟦🟪🟫]')
 def square(bot, trigger):
-    bot.say(f"{DOMAIN}v/square.mp4")
+    bot.say(f'{DOMAIN}v/square.mp4')
 
 
-@plugin.command("dblflip")
+@plugin.commands('doubleflip', 'dblflip')
 def dblflip(bot, trigger):
     """Flip two tables...at the same time!"""
-    bot.say("┻━┻ ︵ヽ(`Д´)ﾉ︵﻿ ┻━┻")
+    bot.say('┻━┻ ︵ヽ(`Д´)ﾉ︵﻿ ┻━┻')
 
 
-@plugin.search("bite me")
+@plugin.search('bite me')
 def bitesback(bot, trigger):
-    bot.action(f"bites {trigger.nick}")
+    bot.action(f'bites {trigger.nick}')
 
 
-@plugin.rule("^Bye!$")
+@plugin.rule('^Bye!$')
 def byebye(bot, trigger):
-    bot.say(f"{DOMAIN}misc/BYE!.webp")
+    bot.say(f'{DOMAIN}misc/BYE!.webp')
 
 
-@plugin.command("cb")
+@plugin.commands('clickbait', 'cb')
 def clickbait(bot, trigger):
     """Post clickbait into chat."""
     clickbait = [
@@ -981,307 +787,284 @@ def clickbait(bot, trigger):
     bot.say(choose(clickbait))
 
 
-@plugin.search("COVID19!")
+@plugin.search('COVID19!')
 def windofgod(bot, trigger):
-    bot.say(f"{DOMAIN}v/windofgod.webm")
+    bot.say(f'{DOMAIN}v/windofgod.webm')
 
 
-@plugin.search("crossfit")
+@plugin.search('crossfit')
 def crossfit(bot, trigger):
-    bot.say(f"{DOMAIN}v/crossfit.webm")
+    bot.say(f'{DOMAIN}v/crossfit.webm')
 
 
-@plugin.rule("^dang$")
+@plugin.rule('^dang$')
 def dang(bot, trigger):
-    bot.say(f"{DOMAIN}misc/dang.jpg")
+    bot.say(f'{DOMAIN}misc/dang.jpg')
 
 
-@plugin.command("dbc")
+@plugin.command('dbc')
 def dbc(bot, trigger):
     """Post a Dragonbro Chi comic."""
-    bot.say(f"{DOMAIN}dbc/{choose(listdir(f'{PATH}dbc'))}")
+    bot.say(choose([f'{DOMAIN}dbc/{pic}' for pic in listdir(f'{PATH}dbc')]))
 
 
-@plugin.rule(r"^Deus\svult!$")
+@plugin.search('deus vult')
 def deusvult(bot, trigger):
     bot.say(f"{DOMAIN}v/deusvult.webm")
 
 
-@plugin.search("fake(!| and gay)")
-@plugin.command("fake")
+@plugin.command('fake')
+@plugin.search('fake(!| and gay)')
 def fake(bot, trigger):
     """For when something is super fake.
-    Can also be triggered with 'fake!' or 'fake and gay' anywhere in a message."""
-    bot.say(f"{DOMAIN}fake/{choose(listdir(f'{PATH}fake'))}")
+    Can also be triggered with 'fake!' or 'fake and gay' anywhere."""
+    bot.say(choose([f'{DOMAIN}fake/{pic}' for pic in listdir(f'{PATH}fake')]))
 
 
-@plugin.search("!erect")
-@plugin.command("erect")
+@plugin.search(r'\berect\b')
 def erect(bot, trigger):
-    """Classic Krieger GIF.
-    Can also be triggered with '!erect' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/erect.gif")
+    bot.say(f'{DOMAIN}misc/erect.gif')
 
 
-@plugin.search("GOAT!")
-@plugin.command("goat")
+@plugin.search(r'\bGOAT\b')
 def goat(bot, trigger):
-    """Greatest of all time!
-    Can also be triggered with 'GOAT!' anywhere in a message."""
-    bot.say(f"{DOMAIN}v/GOAT.webm")
+    bot.say(f'{DOMAIN}v/GOAT.webm')
 
 
-@plugin.rule("^hackers$")
-@plugin.command("hackers")
+@plugin.rule(r'\bhackers\b')
 def hackers(bot, trigger):
-    """Summons the world's two greatest hackers.
-    Can also be summoned without the preceeding period/full stop."""
     bot.say(f"{DOMAIN}as/hackers.png")
 
 
-@plugin.rule("^hue.*")
+@plugin.rule('^hue.*')
 def hue(bot, trigger):
-    bot.say(f"{DOMAIN}hue/{choose(listdir(f'{PATH}hue'))}")
+    bot.say(choose([f'{DOMAIN}hue/{pic}' for pic in listdir(f'{PATH}hue')]))
 
 
-@plugin.rule(r"^I am the machine\.(\s$|$)")
+@plugin.rule(r'^I am the machine\.(| )$')
 def iamthemachine(bot, trigger):
-    bot.say("https://www.youtube.com/watch?v=8PAtFsJY5q0")
+    bot.say('https://www.youtube.com/watch?v=8PAtFsJY5q0')
 
 
-@plugin.search("I can't even", "I'm literally can't even")
+@plugin.rule("^I can't even$")
 def icanteven(bot, trigger):
-    bot.say(f"{DOMAIN}v/icanteven.webm")
+    bot.say(f'{DOMAIN}v/icanteven.webm')
 
 
-@plugin.rule(r"^I\sship\s(it|that).*")
+@plugin.rule('^I ship (it|that).*')
 def ishipit(bot, trigger):
-    bot.say(f"{DOMAIN}misc/fedex.webp")
+    bot.say(f'{DOMAIN}misc/fedex.webp')
 
 
-@plugin.search("idgaf")
+@plugin.search('idgaf')
 def idgaf(bot, trigger):
-    bot.say(f"{DOMAIN}idgaf/{choose(listdir(f'{PATH}idgaf'))}")
+    bot.say(choose([f'{DOMAIN}idgaf/{pic}' for pic in listdir(f'{PATH}idgaf')]))
 
 
-@plugin.search("hugh mungus")
+@plugin.search('hugh mungus')
 def hughmungus(bot, trigger):
-    bot.say(f"{DOMAIN}v/hughmungus.webm")
+    bot.say(f'{DOMAIN}v/hughmungus.webm')
 
 
-@plugin.search("IMDABES")
+@plugin.search('IMDABES')
 def imdabes(bot, trigger):
-    bot.say(f"{DOMAIN}v/IMDABES.webm")
+    bot.say(f'{DOMAIN}v/IMDABES.webm')
 
 
-@plugin.search("!JPEG")
-@plugin.command("jpeg")
+@plugin.command('jpeg')
+@plugin.search('!JPEG')
 def jpeg(bot, trigger):
     """Do I look like I know what a JPEG is?
-    Can also be triggered with '!JPEG' anywhere in a message."""
-    bot.say(f"{DOMAIN}v/JPEG.webm")
+    Can also be triggered with '!JPEG' anywhere."""
+    bot.say(f'{DOMAIN}v/JPEG.webm')
 
 
-@plugin.search("!kazoo")
-@plugin.command("kazoo")
+@plugin.command('kazoo')
+@plugin.search('!kazoo')
 def kazoo(bot, trigger):
     """Kaaazzzzoooooooooo!!!
-    Can also be triggered with '!kazoo' anywhere in a message."""
-    bot.say(f"{DOMAIN}v/kazoo.webm")
+    Can also be triggered with '!kazoo' anywhere."""
+    bot.say(f'{DOMAIN}v/kazoo.webm')
 
 
-@plugin.rule("^kill me.*")
+@plugin.rule('^kill me.*')
 def killme(bot, trigger):
-    bot.say(f"{DOMAIN}killme/{choose(listdir(f'{PATH}killme'))}")
+    bot.say(choose([f'{DOMAIN}killme/{pic}' for pic in listdir(f'{PATH}killme')]))
 
 
-@plugin.rule(r".*((?<!\w)k(y|m)s(?!\w)|kill\syourself).*")
+@plugin.search(r'((?<!\w)k(y|m)s(?!\w)|kill yourself)')
 def kys(bot, trigger):
-    kys = ['https://lostallhope.com']
-    for pic in listdir(f'{PATH}kys'):
-        kys.append(f'{DOMAIN}kys/{pic}')
+    kys = [f'{DOMAIN}kys/{pic}' for pic in listdir(f'{PATH}kys')]
+    kys.append('https://lostallhope.com')
     bot.say(choose(kys))
 
 
-@plugin.search("!music")
+@plugin.search('!music')
 def listentomusic(bot, trigger):
-    bot.say(f"{DOMAIN}kys/music.webp")
+    bot.say(f'{DOMAIN}kys/music.webp')
 
 
-@plugin.rule(r"^oh\shai.*")
+@plugin.search(r'\boh hai\b')
 def ohhai(bot, trigger):
-    bot.say(f"{DOMAIN}kys/ohhai.webp")
+    bot.say(f'{DOMAIN}kys/ohhai.webp')
 
 
-@plugin.search("(?<!il)legal!")
-@plugin.command("legal")
+@plugin.command('legal')
+@plugin.search('(?<!il)legal!')
 def legal(bot, trigger):
-    """100% totally legal!
-    Can also be triggered with 'legal!' anywhere in a message."""
-    legal = [
-        f"{DOMAIN}misc/👍LEGAL👍.mp4",
-        f"{DOMAIN}misc/🕺LEGAL🕺.mp4"
-    ]
+    """100% totally legal! Can also be triggered with 'legal!' anywhere."""
+    legal = [f'{DOMAIN}misc/👍LEGAL👍.mp4', f'{DOMAIN}misc/🕺LEGAL🕺.mp4']
     bot.say(choose(legal))
 
 
-@plugin.command("judge")
+@plugin.command('judge')
 @plugin.require_chanmsg
 def judge(bot, trigger):
     """Judge someone or something."""
-    judges = [
-        "not guilty! https://p.actionsack.com/misc/not-guilty.png",
-        "guilty! https://p.actionsack.com/misc/guilty.png"
-    ]
+    judges = ['not guilty! https://p.actionsack.com/misc/not-guilty.png',
+            'guilty! https://p.actionsack.com/misc/guilty.png']
     text = plain(trigger.group(2) or '')
     if not text:
-        return bot.reply("I need someone or something to judge!")
-    bot.say(f"{text} is {choose(judges)}")
+        return bot.reply('I need someone or something to judge!')
+    bot.say(f'{text} is {choose(judges)}')
 
 
-@plugin.rule(r"^wat\b")
+@plugin.rule(r'^wat\b')
 def wat(bot, trigger):
-    bot.say(f"{DOMAIN}wat/{choose(listdir(f'{PATH}wat'))}")
+    bot.say(choose([f'{DOMAIN}wat/{pic}' for pic in listdir(f'{PATH}wat')]))
 
 
-@plugin.search("✝")
+@plugin.search('✝')
 def praisejesus(bot, trigger):
-    bot.say("Praise Jesus!")
+    bot.say('Praise Jesus!')
 
 
-@plugin.search("Jesus Christ")
+@plugin.search('Jesus Christ')
 def jesuschrist(bot, trigger):
-    bot.say("Praise Him!")
+    bot.say('Praise Him!')
 
 
-@plugin.search("Windows 10")
-@plugin.command("w10")
+@plugin.command('w10')
+@plugin.search('Windows 10')
 def windowsten(bot, trigger):
-    """Windows 10 bad.
-    Can also be triggered with 'Windows 10' anywhere in a message."""
-    bot.say(f"{DOMAIN}W10/{choose(listdir(f'{PATH}W10'))}")
+    """Windows 10 bad. Can also be triggered with 'Windows 10' anywhere."""
+    bot.say(choose([f'{DOMAIN}W10/{pic}' for pic in listdir(f'{PATH}W10')]))
 
 
-@plugin.search("!wizard", "wazard")
-@plugin.command("wizard")
+@plugin.command('wizard')
+@plugin.search('!wizard', 'wazard')
 def wazard(bot, trigger):
-    """Hagrid tells you what you are.
-    Can also be triggered with '!wizard' or 'wazard' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/wazard.mp4")
+    """Hagrid tells you what you are. Can also be triggered with '!wizard' or 'wazard' anywhere."""
+    bot.say(f'{DOMAIN}misc/wazard.mp4')
 
 
-@plugin.search("wow!")
-@plugin.command("wow")
+@plugin.command('wow')
+@plugin.search('wow!')
 def wow(bot, trigger):
-    """Wow! — Can also be triggered with 'wow!' anywhere in a message."""
-    bot.say(f"{DOMAIN}wow/{choose(listdir(f'{PATH}wow'))}")
+    """Wow! — Can also be triggered with 'wow!' anywhere."""
+    bot.say(choose([f'{DOMAIN}wow/{pic}' for pic in listdir(f'{PATH}wow')]))
 
 
-@plugin.search("whoa(?!mi)")
+@plugin.search('whoa(?!mi)')
 def whoa(bot, trigger):
-    bot.say(f"{DOMAIN}misc/whoa.webp")
+    bot.say(f'{DOMAIN}misc/whoa.webp')
 
 
-@plugin.search("wew lad", "wew!")
-@plugin.command("wew")
+@plugin.search('wew(!| lad)')
 def wew(bot, trigger):
-    """wew lad! — Can also be triggered with 'wew!' or 'wew lad' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/wew.webp")
+    bot.say(f'{DOMAIN}misc/wew.webp')
 
 
-@plugin.rule(r"^(uh\.\.\.|uh{2,})$")
+@plugin.rule(r'^(uh\.\.\.|uh{2,})$')
 def uhh(bot, trigger):
-    bot.say(f"{DOMAIN}uh/{choose(listdir(f'{PATH}uh'))}")
+    bot.say(choose([f'{DOMAIN}uh/{pic}' for pic in listdir(f'{PATH}uh')]))
 
 
-@plugin.search("swiggity swooty")
+@plugin.search('swiggity swooty')
 def swiggityswooty(bot, trigger):
-    bot.say(f"{DOMAIN}swiggityswooty/{choose(listdir(f'{PATH}swiggityswooty'))}")
+    bot.say(choose([f'{DOMAIN}swiggityswooty/{pic}' for pic in listdir(f'{PATH}swiggityswooty')]))
 
 
-@plugin.search("praise the sun")
-@plugin.command("praise")
+@plugin.command('praise')
+@plugin.search('praise the sun')
 def praisethesun(bot, trigger):
-    """Praise the Sun!
-    Can also be triggered with 'praise the sun' anywhere in a message."""
-    bot.say(f"{DOMAIN}v/praisethesun.webm")
+    """Praise the Sun! Can also be triggered with 'praise the sun' anywhere."""
+    bot.say(f'{DOMAIN}v/praisethesun.webm')
 
 
-@plugin.search("#spam")
+@plugin.search('#spam')
 def spam(bot, trigger):
-    bot.say(f"{DOMAIN}misc/spam.png")
+    bot.say(f'{DOMAIN}misc/spam.png')
 
 
-@plugin.search("!son")
-@plugin.command("son")
+@plugin.command('son')
+@plugin.search('!son')
 def son(bot, trigger):
     """Posts a "don't talk to me or my son" meme/image.
-    Can also be triggered with "!son" anywhere in a message."""
-    bot.say(f"{DOMAIN}son/{choose(listdir(f'{PATH}son'))}")
+    Can also be triggered with "!son" anywhere."""
+    bot.say(choose([f'{DOMAIN}son/{pic}' for pic in listdir(f'{PATH}son')]))
 
 
-@plugin.rule("^sh{2,}$")
+@plugin.rule('^sh{2,}$')
 def shh(bot, trigger):
-    bot.say(f"{DOMAIN}shh/{choose(listdir(f'{PATH}shh'))}")
+    bot.say(choose([f'{DOMAIN}shh/{pic}' for pic in listdir(f'{PATH}shh')]))
 
 
-@plugin.search("sex robot")
+@plugin.search('sex robot')
 def sexrobot(bot, trigger):
-    bot.say(f"{DOMAIN}misc/sexrobot.gif")
+    bot.say(f'{DOMAIN}misc/sexrobot.gif')
 
 
-@plugin.search("!stickers")
-@plugin.command("stickers")
+@plugin.command('stickers')
+@plugin.search('!stickers')
 def stickers(bot, trigger):
     """Well-known fact: each sticker on your car adds 5 horsepower.
-    Can also be triggered with '!stickers' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/stickers.gif")
+    Can also be triggered with '!stickers' anywhere."""
+    bot.say(f'{DOMAIN}misc/stickers.gif')
 
 
-@plugin.command("shaved")
+@plugin.command('shaved')
 def shaved(bot, trigger):
     """xnaas' beautiful shaved leg circa 2011."""
-    bot.say(f"{DOMAIN}xnaas/shaved.webp")
+    bot.say(f'{DOMAIN}xnaas/shaved.webp')
 
 
-@plugin.search("!rimshot")
-@plugin.command("rimshot")
+@plugin.command('rimshot')
+@plugin.search('!rimshot')
 def rimshot(bot, trigger):
     """Replies with a 'rimshot' GIF.
-    Can also be triggered with '!rimshot' anywhere in a message."""
-    bot.say(f"{DOMAIN}rimshot/{choose(listdir(f'{PATH}rimshot'))}")
+    Can also be triggered with '!rimshot' anywhere."""
+    bot.say(choose([f'{DOMAIN}rimshot/{pic}' for pic in listdir(f'{PATH}rimshot')]))
 
 
-@plugin.search("!newhouse")
-@plugin.command("newhouse")
+@plugin.command('newhouse')
+@plugin.search('!newhouse')
 def newhouse(bot, trigger):
-    """Can also be triggered with '!newhouse' anywhere in a message."""
-    bot.say(f"{DOMAIN}fecktk/newhouse.webp")
+    """Can also be triggered with '!newhouse' anywhere."""
+    bot.say(f'{DOMAIN}fecktk/newhouse.webp')
 
 
-@plugin.search("!drone")
-@plugin.command("drone")
+@plugin.command('drone')
+@plugin.search('!drone')
 def drone(bot, trigger):
-    """Summons a drone into chat.
-    Can also be summoned with '!drone' anywhere in a message."""
-    bot.say(f"{DOMAIN}v/drone.webm")
+    """Summons a drone into chat. Can also be summoned with '!drone' anywhere."""
+    bot.say(f'{DOMAIN}v/drone.webm')
 
 
-@plugin.search("!cage")
-@plugin.command("cage")
+@plugin.command('cage')
+@plugin.search('!cage')
 def nickcage(bot, trigger):
     """Summons Nicolas Cage into chat.
-    Can also be summoned with '!cage' anywhere in a message."""
-    bot.say(f"{DOMAIN}cage/{choose(listdir(f'{PATH}cage'))}")
+    Can also be summoned with '!cage' anywhere."""
+    bot.say(choose([f'{DOMAIN}cage/{pic}' for pic in listdir(f'{PATH}cage')]))
 
 
-@plugin.search("!va")
-@plugin.command("va")
+@plugin.command('va')
 @plugin.rate(user=900)
+@plugin.search('!va')
 def voiceactor(bot, trigger):
     """Quote (or pic!) of a #RealVoiceActor.
-    Can only be triggered once per 15 minutes per user.
-    Can also be triggered with '!va' anywhere in a message."""
+    Can only be triggered once per 15 minutes per user. Can also be triggered with '!va' anywhere."""
     voice_actor = [
         "You are a pathetic worm... Fight for your scraps... Take your pics haha. I am a true artist and someone that crushes vermin like you in my path. You are a fake and a child with no comprehension of skill nor talent. You are weak... Just like so many... I am pleasure to work with... Unless you cross me or treat me like dirt... Then you will feel my fury... You should have been nice... Now you pay... I am not a pushover... haha... I can make your soul cry and beg for mercy... I am tired of you jerks... I will fight back... Every time...",
         "Give me a break! You guys think you have some freaking special talent that deserves all this damn nonrecognition?! You guys want to get paid to sell and just SPEAK these god damn advertisements! I hate that side of this business! Real voice ACTING is art, it is all the animation and film, it is video games!",
@@ -1304,138 +1087,135 @@ def voiceactor(bot, trigger):
     bot.say(choose(voice_actor), max_messages=3)
 
 
-@plugin.search("!baby")
-@plugin.command("baby")
+@plugin.command('baby')
+@plugin.search('!baby')
 def baby(bot, trigger):
-    """Posts an image of GIF involving babies.
-    WARNING: not a cutesy command.
-    Can also be triggered with '!baby' anywhere in a message."""
-    bot.say(f"{DOMAIN}baby/{choose(listdir(f'{PATH}baby'))}")
+    """Posts an image of GIF involving babies. Can also be triggered with '!baby' anywhere.
+    WARNING: not a cutesy command."""
+    bot.say(choose([f'{DOMAIN}baby/{pic}' for pic in listdir(f'{PATH}baby')]))
 
 
-@plugin.search("boom!")
-@plugin.command("boom")
+@plugin.command('boom')
+@plugin.search('boom!')
 def boom(bot, trigger):
-    """BOOM! — Can also be triggered with 'boom!' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/boom.webp")
+    """BOOM! — Can also be triggered with 'boom!' anywhere."""
+    bot.say(f'{DOMAIN}misc/boom.webp')
 
 
-@plugin.search("burn!")
+@plugin.search('burn!')
 def burn(bot, trigger):
-    bot.say("https://w.wiki/n9f")
+    bot.say('https://w.wiki/n9f')
 
 
+@plugin.command('bustin')
 @plugin.search("bustin'")
-@plugin.command("bustin")
 def bustin(bot, trigger):
-    """Bustin' makes me feel good!
-    Can also be triggered with "bustin'" anywhere in a message."""
-    bot.say(f"{DOMAIN}v/bustin.webm")
+    """Bustin' makes me feel good! Can also be triggered with "bustin'" anywhere."""
+    bot.say(f'{DOMAIN}v/bustin.webm')
 
 
-@plugin.search(r"(?<!s)canned(?!\sair)")
+@plugin.search('(?<!s)canned(?! air)')
 def canned(bot, trigger):
-    bot.say(f"{DOMAIN}misc/canned.gif")
+    bot.say(f'{DOMAIN}misc/canned.gif')
 
 
-@plugin.search(r"consider(\s|ed\s)this")
+@plugin.search('consider this')
 def consider(bot, trigger):
-    bot.say(f"{DOMAIN}misc/consider.webp")
+    bot.say(f'{DOMAIN}misc/consider.webp')
 
 
-@plugin.search("congraturaisins")
+@plugin.search('congraturaisins')
 def congraturaisins(bot, trigger):
-    bot.say(f"{DOMAIN}misc/congraturaisins.png")
+    bot.say(f'{DOMAIN}misc/congraturaisins.webp')
 
 
-@plugin.search("cowabunga")
+@plugin.search('cowabunga')
 def cowabunga(bot, trigger):
-    bot.say(f"{DOMAIN}misc/cowabunga.png")
+    bot.say(f'{DOMAIN}misc/cowabunga.png')
 
 
-@plugin.search("correct!")
+@plugin.search('correct!')
 def correcthorse(bot, trigger):
-    bot.say(f"{DOMAIN}misc/correct!.gif")
+    bot.say(f'{DOMAIN}misc/correct!.gif')
 
 
-@plugin.search("centaur")
+@plugin.search('centaur')
 def centaur(bot, trigger):
-    bot.say(f"{DOMAIN}misc/centaur.png")
+    bot.say(f'{DOMAIN}misc/centaur.png')
 
 
-@plugin.search("(?<!rid)(!dance|dance!)")
-@plugin.command("dance")
+@plugin.command('dance')
+@plugin.search('(?<!rid)(!dance|dance!)')
 def dance(bot, trigger):
     """Posts a dancing GIF.
-    Can also be triggered with 'dance!' or '!dance' anywhere in a message."""
-    bot.say(f"{DOMAIN}dance/{choose(listdir(f'{PATH}dance'))}")
+    Can also be triggered with 'dance!' or '!dance' anywhere."""
+    bot.say(choose([f'{DOMAIN}dance/{pic}' for pic in listdir(f'{PATH}dance')]))
 
 
-@plugin.command("doomanimal")
+@plugin.command('doomanimal')
 def doomanimal(bot, trigger):
-    """Posts "DOOMANIMAL" video by @andmish."""
-    bot.say(f"{DOMAIN}v/DOOMANIMAL.webm")
+    """Posts 'DOOMANIMAL' video by @andmish."""
+    bot.say(f'{DOMAIN}v/DOOMANIMAL.webm')
 
 
-@plugin.command("doomcrossing")
+@plugin.command('doomcrossing')
 def doomcrossing(bot, trigger):
-    """Posts "DOOM CROSSING: Eternal Horizons" by The Chalkeaters feat. Natalia Natchan."""
-    bot.say(f"{DOMAIN}v/DOOMCROSSING.webm")
+    """Posts 'DOOM CROSSING: Eternal Horizons' by The Chalkeaters feat. Natalia Natchan."""
+    bot.say(f'{DOMAIN}v/DOOMCROSSING.webm')
 
 
-@plugin.search("doom guy")
+@plugin.search('doom guy')
 def doomguy(bot, trigger):
-    bot.say(f"{DOMAIN}misc/doomguy.webp")
+    bot.say(f'{DOMAIN}misc/doomguy.webp')
 
 
-@plugin.search("grapist")
+@plugin.search('grapist')
 def grapist(bot, trigger):
-    bot.say(f"{DOMAIN}misc/grapist.gif")
+    bot.say(f'{DOMAIN}misc/grapist.gif')
 
 
-@plugin.search(r"\bit was me\b")
+@plugin.search(r'\bit was me\b')
 def itwasme(bot, trigger):
-    bot.say(f"{DOMAIN}dio/{choose(listdir(f'{PATH}dio'))}")
+    bot.say(choose([f'{DOMAIN}dio/{pic}' for pic in listdir(f'{PATH}dio')]))
 
 
-@plugin.rule(r"^god\sbless\s(.*)")
+@plugin.rule('^god bless (.*)')
 def godbless(bot, trigger):
-    bot.action(f"blesses {trigger.group(1)}")
+    bot.action(f'blesses {trigger.group(1)}')
 
 
-@plugin.search("hail satan!")
+@plugin.search('hail satan!')
 def hailsatan(bot, trigger):
-    bot.say(f"{DOMAIN}satan/{choose(listdir(f'{PATH}satan'))}")
+    bot.say(choose([f'{DOMAIN}satan/{pic}' for pic in listdir(f'{PATH}satan')]))
 
 
-@plugin.search("have a seat")
+@plugin.search('have a seat')
 def haveaseat(bot, trigger):
-    bot.say(f"{DOMAIN}misc/haveaseat.gif")
+    bot.say(f'{DOMAIN}misc/haveaseat.gif')
 
 
-@plugin.search("(jews|✡️|✡)")
+@plugin.search('(jews|✡️|✡)')
 def jews(bot, trigger):
-    bot.say(f"{DOMAIN}jews/{choose(listdir(f'{PATH}jews'))}")
+    bot.say(choose([f'{DOMAIN}jews/{pic}' for pic in listdir(f'{PATH}jews')]))
 
 
-@plugin.rule("^k$")
+@plugin.rule('^k$')
 def kay(bot, trigger):
-    kk = ['k', '👌', '👌🏻', '👌🏼', '👌🏽', '👌🏾', '👌🏿', '👌🏻👌🏼👌🏽👌🏾👌🏿', '🆗']
-    for pic in listdir(f'{PATH}k'):
-        kk.append(f'{DOMAIN}k/{pic}')
+    kk = [f'{DOMAIN}k/{pic}' for pic in listdir(f'{PATH}k')]
+    kk.extend(['k', '👌', '👌🏻', '👌🏼', '👌🏽', '👌🏾', '👌🏿', '👌🏻👌🏼👌🏽👌🏾👌🏿', '🆗'])
     bot.say(choose(kk))
 
 
-@plugin.search("!words")
+@plugin.search('!words')
 def words(bot, trigger):
     # Requested by Aegisfate on 2020-11-19
-    bot.say(f"{DOMAIN}misc/words.webp")
+    bot.say(f'{DOMAIN}misc/words.webp')
 
 
-@plugin.search("!kiki")
-@plugin.command("kiki")
+@plugin.command('kiki')
+@plugin.search('!kiki')
 def kiki(bot, trigger):
-    """Can also be trigged with '!kiki' anywhere in a message."""
+    """Can also be trigged with '!kiki' anywhere."""
     kiki = [monospace('[4:44 PM] Kiki: U sound so far right now'),
             'I S M A E L  C H I A  T O R R E S']
     for pic in listdir(f'{PATH}kiki'):
@@ -1443,310 +1223,286 @@ def kiki(bot, trigger):
     bot.say(choose(kiki))
 
 
-@plugin.search("major spoiler")
+@plugin.search('major spoiler')
 def majorspoiler(bot, trigger):
-    bot.say(f"{DOMAIN}misc/spoiler.png")
+    bot.say(f'{DOMAIN}misc/spoiler.png')
 
 
-@plugin.commands("navy", "navyseal", "seal")
+@plugin.commands('navy', 'navyseal', 'seal')
 @plugin.rate(server=21600)
 def navyseal(bot, trigger):
     """Posts the infamous Navy Seal copypasta...or you get a cat MP4 version.
     Server-wide rate limit of once per 6 hours."""
     navy_seal = [
-        f"{DOMAIN}misc/navyseal.mp4",
+        f'{DOMAIN}misc/navyseal.mp4',
         "What the fuck did you just fucking say about me, you little bitch? I'll have you know I graduated top of my class in the Navy Seals, and I've been involved in numerous secret raids on Al-Quaeda, and I have over 300 confirmed kills. I am trained in gorilla warfare and I'm the top sniper in the entire US armed forces. You are nothing to me but just another target. I will wipe you the fuck out with precision the likes of which has never been seen before on this Earth, mark my fucking words. You think you can get away with saying that shit to me over the Internet? Think again, fucker. As we speak I am contacting my secret network of spies across the USA and your IP is being traced right now so you better prepare for the storm, maggot. The storm that wipes out the pathetic little thing you call your life. You're fucking dead, kid. I can be anywhere, anytime, and I can kill you in over seven hundred ways, and that's just with my bare hands. Not only am I extensively trained in unarmed combat, but I have access to the entire arsenal of the United States Marine Corps and I will use it to its full extent to wipe your miserable ass off the face of the continent, you little shit. If only you could have known what unholy retribution your little ''clever'' comment was about to bring down upon you, maybe you would have held your fucking tongue. But you couldn't, you didn't, and now you're paying the price, you goddamn idiot. I will shit fury all over you and you will drown in it. You're fucking dead, kiddo."
     ]
     bot.say(choose(navy_seal), max_messages=4)
 
 
-@plugin.search("racist")
+@plugin.search('racist')
 def racist(bot, trigger):
     racists = listdir(f'{PATH}racist')
     racists.remove('nig')
     bot.say(f'{DOMAIN}racist/{choose(racists)}')
 
 
-@plugin.search("nigger")
+@plugin.search('nigger')
 def niggers(bot, trigger):
-    if trigger.is_privmsg or trigger.sender == "#nsfw":
-        bot.say(f"{DOMAIN}racist/nig/{choose(listdir(f'{PATH}racist/nig'))}")
+    if trigger.sender == '#nsfw':
+        bot.say(choose([f'{DOMAIN}racist/nig/{pic}' for pic in listdir(f'{PATH}racist/nig')]))
 
-
-@plugin.search("pasta disasta")
+@plugin.search('pasta disasta')
 def pastadisasta(bot, trigger):
-    bot.say(f"{DOMAIN}🍝/disasta.webm")
+    bot.say(f'{DOMAIN}🍝/disasta.webm')
 
 
-@plugin.search("(?<!his)panic!")
+@plugin.search('(?<!his)panic!')
 def panic(bot, trigger):
-    bot.say(f"{DOMAIN}panic/{choose(listdir(f'{PATH}panic'))}")
+    bot.say(choose([f'{DOMAIN}panic/{pic}' for pic in listdir(f'{PATH}panic')]))
 
 
-@plugin.search("my brand")
+@plugin.search('my brand')
 def mybrand(bot, trigger):
-    bot.say(f"{DOMAIN}v/MY_BRAND!.webm")
+    bot.say(f'{DOMAIN}v/MY_BRAND!.webm')
 
 
 @plugin.search("!nms")
 def nms(bot, trigger):
-    bot.say(f"{DOMAIN}nms/{choose(listdir(f'{PATH}nms'))}")
+    bot.say(choose([f'{DOMAIN}nms/{pic}' for pic in listdir(f'{PATH}nms')]))
 
 
-@plugin.rule(r"^(nice|sick)\sgif.*")
+@plugin.search('(nice|sick) gif')
 def sickgif(bot, trigger):
-    bot.say(f"{DOMAIN}misc/sickgif.gif")
+    bot.say(f'{DOMAIN}misc/sickgif.gif')
 
 
-@plugin.rule("^nerd!$")
+@plugin.search('nerd!')
 def nerd(bot, trigger):
-    bot.say(f"{DOMAIN}misc/nerd!.gif")
+    bot.say(f'{DOMAIN}misc/nerd!.gif')
 
 
-@plugin.search("neat!")
+@plugin.search('neat!')
 def neat(bot, trigger):
-    bot.say(f"{DOMAIN}neat/{choose(listdir(f'{PATH}neat'))}")
+    bot.say(choose([f'{DOMAIN}neat/{pic}' for pic in listdir(f'{PATH}neat')]))
 
 
 @plugin.require_admin
-@plugin.search("my server")
+@plugin.search('my server')
 def myserver(bot, trigger):
-    bot.say(f"{DOMAIN}server/{choose(listdir(f'{PATH}server'))}")
+    bot.say(choose([f'{DOMAIN}server/{pic}' for pic in listdir(f'{PATH}server')]))
 
 
-@plugin.search(r"(?<!\w)moist(?!\w)")
+@plugin.search(r'(?<!\w)moist(?!\w)')
 def moist(bot, trigger):
-    bot.say(f"{DOMAIN}moist/{choose(listdir(f'{PATH}moist'))}")
+    bot.say(choose([f'{DOMAIN}moist/{pic}' for pic in listdir(f'{PATH}moist')]))
 
 
-@plugin.search("!manga")
-@plugin.command("manga")
+@plugin.command('manga')
+@plugin.search('!manga')
 def manga(bot, trigger):
     """Posts a clip from the BowserVids "What's in the bag?" video.
-    Can also be triggered with '!manga' anywhere in a message."""
-    bot.say(f"{DOMAIN}v/manga.mp4")
+    Can also be triggered with '!manga' anywhere."""
+    bot.say(f'{DOMAIN}v/manga.mp4')
 
 
-@plugin.search("LET ME IN")
+@plugin.search('LET ME IN')
 def letmein(bot, trigger):
-    bot.say(f"{DOMAIN}v/letmein.mp4")
+    bot.say(f'{DOMAIN}v/letmein.mp4')
 
 
-@plugin.search("I made this")
+@plugin.search('I made this')
 def imadethis(bot, trigger):
-    bot.say(f"{DOMAIN}OC/{choose(listdir(f'{PATH}OC'))}")
+    bot.say(choose([f'{DOMAIN}OC/{pic}' for pic in listdir(f'{PATH}OC')]))
 
 
-@plugin.search(r"(?<!\w)eat shit")
+@plugin.search(r'(?<!\w)eat shit')
 def frank(bot, trigger):
-    bot.say(f"{DOMAIN}misc/frank.gif")
+    bot.say(f'{DOMAIN}misc/frank.gif')
 
 
-@plugin.search("GTFO")
+@plugin.search('GTFO!')
 def gtfo(bot, trigger):
-    bot.say(f"{DOMAIN}misc/gtfo.png")
+    bot.say(f'{DOMAIN}misc/gtfo.png')
 
 
-@plugin.search("hawt")
+@plugin.search('hawt')
 def hawt(bot, trigger):
-    bot.say("🥵")
+    bot.say('🥵')
 
 
-@plugin.rule("^hwat.*")
+@plugin.rule('^hwat.*')
 def hwat(bot, trigger):
-    bot.say(f"{DOMAIN}hwat/{choose(listdir(f'{PATH}hwat'))}")
+    bot.say(choose([f'{DOMAIN}hwat/{pic}' for pic in listdir(f'{PATH}hwat')]))
 
 
-@plugin.search(r"I see you(?!('|r))")
+@plugin.search("I see you(?!('|r))")
 def iseeyou(bot, trigger):
-    bot.say(f"{DOMAIN}👀/iSeeU.mp4")
+    bot.say(f'{DOMAIN}👀/iSeeU.mp4')
 
 
-@plugin.search("eyelids")
+@plugin.search('eyelids')
 def eyelids(bot, trigger):
-    bot.say(f"{DOMAIN}👀/eyelids.mp4")
+    bot.say(f'{DOMAIN}👀/eyelids.mp4')
 
 
-@plugin.search("👀")
+@plugin.search('👀')
 def eyes(bot, trigger):
-    bot.say(f"{DOMAIN}👀/{choose(listdir(f'{PATH}👀'))}")
+    bot.say(choose([f'{DOMAIN}👀/{pic}' for pic in listdir(f'{PATH}👀')]))
 
 
-@plugin.search(r"💩(|\s)💩")
+@plugin.search('💩(| )💩')
 def shit(bot, trigger):
-    bot.say(f"{DOMAIN}💩/{choose(listdir(f'{PATH}💩'))}")
+    bot.say(choose([f'{DOMAIN}💩/{pic}' for pic in listdir(f'{PATH}💩')]))
 
 
-@plugin.search("!tesla")
-@plugin.command("tesla")
+@plugin.command('tesla')
+@plugin.search('!tesla')
 def tesla(bot, trigger):
-    """Can also be triggered with '!tesla' anywhere in a message."""
-    bot.say(f"{DOMAIN}v/tesla.webm")
+    """Can also be triggered with '!tesla' anywhere."""
+    bot.say(f'{DOMAIN}v/tesla.webm')
 
 
-@plugin.search("!vn")
-@plugin.command("vn")
+@plugin.command('vn')
+@plugin.search('!vn')
 def vapenaysh(bot, trigger):
-    """Vape naysh, y'all!
-    Can also be triggered with '!vn' anywhere in a message."""
-    bot.say(f"{DOMAIN}vn/{choose(listdir(f'{PATH}vn'))}")
+    """Vape naysh, y'all! Can also be triggered with '!vn' anywhere."""
+    bot.say(choose([f'{DOMAIN}vn/{pic}' for pic in listdir(f'{PATH}vn')]))
 
 
-@plugin.search("🦈")
+@plugin.search('🦈')
 def sharku(bot, trigger):
-    bot.say(f"{DOMAIN}🦈/{choose(listdir(f'{PATH}🦈'))}")
+    bot.say(choose([f'{DOMAIN}🦈/{pic}' for pic in listdir(f'{PATH}🦈')]))
 
 
-@plugin.search(r"🦇(|\s)👨")
-@plugin.command("batman")
+@plugin.command('batman')
+@plugin.search('🦇(| )👨')
 def batman(bot, trigger):
     """Summons a Batman. Names are base64 encoded.
     Can also be triggered by sending a message that is only the "🦇👨" emoji."""
-    bot.say(f"{DOMAIN}🦇👨/{choose(listdir(f'{PATH}🦇👨'))}")
+    bot.say(choose([f'{DOMAIN}🦇👨/{pic}' for pic in listdir(f'{PATH}🦇👨')]))
 
 
-@plugin.search("🤔{3,}")
+@plugin.search('🤔{3,}')
 def think(bot, trigger):
-    bot.say(f"{DOMAIN}think/{choose(listdir(f'{PATH}think'))}")
+    bot.say(choose([f'{DOMAIN}think/{pic}' for pic in listdir(f'{PATH}think')]))
 
 
-@plugin.search("🚸")
+@plugin.search('🚸')
 def as_linus(bot, trigger):
-    bot.say(f"{DOMAIN}as/linus.png")
+    bot.say(f'{DOMAIN}as/linus.png')
 
 
-@plugin.search("🚬")
+@plugin.search('🚬')
 def smoking(bot, trigger):
-    bot.say(f"{DOMAIN}misc/smoking.webp")
+    bot.say(f'{DOMAIN}misc/smoking.webp')
 
 
-@plugin.search("🚁")
+@plugin.search('🚁')
 def heli(bot, trigger):
-    bot.say(f"{DOMAIN}🚁/{choose(listdir(f'{PATH}🚁'))}")
+    bot.say(choose([f'{DOMAIN}🚁/{pic}' for pic in listdir(f'{PATH}🚁')]))
 
 
-@plugin.search("🍝")
+@plugin.search('🍝')
 def spaghetti(bot, trigger):
-    bot.say(f"{DOMAIN}🍝/{choose(listdir(f'{PATH}🍝'))}")
+    bot.say(choose([f'{DOMAIN}🍝/{pic}' for pic in listdir(f'{PATH}🍝')]))
 
 
-@plugin.search("svehla")
+@plugin.search('svehla')
 def svehla(bot, trigger):
-    bot.say(f"{DOMAIN}misc/svehla.webp")
+    bot.say(f'{DOMAIN}misc/svehla.webp')
 
 
-@plugin.search("🗑")
+@plugin.search('🗑')
 def trash(bot, trigger):
-    bot.say(f"{DOMAIN}misc/🗑.webp")
+    bot.say(f'{DOMAIN}misc/🗑.webp')
 
 
-@plugin.search("!cumcan")
-@plugin.command("cumcan")
+@plugin.command('cumcan')
+@plugin.search('!cumcan')
 def cumcan(bot, trigger):
-    """Can also be triggered with '!cumcan' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/cumcan.webp")
+    """Can also be triggered with '!cumcan' anywhere."""
+    bot.say(f'{DOMAIN}misc/cumcan.webp')
 
 
-@plugin.search("!cancer")
-@plugin.command("cancer")
+@plugin.command('cancer')
+@plugin.search('!cancer')
 def cancer(bot, trigger):
-    """Warning! Posts pure cancer into chat.
-    Can also be triggered with '!cancer' anywhere in a message."""
-    cancer_images = [
-        f"{DOMAIN}as/cancer-list.png",
-        f"{DOMAIN}as/cancer-microscope.png"
-    ]
+    """Warning! Posts pure cancer into chat. Can also be triggered with '!cancer' anywhere."""
+    cancer_images = [f'{DOMAIN}as/cancer-list.png',
+                    f'{DOMAIN}as/cancer-microscope.png']
     bot.say(choose(cancer_images))
 
 
-@plugin.search("!daquan")
-@plugin.command("daquan")
+@plugin.command('daquan')
+@plugin.search('!daquan')
 def daquan(bot, trigger):
-    """Can also be triggered with '!daquan' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/daquan.jpg")
+    """Can also be triggered with '!daquan' anywhere."""
+    bot.say(f'{DOMAIN}misc/daquan.jpg')
 
 
-@plugin.search("!heff")
-@plugin.command("heff")
+@plugin.command('heff')
+@plugin.search('!heff')
 def heff(bot, trigger):
-    """Is only game, why you heff to be mad?
-    Can also be triggered with '!heff' anywhere in a message."""
-    bot.say(f"{DOMAIN}v/heff.webm")
+    """Is only game, why you heff to be mad? Can also be triggered with '!heff' anywhere."""
+    bot.say(f'{DOMAIN}v/heff.webm')
 
 
-@plugin.search("!salty", "🧂")
-@plugin.command("salty")
+@plugin.command('salty')
+@plugin.search('!salty', '🧂')
 def salty(bot, trigger):
-    """Can also be triggered with '!salty' anywhere in a message."""
-    bot.say(f"{DOMAIN}salt/{choose(listdir(f'{PATH}salt'))}")
+    """Can also be triggered with '!salty' anywhere."""
+    bot.say(choose([f'{DOMAIN}salt/{pic}' for pic in listdir(f'{PATH}salt')]))
 
 
-@plugin.search(r"\[laughs\]")
+@plugin.action_command('laughs')
+@plugin.search(r'\[laughs\]')
 def laughs(bot, trigger):
-    bot.say(f"{DOMAIN}misc/laughs.jpg")
+    bot.say(f'{DOMAIN}misc/laughs.jpg')
 
 
-@plugin.action_command("raughs")
-@plugin.search(r"\[raughs\]")
+@plugin.action_command('raughs')
+@plugin.search(r'\[raughs\]')
 def raughs(bot, trigger):
-    bot.say(f"{DOMAIN}tasian/raughs.webp")
+    bot.say(f'{DOMAIN}tasian/raughs.webp')
 
 
 # Action Sack People Section
-@plugin.search("!asak")
-@plugin.command("asak")
-def asak(bot, trigger):
-    """Posts an Action Sack meme.
-    Can also be triggered with '!asak' anywhere in a message."""
-    bot.say(f"{DOMAIN}as/{choose(listdir(f'{PATH}as'))}")
+@plugin.command('asak','bytes','fecktk','feek','jaja','JTL','kristen','nC','tasian','viz','voodoo','xnaas')
+@plugin.rate(user=30)
+@plugin.search('!(asak|bytes|fecktk|feek|jaja|JTL|kristen|nC|tasian|viz|voodoo|xnaas)')
+def asak_ppl(bot, trigger):
+    """Action Sack People Memes™ have a rate-limit of once per 30s per user."""
+    name = trigger.group(1).lower()
+    # fix name casing
+    if name == 'nc':
+        name = 'nC'
+    if name == 'jtl':
+        name = 'JTL'
+    # get the list of choices
+    choices = [f'{DOMAIN}{name}/{pic}' for pic in listdir(f'{PATH}{name}')]
+    if name == 'feek':
+        choices.append('Works for Me™')
+    if name == 'JTL':
+        zwsp = '\u200B'
+        choices.extend(['JTL thinks he\'s not 100% gay lol',
+            f'JTL is addicted to {zwsp.join("xnaas")} 😱',
+            'God cries because JTL touches himself at night.',
+            'JTL\'s quote addition is insane. Almost feel bad for the dude.'])
+    if name == 'voodoo':
+        choices.append("I fantasize about fucking California's earthquake fault line. The dirt, the debris, the thought of the earth quivering under me as I slowly stick my dick into its gaping wide entrance. I keep looking at news stories and getting the firmest erections of my life seeing those beautiful cracks. She's so open and so wanting. Each earthquake is like another whimper just begging for me to take her. The amount of cum I've lost just thinking about thrusting my rod into our beloved planet. Talk about getting my rocks off. Fuck I'm hard.")
+    if name == 'xnaas':
+        choices.append(f'{DOMAIN}v/tesla.webm')
+    # say it!
+    bot.say(choose(choices), max_messages=2)
 
 
-@plugin.search("!bytes")
-@plugin.command("bytes")
-def ComputersByte(bot, trigger):
-    """Posts a ComputersByte meme.
-    Can also be triggered with '!bytes' anywhere in a message."""
-    bot.say(f"{DOMAIN}bytes/{choose(listdir(f'{PATH}bytes'))}")
-
-
-@plugin.search("!fecktk")
-@plugin.command("fecktk")
-@plugin.rate(user=900)
-def fecktk(bot, trigger):
-    """A user triggering this command can only do so once per 15 minutes."""
-    bot.say(f"{DOMAIN}fecktk/{choose(listdir(f'{PATH}fecktk'))}")
-
-
-@plugin.search("!feek")
-@plugin.command("feek")
-@plugin.rate(user=900)
-def feek(bot, trigger):
-    """A user triggering this command can only do so once per 15 minutes."""
-    feeks = ['Works for Me™']
-    for pic in listdir(f'{PATH}feek'):
-        feeks.append(f'{DOMAIN}feek/{pic}')
-    bot.say(choose(feeks))
-
-
-@plugin.search("!jaja")
-@plugin.command("jaja")
-@plugin.rate(user=900)
-def jajabro(bot, trigger):
-    """A user triggering this command can only do so once per 15 minutes."""
-    bot.say(f"{DOMAIN}jaja/{choose(listdir(f'{PATH}jaja'))}")
-
-
-@plugin.search("!kristen")
-@plugin.command("kristen")
-def kristen(bot, trigger):
-    bot.say(f"{DOMAIN}kristen/{choose(listdir(f'{PATH}kristen'))}")
-
-
-@plugin.search("!mike")
-@plugin.command("mike")
-@plugin.rate(user=900)
+# TODO: make mike fit in with everyone else...
+@plugin.command('mike')
+@plugin.search('!mike')
+@plugin.rate(user=30)
 def mike(bot, trigger):
-    """A user triggering this command can only do so once per 15 minutes."""
+    """A user triggering this command can only do so once every 30 seconds."""
     mikes = listdir(f'{PATH}mike')
     mikes.remove('📖')
     i = 0
@@ -1756,499 +1512,421 @@ def mike(bot, trigger):
     for pic in listdir(f'{PATH}mike/📖'):
         mikes.append(f'{DOMAIN}mike/📖/{pic}')
     bot.say(choose(mikes))
-
-
-@plugin.search("!tasian")
-@plugin.command("tasian")
-@plugin.rate(user=900)
-def tasian(bot, trigger):
-    """A user triggering this command can only do so once per 15 minutes."""
-    bot.say(f"{DOMAIN}tasian/{choose(listdir(f'{PATH}tasian'))}")
-
-
-@plugin.search("!viz")
-@plugin.command("viz")
-@plugin.rate(user=900)
-def viz(bot, trigger):
-    """A user triggering this command can only do so once per 15 minutes."""
-    bot.say(f"{DOMAIN}viz/{choose(listdir(f'{PATH}viz'))}")
-
-
-@plugin.search("!voodoo")
-@plugin.command("voodoo")
-def voodoo(bot, trigger):
-    """A user triggering this command can only do so once per 15 minutes."""
-    voodoos = ["I fantasize about fucking California's earthquake fault line. The dirt, the debris, the thought of the earth quivering under me as I slowly stick my dick into its gaping wide entrance. I keep looking at news stories and getting the firmest erections of my life seeing those beautiful cracks. She's so open and so wanting. Each earthquake is like another whimper just begging for me to take her. The amount of cum I've lost just thinking about thrusting my rod into our beloved planet. Talk about getting my rocks off. Fuck I'm hard."]
-    for pic in listdir(f'{PATH}voodoo'):
-        voodoos.append(f'{DOMAIN}voodoo/{pic}')
-    bot.say(choose(voodoos), max_messages=2)
-
-
-@plugin.search("!xnaas")
-@plugin.command("xnaas")
-@plugin.rate(user=900)
-def xnaas(bot, trigger):
-    """A user triggering this command can only do so once per 15 minutes."""
-    xs = [f'{DOMAIN}v/tesla.webm']
-    for pic in listdir(f'{PATH}xnaas'):
-        xs.append(f'{DOMAIN}xnaas/{pic}')
-    bot.say(choose(xs))
-
-
-@plugin.search("!JTL")
-@plugin.command("JTL")
-@plugin.rate(user=900)
-def JTL(bot, trigger):
-    """A user triggering this command can only do so once per 15 minutes."""
-    JTL = [
-        "JTL thinks he's not 100% gay lol",
-        "JTL is addicted to {} 😱".format("\u200B".join("xnaas")),
-        "God cries because JTL touches himself at night.",
-        "JTL's quote addition is insane. Almost feel bad for the dude.",
-        f"{DOMAIN}JTL/bushes.webp",
-        f"{DOMAIN}JTL/sendit.webp"
-    ]
-    bot.say(choose(JTL))
-
-
-@plugin.search("!nC")
-@plugin.command("nC")
-@plugin.rate(user=900)
-def nC(bot, trigger):
-    """A user triggering this command can only do so once per 15 minutes."""
-    bot.say(f"{DOMAIN}nC/{choose(listdir(f'{PATH}nC'))}")
-
 # /Action Sack People Section
 
 
-@plugin.search("!RGB")
-@plugin.command("RGB")
+@plugin.command('RGB')
+@plugin.search('!RGB')
 def RGB(bot, trigger):
-    """Can also be triggered with '!RGB' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/RGB.webp")
+    """Can also be triggered with '!RGB' anywhere."""
+    bot.say(f'{DOMAIN}misc/RGB.webp')
 
 
-@plugin.search("savage!")
+@plugin.search('savage!')
 def savage(bot, trigger):
-    bot.say(f"{DOMAIN}savage/{choose(listdir(f'{PATH}savage'))}")
+    bot.say(choose([f'{DOMAIN}savage/{pic}' for pic in listdir(f'{PATH}savage')]))
 
 
-@plugin.search("🥗")
+@plugin.search('🥗')
 def salad(bot, trigger):
-    bot.say(f"{DOMAIN}misc/🥗.png")
+    bot.say(f'{DOMAIN}misc/🥗.png')
 
 
-@plugin.search("(?<!t)rickles")
+@plugin.search('(?<!t)rickles')
 def rickles(bot, trigger):
-    bot.say(f"{DOMAIN}misc/rickles.png")
+    bot.say(f'{DOMAIN}misc/rickles.png')
 
 
-@plugin.rule(r"^(yo|)u\swin.*")
+@plugin.rule('^(yo|)u win.*')
 def uwin(bot, trigger):
-    bot.say(f"{DOMAIN}misc/uWin.png")
+    bot.say(f'{DOMAIN}misc/uWin.png')
 
 
-@plugin.rule("^you don't say.*")
+@plugin.search("you don't say")
 def udontsay(bot, trigger):
-    bot.say(f"{DOMAIN}misc/yds.png")
+    bot.say(f'{DOMAIN}misc/yds.png')
 
 
 @plugin.search("you're too slow")
 def urtooslow(bot, trigger):
-    bot.say(f"{DOMAIN}sanic/{choose(listdir(f'{PATH}sanic'))}")
+    bot.say(choose([f'{DOMAIN}sanic/{pic}' for pic in listdir(f'{PATH}sanic')]))
 
 
-@plugin.search("whale rape")
+@plugin.search('whale rape')
 def whalerape(bot, trigger):
-    bot.say(f"{DOMAIN}v/whalerape.mp4")
+    bot.say(f'{DOMAIN}v/whalerape.mp4')
 
 
-@plugin.search("kwaken")
+@plugin.search('kwaken')
 def kwaken(bot, trigger):
-    bot.say(f"{DOMAIN}misc/kwaken.png")
+    bot.say(f'{DOMAIN}misc/kwaken.png')
 
 
-@plugin.search("!KFC")
+@plugin.search('!KFC')
 def kfc(bot, trigger):
-    bot.say(f"{DOMAIN}kfc/{choose(listdir(f'{PATH}kfc'))}")
+    bot.say(choose([f'{DOMAIN}kfc/{pic}' for pic in listdir(f'{PATH}kfc')]))
 
 
-@plugin.search("(?<!en)joy!")
+@plugin.search('(?<!en)joy!')
 def joy(bot, trigger):
-    bot.say(f"{DOMAIN}misc/joy.gif")
+    bot.say(f'{DOMAIN}misc/joy.gif')
 
 
-@plugin.search("bernie")
+@plugin.search('bernie')
 def bernii(bot, trigger):
-    bot.say(f"{DOMAIN}misc/bernii.webp")
+    bot.say(f'{DOMAIN}misc/bernii.webp')
 
 
-@plugin.search("blumkin")
+@plugin.search('blumkin')
 def blumpkin(bot, trigger):
-    bot.say(f"{DOMAIN}misc/blumkin.gif")
+    bot.say(f'{DOMAIN}misc/blumkin.gif')
 
 
-@plugin.search("!(chief|halo)")
-@plugin.command("chief", "halo")
+@plugin.command('chief', 'halo')
+@plugin.search('!(chief|halo)')
 def chief(bot, trigger):
     """Posts a Master Chief/Halo-related image.
     Can also be triggered with '!chief' or '!halo' anywhere in chat."""
-    master_chef = [f'{DOMAIN}son/chiefs.webp', f'{DOMAIN}son/halo.webp']
-    for pic in listdir(f'{PATH}halo'):
-        master_chef.append(f'{DOMAIN}halo/{pic}')
+    master_chef = [f'{DOMAIN}halo/{pic}' for pic in listdir(f'{PATH}halo')]
+    master_chef.extend([f'{DOMAIN}son/chiefs.webp', f'{DOMAIN}son/halo.webp'])
     bot.say(choose(master_chef))
 
 
-@plugin.search("!drphil")
-@plugin.command("drphil")
+@plugin.command('drphil')
+@plugin.search('!drphil')
 def drphil(bot, trigger):
-    """Can also be triggered with '!drphil' anywhere in a message."""
-    bot.say(f"{DOMAIN}drphil/{choose(listdir(f'{PATH}drphil'))}")
+    """Can also be triggered with '!drphil' anywhere."""
+    bot.say(choose([f'{DOMAIN}drphil/{pic}' for pic in listdir(f'{PATH}drphil')]))
 
 
-@plugin.search("🌀")
+@plugin.search('🌀')
 def hurricane(bot, trigger):
-    bot.say(f"{DOMAIN}🌀/{choose(listdir(f'{PATH}🌀'))}")
+    bot.say(choose([f'{DOMAIN}🌀/{pic}' for pic in listdir(f'{PATH}🌀')]))
 
 
-@plugin.search("!pepe")
-@plugin.command("pepe")
+@plugin.command('pepe')
+@plugin.search('!pepe', 'rare pepe')
 def pepe(bot, trigger):
-    """Posts a rare pepe into chat.
-    Can also be triggered with '!pepe' anywhere in a message."""
-    bot.say(f"{DOMAIN}pepe/{choose(listdir(f'{PATH}pepe'))}")
+    """Posts a rare pepe into chat. Can also be triggered with '!pepe' or 'rare pepe' anywhere."""
+    bot.say(choose([f'{DOMAIN}pepe/{pic}' for pic in listdir(f'{PATH}pepe')]))
 
 
-@plugin.search("repost")
+@plugin.search('repost')
 def repost(bot, trigger):
-    bot.say(f"{DOMAIN}repost/{choose(listdir(f'{PATH}repost'))}")
+    bot.say(choose([f'{DOMAIN}repost/{pic}' for pic in listdir(f'{PATH}repost')]))
 
 
-@plugin.command("rip")
+@plugin.command('rip')
 def rip(bot, trigger):
-    bot.say(f"{DOMAIN}emoji/rip.webp")
+    bot.say(f'{DOMAIN}emoji/rip.webp')
 
 
-@plugin.search("!trump")
-@plugin.command("trump")
+@plugin.command('trump')
+@plugin.search('!trump')
 def trump(bot, trigger):
-    """Can also be triggered with '!trump' anywhere in a message."""
-    bot.say(f"{DOMAIN}trump/{choose(listdir(f'{PATH}trump'))}")
+    """Can also be triggered with '!trump' anywhere."""
+    bot.say(choose([f'{DOMAIN}trump/{pic}' for pic in listdir(f'{PATH}trump')]))
 
 
-@plugin.command("downvote")
+@plugin.command('downvote')
 def downvote(bot, trigger):
-    bot.say(f"{DOMAIN}vote/down/{choose(listdir(f'{PATH}vote/down'))}")
+    bot.say(choose([f'{DOMAIN}vote/down/{pic}' for pic in listdir(f'{PATH}vote/down')]))
 
 
-@plugin.command("upvote")
+@plugin.command('upvote')
 def upvote(bot, trigger):
-    bot.say(f"{DOMAIN}vote/up/{choose(listdir(f'{PATH}vote/up'))}")
+    bot.say(choose([f'{DOMAIN}vote/up/{pic}' for pic in listdir(f'{PATH}vote/up')]))
 
 
-@plugin.search("!apologize")
+@plugin.search('!apologize')
 def apologize(bot, trigger):
-    bot.say(f"{DOMAIN}misc/apologize.webp")
+    bot.say(f'{DOMAIN}misc/apologize.webp')
 
 
 @plugin.search("(?<!sh)it's happening")
 def happening(bot, trigger):
-    its_happening = [
-        f"{DOMAIN}halo/happening.gif",
-        f"{DOMAIN}misc/happening.gif"
-    ]
+    its_happening = [f'{DOMAIN}halo/happening.gif', f'{DOMAIN}misc/happening.gif']
     bot.say(choose(its_happening))
 
 
 @plugin.rule("^It's time to stop!$")
 def timetostop(bot, trigger):
-    bot.say(f"{DOMAIN}🛑/{choose(listdir(f'{PATH}🛑'))}")
+    bot.say(choose([f'{DOMAIN}🛑/{pic}' for pic in listdir(f'{PATH}🛑')]))
 
 
-@plugin.rule("pepsi")
+@plugin.search('pepsi')
 def pepsi(bot, trigger):
-    bot.say(f"{DOMAIN}misc/pepsi.gif")
+    bot.say(f'{DOMAIN}misc/pepsi.gif')
 
 
-@plugin.search("terrorist")
+@plugin.search('terrorist')
 def terrorists(bot, trigger):
-    bot.say(f"{DOMAIN}misc/terrorist.gif")
+    bot.say(f'{DOMAIN}misc/terrorist.gif')
 
 
-@plugin.search("space pants")
+@plugin.search('space pants')
 def spacepants(bot, trigger):
-    space_pants = [
-        f"{DOMAIN}misc/spacepants.gif",
-        f"{DOMAIN}v/spacepants.mp4"
-    ]
+    space_pants = [f'{DOMAIN}misc/spacepants.gif', f'{DOMAIN}v/spacepants.mp4']
     bot.say(choose(space_pants))
 
 
-@plugin.search("!peep")
-@plugin.command("peep")
+@plugin.command('peep')
+@plugin.search('!peep')
 def peep(bot, trigger):
-    """Peep on chat. Can also be triggered with '!peep' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/peep.gif")
+    """Peep on chat. Can also be triggered with '!peep' anywhere."""
+    bot.say(f'{DOMAIN}misc/peep.gif')
 
 
-@plugin.search("🥒")
+@plugin.search('🥒')
 def cucumber(bot, trigger):
-    bot.say(f"{DOMAIN}misc/🥒.gif")
+    bot.say(f'{DOMAIN}misc/🥒.gif')
 
 
-@plugin.search("krang")
+@plugin.search('krang')
 def krang(bot, trigger):
-    bot.say(f"{DOMAIN}misc/krang.png")
+    bot.say(f'{DOMAIN}misc/krang.png')
 
 
-@plugin.command("reality")
+@plugin.command('reality')
 @plugin.rate(server=86400)
 def reality(bot, trigger):
     """Lays down a hard reality. Rate-limited to once per day on the server."""
-    bot.say(f"{DOMAIN}xnaas/reality.webp")
+    bot.say(f'{DOMAIN}xnaas/reality.webp')
 
 
-@plugin.search("mass murder")
-@plugin.command("shooting")
+@plugin.command('shooting')
+@plugin.search('mass murder')
 def shooting(bot, trigger):
-    """Can also be triggered with 'mass murder' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/shooting.gif")
+    """Can also be triggered with 'mass murder' anywhere."""
+    bot.say(f'{DOMAIN}misc/shooting.gif')
 
 
-@plugin.search(r"🆒(|\s)🐱")
+@plugin.search('🆒(| )🐱')
 def coolcat(bot, trigger):
-    bot.say(f"{DOMAIN}misc/🆒🐱.png")
+    bot.say(f'{DOMAIN}misc/🆒🐱.png')
 
 
-@plugin.search("shitpost")
+@plugin.search('shitpost')
 def shitpost(bot, trigger):
-    bot.say(f"{DOMAIN}shitpost/{choose(listdir(f'{PATH}shitpost'))}")
+    bot.say(choose([f'{DOMAIN}shitpost/{pic}' for pic in listdir(f'{PATH}shitpost')]))
 
 
-@plugin.rule("^No!$")
+@plugin.rule('^No!$')
 def no(bot, trigger):
-    nonono = [
-        f"{DOMAIN}no/00.mp4",
-        f"{DOMAIN}no/01.mp4",
-    ]
+    nonono = [f'{DOMAIN}no/00.mp4', f'{DOMAIN}no/01.mp4']
     bot.say(choose(nonono))
 
 
-@plugin.rule(r"^just\.\.\.no$")
+@plugin.rule(r'^just\.\.\.no$')
 def justno(bot, trigger):
-    bot.say(f"{DOMAIN}no/just...no.webp")
+    bot.say(f'{DOMAIN}no/just...no.webp')
 
 
-@plugin.search("🏇")
+@plugin.search('🏇')
 def horses(bot, trigger):
-    bot.say(f"{DOMAIN}🏇/{choose(listdir(f'{PATH}🏇'))}")
+    bot.say(choose([f'{DOMAIN}🏇/{pic}' for pic in listdir(f'{PATH}🏇')]))
 
 
-@plugin.search("👽")
+@plugin.search('👽')
 def alien(bot, trigger):
-    bot.say(f"{DOMAIN}misc/👽.webp")
+    bot.say(f'{DOMAIN}misc/👽.webp')
 
 
-@plugin.search("😮{3,}")
+@plugin.search('😮{3,}')
 def gaping_mouth(bot, trigger):
-    bot.say(f"{DOMAIN}misc/😮.webp")
+    bot.say(f'{DOMAIN}misc/😮.webp')
 
 
-@plugin.search("(🕷|🕷️)(?!👨)")
+# TODO: regex bullshit
+@plugin.rule('^[🕷🕷️]$')
 def spider(bot, trigger):
-    bot.say(f"{DOMAIN}🕷/{choose(listdir(f'{PATH}🕷'))}")
+    bot.say(choose([f'{DOMAIN}🕷/{pic}' for pic in listdir(f'{PATH}🕷')]))
 
 
-@plugin.search(r"(🕷|🕷️)(|\s)👨")
-@plugin.command("spiderman")
+@plugin.command('spiderman')
+@plugin.search('[🕷🕷️](| )👨')
 def spiderman(bot, trigger):
-    """Can also be triggered with '🕷👨' anywhere in a message."""
-    bot.say(f"{DOMAIN}🕷👨/{choose(listdir(f'{PATH}🕷👨'))}")
+    """Can also be triggered with '🕷👨' anywhere."""
+    bot.say(choose([f'{DOMAIN}🕷👨/{pic}' for pic in listdir(f'{PATH}🕷👨')]))
 
 
-@plugin.search("shitstorm")
+@plugin.search('shitstorm')
 def shitstorm(bot, trigger):
-    bot.say(f"{DOMAIN}misc/shitstorm.webp")
+    bot.say(f'{DOMAIN}misc/shitstorm.webp')
 
 
-@plugin.search("!ts")
-@plugin.command("ts")
+@plugin.command('ts')
+@plugin.search('!ts')
 def teamspeak(bot, trigger):
-    """Can also be triggered with '!ts' anywhere in a message."""
+    """Can also be triggered with '!ts' anywhere."""
     bot.say(f"{DOMAIN}a/teamspeak.ogg")
 
 
-@plugin.search("!tmf")
-@plugin.command("tmf")
+@plugin.search('!tmf')
+@plugin.command('tmf')
 def thatsmyfetish(bot, trigger):
-    """That's my fetish. ( ͡° ͜ʖ ͡°)
-    Can also be triggered with '!tmf' anywhere in a message."""
-    bot.say(f"{DOMAIN}misc/tmf.webp")
+    """That's my fetish. ( ͡° ͜ʖ ͡°) Can also be triggered with '!tmf' anywhere."""
+    bot.say(f'{DOMAIN}misc/tmf.webp')
 
 
-@plugin.rule("^NDA$")
+@plugin.rule('^NDA$')
 def nda(bot, trigger):
-    bot.say(bold("⚠️ That's ⚠️ some ⚠️ NDA ⚠️ shit ⚠️ right ⚠️ there! ⚠️"))
+    bot.say(bold('⚠️ That\'s ⚠️ some ⚠️ NDA ⚠️ shit ⚠️ right ⚠️ there! ⚠️'))
 
 
-@plugin.search("darude")
+@plugin.search('darude')
 def darude(bot, trigger):
-    bot.say(f"{DOMAIN}v/darude.mp4")
+    bot.say(f'{DOMAIN}v/darude.mp4')
 
 
-@plugin.search("numa")
+@plugin.search('numa numa')
 def numanuma(bot, trigger):
-    bot.say(f"{DOMAIN}v/numa.mp4")
+    bot.say(f'{DOMAIN}v/numa.mp4')
 
 
-@plugin.search("!gems")
-@plugin.command("gems")
+@plugin.command('gems')
+@plugin.search('!gems')
 def gems(bot, trigger):
-    """The greatest video game song to ever exist.
-    Can also be triggered with '!gems' anywhere in a message."""
-    bot.say(f"{DOMAIN}v/gems.mp4")
+    """The greatest video game song to ever exist. Can also be triggered with '!gems' anywhere."""
+    bot.say(f'{DOMAIN}v/gems.mp4')
 
 
-@plugin.search("explosion!")
+@plugin.search('explosion!')
 def explosion(bot, trigger):
-    bot.say(f"{DOMAIN}v/explosion/{choose(listdir(f'{PATH}v/explosion'))}")
+    bot.say(choose([f'{DOMAIN}v/explosion/{pic}' for pic in listdir(f'{PATH}v/explosion')]))
 
 
-@plugin.search("I need a hero")
+@plugin.search('I need a hero')
 def ineedahero(bot, trigger):
-    bot.say(f"{DOMAIN}v/ineedahero.mp4")
+    bot.say(f'{DOMAIN}v/ineedahero.mp4')
 
 
-@plugin.search("!MDMA")
-@plugin.command("mdma")
+@plugin.command('mdma')
+@plugin.search('!MDMA')
 def mdma(bot, trigger):
-    """Can also be triggered with '!MDMA' anywhere in a message."""
-    bot.say(f"{DOMAIN}a/MDMA.flac")
+    """Can also be triggered with '!MDMA' anywhere."""
+    bot.say(f'{DOMAIN}a/MDMA.flac')
 
 
-@plugin.search("!albatraoz")
-@plugin.command("albatraoz")
+@plugin.command('albatraoz')
+@plugin.search('!albatraoz')
 def albatraoz(bot, trigger):
-    """Can also be triggered with '!albatraoz' anywhere in a message."""
-    bot.say(f"{DOMAIN}a/albatraoz.flac")
+    """Can also be triggered with '!albatraoz' anywhere."""
+    bot.say(f'{DOMAIN}a/albatraoz.flac')
 
 
-@plugin.search("!swing")
-@plugin.command("swing")
+@plugin.command('swing')
+@plugin.search('!swing')
 def little_swing(bot, trigger):
-    """Can also be triggered with '!swing' anywhere in a message."""
-    bot.say(f"{DOMAIN}a/swing.flac")
+    """Can also be triggered with '!swing' anywhere."""
+    bot.say(f'{DOMAIN}a/swing.flac')
 
 
-@plugin.search("!rimg", "rave in my garage") # 'rimg' command taken already, so search only
+@plugin.search('!rimg', 'rave in my garage')  # '.rimg' command taken already, so search only
 def rave_in_my_garage(bot, trigger):
-    bot.say(f"{DOMAIN}a/RIMG.flac")
+    bot.say(f'{DOMAIN}a/RIMG.flac')
 
 
-@plugin.search("!fun") # not going to reserve 'fun' command
+@plugin.search('!fun')  # not going to reserve 'fun' command
 def lsn_fun(bot, trigger):
-    bot.say(f"{DOMAIN}a/fun.flac")
+    bot.say(f'{DOMAIN}a/fun.flac')
 
 
-@plugin.search("Let it go!")
+@plugin.search('Let it go!')
 def let_it_go(bot, trigger):
-    bot.say(f"{DOMAIN}v/letitgo.mp4")
+    bot.say(f'{DOMAIN}v/letitgo.mp4')
 
 
-@plugin.search("☕")
+@plugin.search('☕')
 def coffee(bot, trigger):
-    bot.say(f"{DOMAIN}☕/☕.webp")
+    bot.say(f'{DOMAIN}☕/☕.webp')
 
 
-@plugin.search("this is fine")
+@plugin.search('this is fine')
 def thisisfine(bot, trigger):
-    bot.say(f"{DOMAIN}fine/{choose(listdir(f'{PATH}fine'))}")
+    bot.say(choose([f'{DOMAIN}fine/{pic}' for pic in listdir(f'{PATH}fine')]))
 
 
-@plugin.search("efnet")
+@plugin.search('efnet')
 def efnet(bot, trigger):
-    bot.say("EFnet? You mean 'Extremely Fucked Network'?")
+    bot.say('EFnet? You mean \'Extremely Fucked Network\'?')
 
 
-@plugin.search(r"Who's that Pok(e|é)mon\?")
+@plugin.search(r"Who's that Pok[eé]mon\?")
 def whosthatpokemon(bot, trigger):
-    bot.say(f"{DOMAIN}v/whos_that_pokemon.mp4")
+    bot.say(f'{DOMAIN}v/whos_that_pokemon.mp4')
 
 
-@plugin.search("clayman")
+@plugin.search('clayman')
 def fuck_clayman(bot, trigger):
-    bot.say(f"{DOMAIN}rekt/shionXclayman.webp")
+    bot.say(f'{DOMAIN}rekt/shionXclayman.webp')
 
 
-@plugin.search("but why")
+@plugin.search('but why')
 def but_why(bot, trigger):
-    bot.say(f"{DOMAIN}misc/butwhy.webp")
+    bot.say(f'{DOMAIN}misc/butwhy.webp')
 
 
-@plugin.rule("^F$")
+@plugin.rule('^F$')
 def pay_respects(bot, trigger):
-    bot.action("pays respects")
+    bot.action('pays respects')
 
 
-@plugin.rule("^X$")
+@plugin.rule('^X$')
 def x_to_doubt(bot, trigger):
-    bot.action("doubts")
+    bot.action('doubts')
 
 
-@plugin.search(r"\bpiracy\b")
+@plugin.search(r'\bpiracy\b')
 def piracy(bot, trigger):
-    bot.say(f"{DOMAIN}v/piracy.mp4")
+    bot.say(f'{DOMAIN}v/piracy.mp4')
 
 
-@plugin.rule("^🦆$")
+@plugin.rule('^🦆$')
 def duck_gif(bot, trigger):
-    bot.say(f"{DOMAIN}emoji/duck.webp")
+    bot.say(f'{DOMAIN}emoji/duck.webp')
 
 
-@plugin.search("!peacemaker")
+@plugin.search('!peacemaker')
 def peacemaker(bot, trigger):
-    bot.say(f"{DOMAIN}v/peacemaker.mp4")
+    bot.say(f'{DOMAIN}v/peacemaker.mp4')
 
 
-@plugin.search(r"\bselfie\b")
+@plugin.search(r'\bselfie\b')
 def selfie(bot, trigger):
-    bot.say(f"{DOMAIN}a/selfie.flac")
+    bot.say(f'{DOMAIN}a/selfie.flac')
 
 
-@plugin.search("!surface")
+@plugin.search('!surface')
 def surface(bot, trigger):
-    bot.say(f"{DOMAIN}a/surface.flac")
+    bot.say(f'{DOMAIN}a/surface.flac')
 
 
-@plugin.search(r"\bSOPA\b")
+@plugin.search(r'\bSOPA\b')
 def fuck_sopa(bot, trigger):
-    bot.say(f"{DOMAIN}a/FUCK_SOPA.flac")
+    bot.say(f'{DOMAIN}a/FUCK_SOPA.flac')
 
 
 @plugin.search("shit's on fire( |, )yo")
 def shits_on_fire_yo(bot, trigger):
-    bot.say(f"{DOMAIN}misc/sofy.webp")
+    bot.say(f'{DOMAIN}misc/sofy.webp')
 
 
-@plugin.search("🦞")
+@plugin.search('🦞')
 def lobster(bot, trigger):
-    bot.say(f"{DOMAIN}v/lobster.mp4")
+    bot.say(f'{DOMAIN}v/lobster.mp4')
 
 
-@plugin.search("friday night")
+@plugin.search('friday night')
 def friday_nights(bot, trigger):
-    bot.say(f"{DOMAIN}v/friday_nights.mp4")
+    bot.say(f'{DOMAIN}v/friday_nights.mp4')
 
 
 @plugin.command('att')
 @plugin.output_prefix('[AT&T] ')
 def att(bot, trigger):
-    att_bad = [
-        'More downtime than Level 3.',
-        'You know IPv6 still does not work...',
-        'Down? You know it!',
-        'What upload?',
-        'Less bars in more places.',
-        'Rethinking working internet.'
-    ]
+    att_bad = ['More downtime than Level 3.',
+        'You know IPv6 still does not work...', 'Down? You know it!',
+        'What upload?', 'Less bars in more places.',
+        'Rethinking working internet.']
     bot.say(choose(att_bad))
