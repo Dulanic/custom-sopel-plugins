@@ -14,31 +14,31 @@ def hackernews_loader(settings):
 
 
 @plugin.url_lazy(hackernews_loader)
-@plugin.output_prefix("[HackerNews] ")
+@plugin.output_prefix('[HackerNews] ')
 def get_hn(bot, trigger):
-    hnid = trigger.group("hnid")
+    hnid = trigger.group('hnid')
     url = f"https://hacker-news.firebaseio.com/v0/item/{hnid}.json"
     try:
         r = requests.get(url)
-    except BaseException:
+    except Exception:
         try:
             title = sopel_url.find_title(trigger.group(0))
             return bot.say(f"[TITLE ONLY FALLBACK] {title}")
-        except BaseException:
+        except Exception:
             return
 
     if not r.json():
         return
 
-    if r.json()["type"] == "story":
-        title = r.json()["title"]
-        if "url" in r.json():
-            post_url = r.json()["url"]
-        elif "text" in r.json():
+    if r.json()['type'] == 'story':
+        title = r.json()['title']
+        if 'url' in r.json():
+            post_url = r.json()['url']
+        elif 'text' in r.json():
             post_url = None
-            text = unescape(r.json()["text"])
-        return bot.say(f"{title} | {post_url or text}", truncation=" […]")
+            text = unescape(r.json()['text'])
+        return bot.say(f"{title} | {post_url or text}", truncation=' […]')
 
-    if r.json()["type"] == "comment":
-        text = unescape(r.json()["text"])
-        return bot.say(text, truncation=" […]")
+    if r.json()['type'] == 'comment':
+        text = unescape(r.json()['text'])
+        return bot.say(text, truncation=' […]')
