@@ -439,7 +439,7 @@ def csr(bot, trigger):
 
 
 # === NSFW Commands ===
-@plugin.search('!!(banebread|bread|cockhunter|datascii|dickaroo|fgr|ghostbabies|gimp|jordan|nazi|twerk)')
+@plugin.search('!!(banebread|bread|cockhunter|datascii|dickaroo|fgr|ghostbabies|gimp|jordan|ponies|nazi|twerk)')
 def nsfw_cmds(bot, trigger):
     if trigger.sender != '#nsfw':
         return bot.reply('You can only trigger this in #nsfw')
