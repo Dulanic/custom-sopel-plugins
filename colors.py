@@ -1,14 +1,13 @@
 """
-Authors: xnaas, dgw (2020-2021)
-Source: https://github.com/xnaas/sopel-color-text
-Forked and heavily modified from: https://github.com/sopel-irc/sopel-rainbow
+Authors: dgw (2020-2021), xnaas (2020-2022)
+Fork: https://github.com/xnaas/sopel-color-text
+Source: https://github.com/sopel-irc/sopel-rainbow
 License: Eiffel Forum License, version 2
 """
 import itertools
-import random
 import unicodedata
-from sopel import plugin, formatting
-from sopel.config import types
+from sopel import plugin
+from sopel.formatting import color, plain
 
 
 COLOR_SCHEMES = {
@@ -27,17 +26,12 @@ SCHEME_ERRORS = {
 
 @plugin.commands('rainbow', 'usa', 'commie', 'spooky')
 def rainbow_cmd(bot, trigger):
-    """Make text colored. Options are "rainbow", "usa", "commie", and "spooky"."""
-    text = formatting.plain(trigger.group(2) or '')
+    """Make text colored. Options are 'rainbow', 'usa', 'commie', and 'spooky'."""
+    text = plain(trigger.group(2) or '')
     scheme = trigger.group(1).lower()
 
     if not text:
-        try:
-            msg = SCHEME_ERRORS[scheme]
-        except KeyError:
-            msg = "How did you do that?!"
-        bot.reply(msg)
-        return
+        return bot.reply(SCHEME_ERRORS[scheme])
 
     try:
         colors = COLOR_SCHEMES[scheme]
@@ -45,16 +39,15 @@ def rainbow_cmd(bot, trigger):
         # not possible to reach this at time of writing, but who knows?
         # mistakes happen when updating stuff that needs to be changed in
         # parallel
-        bot.reply(
-            "I don't know what color sequence to use for '{}'!".format(scheme))
-        return
+        return bot.reply(
+            f"I don't know what color sequence to use for '{scheme}'!")
 
     color_cycle = itertools.cycle(colors)
 
     bot.say(
         ''.join(
             char if unicodedata.category(char) == 'Zs'
-            else formatting.color(char, next(color_cycle))
+            else color(char, next(color_cycle))
             for char in text
         ), max_messages=4
     )
