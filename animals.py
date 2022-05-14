@@ -17,7 +17,7 @@ def cats(bot, trigger):
     try:
         cat_img = requests.get(url, params=param).json()[0]['url']
         bot.say(cat_img)
-    except BaseException:
+    except Exception:
         bot.reply('Error reaching API, probably.')
 
 
@@ -28,7 +28,7 @@ def catfact(bot, trigger):
     try:
         cat_fact = requests.get(url, params=params).json()['text']
         bot.say(cat_fact)
-    except BaseException:
+    except Exception:
         bot.reply('Error reaching API, probably.')
 
 
@@ -38,7 +38,7 @@ def dogs(bot, trigger):
     try:
         dog_image = requests.get(url).json()['message']
         bot.say(dog_image)
-    except BaseException:
+    except Exception:
         bot.reply('Error reaching API, probably.')
 
 
@@ -49,14 +49,14 @@ def dogfact(bot, trigger):
     try:
         dog_fact = requests.get(url, params=params).json()[0]['fact']
         bot.say(dog_fact)
-    except BaseException:
+    except Exception:
         bot.reply('Error reaching API, probably.')
 
 
 @plugin.commands('shibe', 'bir(b|d)')
 def shibe_api(bot, trigger):
     cmd = trigger.group(1).lower()
-    base_url = 'https://shibe.online/api/'
+    base_url = 'https://shibe.online/api'
     params = {'count': '1', 'urls': 'true', 'httpsUrls': 'true'}
 
     if cmd == 'shibe':
@@ -67,15 +67,15 @@ def shibe_api(bot, trigger):
     try:
         img = requests.get(url, params=params).json()[0]
         bot.say(img)
-    except BaseException:
+    except Exception:
         bot.reply('Error reaching API, probably.')
 
 
 @plugin.commands('fox(|y)')
 def foxes(bot, trigger):
-    url = 'https://randomfox.ca/floof/'
+    url = 'https://randomfox.ca/floof'
     try:
         fox_image = requests.get(url).json()['image']
         bot.say(fox_image)
-    except:
+    except Exception:
         bot.reply('Error reaching API, probably.')
