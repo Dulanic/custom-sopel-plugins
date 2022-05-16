@@ -19,7 +19,6 @@ NITTER_DOMAINS = [
     'nitter.kavin.rocks',
     'nitter.unixfox.eu',
     'nitter.domain.glass',
-    'nitter.eu',
     'nitter.namazso.eu',
     'birdsite.xanny.family',
     'nitter.hu',
@@ -45,7 +44,6 @@ NITTER_DOMAINS = [
     'nitter.bus-hit.me',
     'fuckthesacklers.network',
     'nitter.govt.land',
-    'nitter.datatunnel.xyz',
     'nitter.esmailelbob.xyz',
     'tw.artemislena.eu',
     'de.nttr.stream',
@@ -58,7 +56,11 @@ NITTER_DOMAINS = [
     'nitter.notraxx.ch',
     'nitter.poast.org',
     'nitter.lunar.icu',
-    'nitter.bird.froth.zone'
+    'nitter.bird.froth.zone',
+    'nitter.dcs0.hu',
+    'twitter.dr460nf1r3.org',
+    'twitter.beparanoid.de',
+    'n.ramle.be'
 ]
 
 
