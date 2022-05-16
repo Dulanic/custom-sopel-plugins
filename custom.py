@@ -1930,3 +1930,8 @@ def att(bot, trigger):
         'What upload?', 'Less bars in more places.',
         'Rethinking working internet.']
     bot.say(choose(att_bad))
+
+
+@plugin.search('loophole')
+def loophole(bot, trigger):
+    bot.say(f'{DOMAIN}a/loophole.flac')
