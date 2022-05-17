@@ -1935,3 +1935,8 @@ def att(bot, trigger):
 @plugin.search('loophole')
 def loophole(bot, trigger):
     bot.say(f'{DOMAIN}a/loophole.flac')
+
+
+@plugin.search('(TM87|swagger)')
+def TM87(bot, trigger):
+    bot.say(f'{DOMAIN}a/TM87.ogg')
