@@ -138,7 +138,7 @@ def casino_set_bank(bot, trigger):
 @plugin.command('nomoremoney')
 @plugin.require_admin
 def casino_wipe_user(bot, trigger):
-    target = plain(trigger.group(3))
+    target = plain(trigger.group(3) or '')
     if not target:
         return bot.reply('I need a user.')
     target = tools.Identifier(target)
