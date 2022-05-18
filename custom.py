@@ -1479,6 +1479,9 @@ def asak_ppl(bot, trigger):
         name = 'nC'
     if name == 'jtl':
         name = 'JTL'
+    # asak → as
+    if name == 'asak':
+        name = 'as'
     # get the list of choices
     choices = [f'{DOMAIN}{name}/{pic}' for pic in listdir(f'{PATH}{name}')]
     if name == 'feek':
