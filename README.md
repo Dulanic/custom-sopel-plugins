@@ -79,6 +79,10 @@ Queries OSRS HiScores for player stats.
 Adds some random APIs for fun.
 
 
+## [rep.py](https://github.com/xnaas/custom-sopel-plugins/blob/main/rep.py)
+Users can increase or decrease each others' reputation.
+
+
 ## [smite_vgs.py](https://github.com/xnaas/custom-sopel-plugins/blob/main/smite_vgs.py)
 Adds [Smite's VGS](https://smite.gamepedia.com/Voice_Guided_System) to Sopel.
 
