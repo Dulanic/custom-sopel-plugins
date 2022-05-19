@@ -65,6 +65,7 @@ def rep_check(bot, trigger):
 @plugin.command('reptop', 'replow')
 @plugin.output_prefix('[REP] ')
 @plugin.rate(user=5)
+@plugin.require_account('You must have a registered account to participate.', True)
 def rep_list(bot, trigger):
     cmd = trigger.group(1).lower()
     query =  "SELECT canonical, key, value FROM nick_values a join nicknames "
