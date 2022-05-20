@@ -274,7 +274,7 @@ def casino_leaderboard(bot, trigger):
 
     query =   "SELECT canonical, key, value FROM nick_values a join nicknames "
     query += f"b on a.nick_id = b.nick_id WHERE key='{DB_BANK}' "
-    query +=  "ORDER BY cast(value as int) DESC;"
+    query +=  "ORDER BY cast(value as int) DESC LIMIT 5;"
     lb = bot.db.execute(query).fetchall()
     if not lb:
         return bot.say('No gambling addicts yet!')
@@ -290,9 +290,6 @@ def casino_leaderboard(bot, trigger):
         else:
             name = '\u200B'.join(person[0])
             bot.say(f'{rank}. {name}: ${int(person[2]):,}.')
-        # We only want to print up to 5 people
-        if rank == 5:
-            break
 
 
 @plugin.command('pick')
