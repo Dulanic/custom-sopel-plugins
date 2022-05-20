@@ -71,9 +71,9 @@ def rep_list(bot, trigger):
     query =  "SELECT canonical, key, value FROM nick_values a join nicknames "
     query += "b on a.nick_id = b.nick_id WHERE key='rep' "
     if cmd == 'reptop':
-        query += "ORDER BY cast(value as int) DESC;"
+        query += "ORDER BY cast(value as int) DESC LIMIT 5;"
     elif cmd == 'replow':
-        query += "ORDER BY cast(value as int) ASC;"
+        query += "ORDER BY cast(value as int) ASC LIMIT 5;"
     else:
         return plugin.NOLIMIT
 
@@ -97,9 +97,6 @@ def rep_list(bot, trigger):
             else:
                 rep = color(f'{rep:,}', colors.GREY)
             rep_list.append(f'{name}: {rep}')
-        # we only want to print up to 5 people
-        if index == 5:
-            break
 
     if cmd == 'reptop' and not rep_list:
         return bot.say('No one with positive reputation...')
