@@ -10,6 +10,10 @@ Just a standard, run-of-the-mill [magic 8-ball](https://en.wikipedia.org/wiki/Ma
 Posts random animal pics from several different APIs.
 
 
+## [apod.py](https://github.com/xnaas/custom-sopel-plugins/blob/main/apod.py)
+Query [NASA API](https://api.nasa.gov) for APOD info.
+
+
 ## [base64coder.py](https://github.com/xnaas/custom-sopel-plugins/blob/main/base64coder.py)
 Encode or decode base64 data.
 
