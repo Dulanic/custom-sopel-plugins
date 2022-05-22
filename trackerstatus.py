@@ -105,11 +105,11 @@ def trackerstatus(subcmd, service):
         else:
             statuses[index] = color('???', colors.ORANGE)
 
-    msg = 'Website: {} | TrackerHTTP: {} | TrackerHTTPS: {}'
+    msg = "Website: {} | TrackerHTTP: {} | TrackerHTTPS: {}"
     if len(statuses) == 3:
         pass
     elif len(statuses) == 6:
-        msg += ' | IRC (Ident): {} ({}) | Torrent Announcer: {}'
+        msg += " | IRC: {} | IRC Ident: {} | Torrent Announcer: {}"
     else:
         raise Exception('Something went horribly wrong...')
 
