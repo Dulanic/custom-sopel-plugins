@@ -206,7 +206,7 @@ def lenny(bot, trigger):
     bot.say('( ͡° ͜ʖ ͡°)')
 
 
-@plugin.command("rlenny")
+@plugin.command('rlenny')
 def rlenny(bot, trigger):
     """Sends a random ( ͡° ͜ʖ ͡°) variation...or a GIF/MP4!"""
     lennys = [f'{DOMAIN}lenny/{pic}' for pic in listdir(f'{PATH}lenny')]
