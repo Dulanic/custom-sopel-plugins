@@ -15,10 +15,7 @@ TS_URL = 'https://{}.trackerstatus.info/api/all'
 @plugin.rate(server=1)
 @plugin.require_chanmsg
 def one_hundred_percent_legal_service_status(bot, trigger):
-    # get command and sub-command, if present
     cmd = trigger.group(1).lower()
-    subcmd = plain(trigger.group(2) or '').lower()
-
     if cmd == 'ab':
         try:
             msg = ab_status()
@@ -27,11 +24,10 @@ def one_hundred_percent_legal_service_status(bot, trigger):
             return plugin.NOLIMIT
     else:
         try:
-            msg = trackerstatus(subcmd, cmd)
+            msg = trackerstatus(cmd)
         except Exception as e:
             bot.say(str(e))
             return plugin.NOLIMIT
-
     bot.say(f'[{cmd.upper()}] {msg}')
 
 
@@ -65,11 +61,7 @@ def ab_status():
     return msg
 
 
-def trackerstatus(subcmd, service):
-    # TODO: do something with subcommands...uptime, downtime, something?
-    if not subcmd:
-        pass
-
+def trackerstatus(service):
     try:
         r = requests.get(TS_URL.format(service))
     except Exception:
