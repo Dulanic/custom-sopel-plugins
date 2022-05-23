@@ -211,7 +211,7 @@ def rlenny(bot, trigger):
     """Sends a random ( ͡° ͜ʖ ͡°) variation...or a GIF/MP4!"""
     lennys = [f'{DOMAIN}lenny/{pic}' for pic in listdir(f'{PATH}lenny')]
     lennys.extend([
-        '( ͡° ͜ʖ ͡°)', '(☭ ͜ʖ ☭)', '( ° ͜ʖ °)', '(⟃ ͜ʖ ⟄) ', '( ‾ ʖ̫ ‾)', '( ͡° ʖ̯ ͡°)',
+        '(☭ ͜ʖ ☭)', '( ° ͜ʖ °)', '(⟃ ͜ʖ ⟄) ', '( ‾ ʖ̫ ‾)', '( ͡° ʖ̯ ͡°)',
         'ʕ ͡° ʖ̯ ͡°ʔ', '( ͡° ل͜ ͡°)', '( ͡o ͜ʖ ͡o)', '( ͡◉ ͜ʖ ͡◉)', '( ͡☉ ͜ʖ ͡☉)',
         'ʕ ͡° ͜ʖ ͡°ʔ', '( ͡ᵔ ͜ʖ ͡ᵔ )', '¯\_( ͡° ͜ʖ ͡°)_/¯', '(͡ ͡° ͜ つ ͡͡°)'])
     bot.say(choose(lennys))
