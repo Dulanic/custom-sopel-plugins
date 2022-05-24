@@ -704,15 +704,15 @@ def foundoutimgay(bot, trigger):
 @plugin.search('fags')
 def fags(bot, trigger):
     if trigger.sender == '#nsfw':
-        bot.say(f'{DOMAIN}faggot/fags.png')
+        bot.say(f'{DOMAIN}faggot/fags.webp')
 
 
 @plugin.search('fag(?!s)')
 def faggot(bot, trigger):
     if trigger.sender != '#nsfw':
         return
-    faggots = [f'{DOMAIN}faggot/faggot.gif', f'{DOMAIN}faggot/oh.gif',
-        f'{DOMAIN}faggot/urafaget.png', 'Faggot!',
+    faggots = [f'{DOMAIN}faggot/faggot.webp', f'{DOMAIN}faggot/oh.webp',
+        f'{DOMAIN}faggot/urafaget.webp', 'Faggot!',
         '(/¯◡ ‿ ◡)/¯ ~~~~ Abracadabra, you\'re a faggot!']
     bot.say(choose(faggots))
 
