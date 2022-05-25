@@ -1943,3 +1943,8 @@ def loophole(bot, trigger):
 @plugin.search('(TM87|swagger)')
 def TM87(bot, trigger):
     bot.say(f'{DOMAIN}a/TM87.ogg')
+
+
+@plugin.search('feelsbadman')
+def horses(bot, trigger):
+    bot.say(choose([f'{DOMAIN}feelsbadman/{pic}' for pic in listdir(f'{PATH}feelsbadman')]))
