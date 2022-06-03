@@ -833,7 +833,7 @@ def goat(bot, trigger):
 
 @plugin.rule(r'\bhackers\b')
 def hackers(bot, trigger):
-    bot.say(f"{DOMAIN}as/hackers.png")
+    bot.say(f"{DOMAIN}as/hackers.webp")
 
 
 @plugin.rule('^hue.*')
