@@ -542,7 +542,7 @@ def ohyou(bot, trigger):
 
 @plugin.search('mikey bikey')
 def mikeybikey(bot, trigger):
-    bot.say(f'{DOMAIN}as/mikeybikey.png')
+    bot.say(f'{DOMAIN}as/mikeybikey.webp')
 
 
 @plugin.search('meal with it')
@@ -1390,7 +1390,7 @@ def think(bot, trigger):
 
 @plugin.search('🚸')
 def as_linus(bot, trigger):
-    bot.say(f'{DOMAIN}as/linus.png')
+    bot.say(f'{DOMAIN}as/linus.webp')
 
 
 @plugin.search('🚬')
