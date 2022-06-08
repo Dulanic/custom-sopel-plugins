@@ -80,7 +80,7 @@ def nitter_to_twitter(bot, trigger):
         if tweet:
             twitter.output_status(bot, trigger, tweet)
         elif user:
-            if user == 'pic':
+            if user in ['pic', 'search']:
                 return
             twitter.output_user(bot, trigger, user)
         else:
