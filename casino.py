@@ -217,6 +217,10 @@ def casino_give_money(bot, trigger):
     except Exception as e:
         return bot.say(str(e))
 
+    # cancel if user tries to give themselves money
+    if target == user:
+        return bot.reply("You missed the duping bug lol!")
+
     # transact the money
     user_bank = user_bank - amount
     target_bank = target_bank + amount
