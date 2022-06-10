@@ -293,6 +293,7 @@ def casino_leaderboard(bot, trigger):
 
 
 @plugin.command('pick')
+@plugin.rate(user=1800)
 def casino_pick(bot, trigger):
     """Pick up money from the ground."""
     try:
@@ -317,6 +318,7 @@ def casino_pick(bot, trigger):
 
 
 @plugin.command('drop')
+@plugin.rate(user=1800)
 def casino_plant(bot, trigger):
     """Drop some money on the ground."""
     try:
