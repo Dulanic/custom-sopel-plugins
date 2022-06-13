@@ -43,7 +43,6 @@ NITTER_DOMAINS = [
     'nitter.mint.lgbt',
     'nitter.bus-hit.me',
     'fuckthesacklers.network',
-    'nitter.govt.land',
     'nitter.esmailelbob.xyz',
     'tw.artemislena.eu',
     'de.nttr.stream',
@@ -60,7 +59,15 @@ NITTER_DOMAINS = [
     'nitter.dcs0.hu',
     'twitter.dr460nf1r3.org',
     'twitter.beparanoid.de',
-    'n.ramle.be'
+    'n.ramle.be',
+    'nitter.cz',
+    'nitter.privacydev.net',
+    'tweet.lambda.dance',
+    'nitter.ebnar.xyz',
+    'nitter.kylrth.com',
+    'nitter.oishi-ra.men',
+    'nitter.foss.wtf',
+    'nitter.priv.pw'
 ]
 
 
