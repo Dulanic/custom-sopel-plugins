@@ -602,7 +602,7 @@ def casino_rndm(bot):
             bot.db.set_channel_value(GCHAN, DB_GRNDM, floor)
             # TODO: add some randomness to the message to
             #       prevent notifications and botting.
-            return bot.say(f'${floor} appeared on the ground.', GCHAN)
+            return bot.say(f'${floor[0]} appeared on the ground.', GCHAN)
         else:
             return
     else:
