@@ -23,7 +23,6 @@ GCHAN = '#casino'
 DB_BANK = 'casino_bank'
 DB_TIMELY = 'casino_timely'
 DB_GRNDM = 'casino_ground_money'
-DB_GRNDU = 'casino_ground_user'
 
 
 ###############################################################################
@@ -305,26 +304,23 @@ def casino_pick(bot, trigger):
     except Exception as e:
         return bot.say(str(e))
 
-    amount = bot.db.get_channel_value(GCHAN, DB_GRNDM, 0)
-    dropped_by = bot.db.get_channel_value(GCHAN, DB_GRNDU, None)
+    floor = bot.db.get_channel_value(GCHAN, DB_GRNDM, [0, None])
 
-    if not amount:
+    if not floor[0]:
         insults = [
             'There is no money to pick up, greedy fucker.',
             'Sorry you are poor, but there is no money for you.'
         ]
         return bot.reply(choose(insults))
 
-    if dropped_by == user:
+    if floor[1] == user:
         return bot.reply("You can't pick up the money you dropped, jackass.")
 
-    bot.db.set_channel_value(GCHAN, DB_GRNDM, 0)
-    bot.db.set_channel_value(GCHAN, DB_GRNDU, None)
-
-    newBalance = bank + amount
+    bot.db.set_channel_value(GCHAN, DB_GRNDM, [0, None])
+    newBalance = bank + floor[0]
     bot.db.set_nick_value(user, DB_BANK, newBalance)
     newBalance = bold(f'${newBalance:,}')
-    return bot.reply(f'Congrats! You picked up ${amount:,}. New balance: {newBalance}')
+    bot.reply(f'Congrats! You picked up ${floor[0]:,}. New balance: {newBalance}')
 
 
 @plugin.command('drop')
@@ -336,8 +332,8 @@ def casino_plant(bot, trigger):
         return bot.say(str(e))
 
     # check if there's already any money on the ground
-    ground_amt = bot.db.get_channel_value(GCHAN, DB_GRNDM, 0)
-    if ground_amt:
+    floor = bot.db.get_channel_value(GCHAN, DB_GRNDM, [0, None])
+    if floor[0]:
         return bot.say('There is already money on the ground.')
 
     # take from user first
@@ -345,8 +341,7 @@ def casino_plant(bot, trigger):
     bot.db.set_nick_value(user, DB_BANK, newBalance)
     
     # drop the money on the ground & identify the dropper
-    bot.db.set_channel_value(GCHAN, DB_GRNDM, bet)
-    bot.db.set_channel_value(GCHAN, DB_GRNDU, user)
+    bot.db.set_channel_value(GCHAN, DB_GRNDM, [bet, user])
     return bot.say(f'Someone dropped ${bet:,} on the ground!')
 
 
@@ -597,17 +592,17 @@ def casino_wheel(bot, trigger):
 @plugin.interval(3600)
 def casino_rndm(bot):
     # check if there's already any money
-    amount = bot.db.get_channel_value(GCHAN, DB_GRNDM, 0)
+    floor = bot.db.get_channel_value(GCHAN, DB_GRNDM, [0, None])
 
     # if there's no money...
-    if not amount:
+    if not floor[0]:
         roll = randbelow(11)
         if roll == 6:  # choose 6 just because
-            amount = randbelow(91) + 10
-            bot.db.set_channel_value(GCHAN, DB_GRNDM, amount)
+            floor = [randbelow(91)+10, None]
+            bot.db.set_channel_value(GCHAN, DB_GRNDM, floor)
             # TODO: add some randomness to the message to
             #       prevent notifications and botting.
-            return bot.say(f'${amount} appeared on the ground.', GCHAN)
+            return bot.say(f'${floor} appeared on the ground.', GCHAN)
         else:
             return
     else:
