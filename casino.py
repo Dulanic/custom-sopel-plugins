@@ -23,6 +23,7 @@ GCHAN = '#casino'
 DB_BANK = 'casino_bank'
 DB_TIMELY = 'casino_timely'
 DB_GRNDM = 'casino_ground_money'
+DB_GRNDU = 'casino_ground_user'
 
 
 ###############################################################################
@@ -174,8 +175,8 @@ def casino_timely_reset(bot, trigger):
 #  \___/  |___/  \___| |_|       \____| |_| |_| |_|  \__,_| |___/ #
 ###################################################################
 # This is a simple bank balance checker.
-@plugin.command(r'\$')
-@plugin.example('.$ nick')
+@plugin.commands('bal', r'\$')
+@plugin.example('.bal nick')
 def casino_get_bank(bot, trigger):
     try:
         bank, target = casino_check(bot, trigger, 3, True, False)
@@ -297,34 +298,38 @@ def casino_leaderboard(bot, trigger):
 
 
 @plugin.command('pick')
-@plugin.rate(user=1800)
 def casino_pick(bot, trigger):
-    """Pick up money from the ground."""
+    """Pick up money from the floor of the casino."""
     try:
         bank, user = casino_check(bot, trigger, None, True, False)
     except Exception as e:
         return bot.say(str(e))
 
     amount = bot.db.get_channel_value(GCHAN, DB_GRNDM, 0)
+    dropped_by = bot.db.get_channel_value(GCHAN, DB_GRNDU, None)
+
     if not amount:
         insults = [
             'There is no money to pick up, greedy fucker.',
             'Sorry you are poor, but there is no money for you.'
         ]
         return bot.reply(choose(insults))
-    else:
-        bot.db.set_channel_value(GCHAN, DB_GRNDM, 0)
-        newBalance = bank + amount
-        bot.db.set_nick_value(user, DB_BANK, newBalance)
-        newBalance = bold(f'${newBalance:,}')
-        return bot.reply(
-            f'Congrats! You picked up ${amount:,}. New balance: {newBalance}')
+
+    if dropped_by == user:
+        return bot.reply("You can't pick up the money you dropped, jackass.")
+
+    bot.db.set_channel_value(GCHAN, DB_GRNDM, 0)
+    bot.db.set_channel_value(GCHAN, DB_GRNDU, None)
+
+    newBalance = bank + amount
+    bot.db.set_nick_value(user, DB_BANK, newBalance)
+    newBalance = bold(f'${newBalance:,}')
+    return bot.reply(f'Congrats! You picked up ${amount:,}. New balance: {newBalance}')
 
 
 @plugin.command('drop')
-@plugin.rate(user=1800)
 def casino_plant(bot, trigger):
-    """Drop some money on the ground."""
+    """Drop some money on the floor of the casino."""
     try:
         bank, bet, user = casino_check(bot, trigger, None, True, True)
     except Exception as e:
@@ -339,8 +344,9 @@ def casino_plant(bot, trigger):
     newBalance = bank - bet
     bot.db.set_nick_value(user, DB_BANK, newBalance)
     
-    # drop the money on the ground
+    # drop the money on the ground & identify the dropper
     bot.db.set_channel_value(GCHAN, DB_GRNDM, bet)
+    bot.db.set_channel_value(GCHAN, DB_GRNDU, user)
     return bot.say(f'Someone dropped ${bet:,} on the ground!')
 
 
