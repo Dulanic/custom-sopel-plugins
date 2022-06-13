@@ -9,6 +9,13 @@ from sopel.formatting import color, colors, plain
 
 AB_URL = 'https://status.animebytes.tv/api/status'
 TS_URL = 'https://{}.trackerstatus.info/api/all'
+SERVICES = {
+    'ab': 'AnimeBytes',
+    'btn': 'BroadcasTheNet',
+    'ggn': 'GazelleGames',
+    'ptp': 'PassThePopcorn',
+    'red': 'Redacted'
+}
 
 
 @plugin.command('ab', 'btn', 'ggn', 'ptp', 'red')
@@ -28,7 +35,7 @@ def one_hundred_percent_legal_service_status(bot, trigger):
         except Exception as e:
             bot.say(str(e))
             return plugin.NOLIMIT
-    bot.say(f'[{cmd.upper()}] {msg}')
+    bot.say(f'[{SERVICES[cmd]}] {msg}')
 
 
 def ab_status():
