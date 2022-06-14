@@ -5,6 +5,7 @@ License: The Unlicense (public domain)
 import re
 import time
 from datetime import timedelta
+from math import floor as round_down
 from random import choices
 from secrets import choice as choose, randbelow
 from sopel import plugin, tools
@@ -23,6 +24,7 @@ GCHAN = '#casino'
 DB_BANK = 'casino_bank'
 DB_TIMELY = 'casino_timely'
 DB_GRNDM = 'casino_ground_money'
+BASE_CLAIM = 25
 
 
 ###############################################################################
@@ -134,7 +136,6 @@ def casino_set_bank(bot, trigger):
 
 
 # This command makes it like a user never existed in the casino.
-# Should be merged with 'timelyreset' if that TODO is never done.
 @plugin.command('nomoremoney')
 @plugin.require_admin
 def casino_wipe_user(bot, trigger):
@@ -148,11 +149,7 @@ def casino_wipe_user(bot, trigger):
 
 
 # This command is to reset someone's timely timer so they can timely again.
-# TODO: this is a full reset that makes it like they never timely'd. but it
-#   should really just set the timer far enough back so that they can timely
-#   for the normal amount again.
-# PRIORITY: low
-@plugin.command('timelyreset')
+@plugin.commands('timelyreset', 'treset')
 @plugin.require_admin
 @plugin.require_chanmsg(f'{GCHAN} only', True)
 def casino_timely_reset(bot, trigger):
@@ -246,16 +243,24 @@ def casino_timely(bot, trigger):
     timely_check = bot.db.get_nick_value(user, DB_TIMELY, None)
     if not timely_check:
         bot.db.set_nick_value(user, DB_TIMELY, now)
-        claim = 100
     elif timely_check:
         timely_check_4h = now - timely_check
         if timely_check_4h >= 14400:
             bot.db.set_nick_value(user, DB_TIMELY, now)
-            claim = 25
         else:
             to_timely = 14400 - timely_check_4h
             to_timely = str(timedelta(seconds=round(to_timely)))
             return bot.reply(f'{to_timely} until you can claim again, greedy!')
+
+    # modify claim based on weathiest user
+    query =   "SELECT canonical, key, value FROM nick_values a join nicknames "
+    query += f"b on a.nick_id = b.nick_id WHERE key='{DB_BANK}' "
+    query +=  "ORDER BY cast(value as int) DESC LIMIT 1;"
+    # NOTE: this code would fall apart if no one had ever gambled yet
+    #   e.g.: everyone has None or nothing returned from sqlite query
+    top_bank = int(bot.db.execute(query).fetchall()[0][-1])
+    claim_mod = round_down(top_bank * 0.005)
+    claim = BASE_CLAIM + claim_mod
 
     newBalance = bank + claim
     bot.db.set_nick_value(user, DB_BANK, newBalance)
