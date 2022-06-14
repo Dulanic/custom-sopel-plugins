@@ -48,8 +48,8 @@ def casino_check(bot, trigger, targetGroup=None, getBank=None, getBet=None):
     # get our target
     if targetGroup == 3:
         target = plain(trigger.group(3) or trigger.nick)
-    elif targetGroup == 4:
-        target = plain(trigger.group(4) or '')
+    elif targetGroup in [4, 5]:
+        target = plain(trigger.group(targetGroup) or '')
         if not target:
             raise Exception('I need a target, fool!')
     else:
@@ -119,8 +119,6 @@ def casino_check(bot, trigger, targetGroup=None, getBank=None, getBet=None):
 #  somewhat clean-ish, if you're into that. #
 #############################################
 # This command is to set someone's balance to whatever is desired.
-# There used to be award/take commands, but this seems like the 
-#   simpler and better solution overall.
 @plugin.command('cset')
 @plugin.example('.cset 100 nick')
 @plugin.require_admin
@@ -133,6 +131,29 @@ def casino_set_bank(bot, trigger):
     bot.db.set_nick_value(target, DB_BANK, amount)
     balance = f'${amount:,}'
     bot.say(f'{target} now has {bold(balance)}')
+
+
+# Tranfer X amount of money from one user to another.
+@plugin.commands('ctransfer', 'ctrans')
+@plugin.example('.ctrans 100 fromUser toUser')
+@plugin.require_admin
+def casino_transfer(bot, trigger):
+    try:
+        loser_bank, amount, loser = casino_check(bot, trigger, 4, True, True)
+        winner_bank, winner = casino_check(bot, trigger, 5, True, False)
+    except Exception as e:
+        return bot.say(str(e))
+
+    loser_newBal = loser_bank - amount
+    winner_newBal = winner_bank + amount
+
+    bot.db.set_nick_value(loser, DB_BANK, loser_newBal)
+    bot.db.set_nick_value(winner, DB_BANK, winner_newBal)
+
+    msg =  f"[Balance Transfer] Amount: ${amount:,} | "
+    msg += f"{loser}: ${loser_bank:,} → ${loser_newBal:,} | "
+    msg += f"{winner}: ${winner_bank:,} → ${winner_newBal}"
+    bot.say(msg)
 
 
 # This command makes it like a user never existed in the casino.
@@ -149,7 +170,7 @@ def casino_wipe_user(bot, trigger):
 
 
 # This command is to reset someone's timely timer so they can timely again.
-@plugin.commands('timelyreset', 'treset')
+@plugin.commands('timelyreset', 'ctreset')
 @plugin.require_admin
 @plugin.require_chanmsg(f'{GCHAN} only', True)
 def casino_timely_reset(bot, trigger):
