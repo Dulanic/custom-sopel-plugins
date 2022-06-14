@@ -19,7 +19,14 @@ def ercot_status(bot, trigger):
         # Frequency
         url_freq = f"{base_url}/ancillaryServices.json"
         freq = requests.get(url_freq).json()["data"][0]["currentFrequency"]
+        # Demand
+        url_demand = f"{base_url}/todays-outlook.json"
+        for section in requests.get(url_demand).json()['data']:
+            if section['forecast'] == 0:
+                demand = '{:,}'.format(section['demand'])
+            else:
+                break
     except Exception as e:
         return bot.reply(str(e))
 
-    bot.say(f"Status: {status} ({freq}Hz) | Reserves: {op_res}MWh")
+    bot.say(f"Status: {status} ({freq}Hz) | Reserves: {op_res}MWh | Demand: {demand}Mwh")
