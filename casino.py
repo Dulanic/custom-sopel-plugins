@@ -475,7 +475,7 @@ def casino_betoddeven(bot, trigger):
 @plugin.rate(user=2)
 def casino_betroll(bot, trigger):
     """Bet your money on a random roll from 0-100. Roll payouts:
-    0-66: 0x // 67-90: 2x // 91-99: 4x // 100: 10x"""
+    0-65: 0x // 66-90: 2x // 91-99: 4x // 100: 10x"""
     try:
         bank, bet, user = casino_check(bot, trigger, None, True, True)
     except Exception as e:
@@ -488,9 +488,9 @@ def casino_betroll(bot, trigger):
     # roll a number 0-100
     roll = randbelow(101)
     # determine multiplier
-    if 0 <= roll <= 66:
+    if 0 <= roll <= 65:
         multiplier = 0
-    elif 67 <= roll <= 90:
+    elif 66 <= roll <= 90:
         multiplier = 2
     elif 91 <= roll <= 99:
         multiplier = 4
