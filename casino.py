@@ -205,14 +205,9 @@ def casino_init_user(bot, trigger):
 @plugin.command('give')
 @plugin.example('.give 100 nick')
 def casino_give_money(bot, trigger):
-    # get data for giver of money
+    # get data for giver and receiver of money
     try:
         user_bank, amount, user = casino_check(bot, trigger, None, True, True)
-    except Exception as e:
-        return bot.say(str(e))
-
-    # get data for receiver of money
-    try:
         target_bank, target = casino_check(bot, trigger, 4, True, False)
     except Exception as e:
         return bot.say(str(e))
